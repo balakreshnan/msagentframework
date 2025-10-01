@@ -1,0 +1,740 @@
+# Copyright (c) Microsoft. All rights reserved.
+
+import asyncio
+import os
+import json
+from datetime import datetime
+from random import randint
+from typing import Annotated, Dict, List, Any
+import streamlit as st
+
+from agent_framework import ChatAgent
+from agent_framework.azure import AzureAIAgentClient
+from azure.ai.projects.aio import AIProjectClient
+from azure.identity.aio import AzureCliCredential
+from pydantic import Field
+
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Configure Streamlit page
+st.set_page_config(
+    page_title="Azure AI Agent Chat",
+    page_icon="🤖",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
+# Initialize session state FIRST - before any other operations
+def initialize_session_state():
+    """Initialize all session state variables"""
+    if 'messages' not in st.session_state:
+        st.session_state.messages = []
+    
+    if 'debug_logs' not in st.session_state:
+        st.session_state.debug_logs = []
+    
+    if 'tool_calls' not in st.session_state:
+        st.session_state.tool_calls = []
+    
+    if 'agent_created' not in st.session_state:
+        st.session_state.agent_created = False
+    
+    if 'agent_id' not in st.session_state:
+        st.session_state.agent_id = None
+    
+    if 'demo_mode' not in st.session_state:
+        st.session_state.demo_mode = True
+    
+    if 'token_usage' not in st.session_state:
+        st.session_state.token_usage = {
+            'prompt_tokens': 0,
+            'completion_tokens': 0,
+            'total_tokens': 0,
+            'interactions': 0,
+            'details': []  # per message usage breakdown
+        }
+
+# Initialize session state immediately
+initialize_session_state()
+
+# Custom CSS for better styling
+st.markdown("""
+<style>
+    .main > div {
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+    }
+    
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 2rem;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        padding: 0 24px;
+        background-color: #f0f2f6;
+        border-radius: 8px;
+        margin-right: 8px;
+    }
+    
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        background-color: #0066cc;
+        color: white;
+    }
+    
+    /* Chat message styling */
+    .stChatMessage {
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border-radius: 0.75rem;
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+    }
+    
+    /* Container styling */
+    div[data-testid="stVerticalBlock"] > div[style*="height: 500px"] {
+        border: 1px solid #d0d0d0;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    div[data-testid="stVerticalBlock"] > div[style*="height: 450px"] {
+        border: 1px solid #d0d0d0;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 0.85rem;
+    }
+    
+    /* Input styling */
+    .stChatInput > div {
+        border: 2px solid #0066cc;
+        border-radius: 0.75rem;
+        background-color: white;
+    }
+    
+    /* Status indicators */
+    .status-connected {
+        background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        text-align: center;
+        margin: 0.5rem 0;
+    }
+    
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        text-align: center;
+        margin: 0.5rem 0;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+def get_weather(
+    location: Annotated[str, Field(description="The location to get the weather for.")],
+) -> str:
+    """Get the weather for a given location."""
+    conditions = ["sunny", "cloudy", "rainy", "stormy"]
+    weather = f"The weather in {location} is {conditions[randint(0, 3)]} with a high of {randint(10, 30)}°C."
+    
+    # Log tool usage for debugging - ensure session state exists
+    if 'tool_calls' not in st.session_state:
+        st.session_state.tool_calls = []
+    
+    st.session_state.tool_calls.append({
+        'timestamp': datetime.now().strftime("%H:%M:%S"),
+        'tool': 'get_weather',
+        'input': location,
+        'output': weather
+    })
+    
+    # Also log to debug
+    log_debug(f"Weather tool called for {location}: {weather}")
+    
+    return weather
+
+async def create_agent():
+    """Create the Azure AI agent"""
+    try:
+        # Check if environment variables are set
+        endpoint = os.environ.get("AZURE_AI_PROJECT_ENDPOINT")
+        model = os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME")
+        
+        if not endpoint or not model:
+            log_debug("Missing Azure environment variables - cannot create agent")
+            log_debug(f"AZURE_AI_PROJECT_ENDPOINT: {'SET' if endpoint else 'NOT SET'}")
+            log_debug(f"AZURE_AI_MODEL_DEPLOYMENT_NAME: {'SET' if model else 'NOT SET'}")
+            st.error("Missing required environment variables: AZURE_AI_PROJECT_ENDPOINT and/or AZURE_AI_MODEL_DEPLOYMENT_NAME")
+            return False
+        
+        log_debug("Creating Azure AI agent...")
+        log_debug(f"Endpoint: {endpoint}")
+        log_debug(f"Model: {model}")
+        
+        try:
+            log_debug("Initializing Azure CLI credential...")
+            credential = AzureCliCredential()
+            
+            log_debug("Creating AI Project client...")
+            client = AIProjectClient(
+                endpoint=endpoint, 
+                credential=credential
+            )
+            
+            log_debug("Creating agent...")
+            # Create an agent that will persist for the session
+            created_agent = await client.agents.create_agent(
+                model=model, 
+                name=f"StreamlitWeatherAgent_{randint(1000, 9999)}"
+            )
+            
+            st.session_state.agent_id = created_agent.id
+            st.session_state.agent_created = True
+            st.session_state.client = client
+            st.session_state.credential = credential
+            st.session_state.demo_mode = False
+            
+            log_debug(f"Agent successfully created with ID: {created_agent.id}")
+            return True
+            
+        except Exception as inner_e:
+            log_debug(f"Inner creation error: {str(inner_e)}")
+            log_debug(f"Error type: {type(inner_e).__name__}")
+            raise inner_e
+        
+    except Exception as e:
+        error_msg = f"Failed to create agent: {str(e)}"
+        log_debug(error_msg)
+        log_debug(f"Exception type: {type(e).__name__}")
+        st.error(error_msg)
+        return False
+
+async def create_agent_with_data(session_data: dict = None):
+    """Create the Azure AI agent and return session data"""
+    try:
+        # Check if environment variables are set
+        endpoint = os.environ.get("AZURE_AI_PROJECT_ENDPOINT")
+        model = os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME")
+        
+        if not endpoint or not model:
+            print(f"[DEBUG] Missing Azure environment variables - cannot create agent")
+            print(f"[DEBUG] AZURE_AI_PROJECT_ENDPOINT: {'SET' if endpoint else 'NOT SET'}")
+            print(f"[DEBUG] AZURE_AI_MODEL_DEPLOYMENT_NAME: {'SET' if model else 'NOT SET'}")
+            return False, {}
+        
+        print(f"[DEBUG] Creating Azure AI agent...")
+        print(f"[DEBUG] Endpoint: {endpoint}")
+        print(f"[DEBUG] Model: {model}")
+        
+        try:
+            print(f"[DEBUG] Initializing Azure CLI credential...")
+            credential = AzureCliCredential()
+            
+            print(f"[DEBUG] Creating AI Project client...")
+            client = AIProjectClient(
+                endpoint=endpoint, 
+                credential=credential
+            )
+            
+            print(f"[DEBUG] Creating agent...")
+            # Create an agent that will persist for the session
+            created_agent = await client.agents.create_agent(
+                model=model, 
+                name=f"StreamlitWeatherAgent_{randint(1000, 9999)}"
+            )
+            
+            # Return session data
+            new_session_data = {
+                'agent_id': created_agent.id,
+                'agent_created': True,
+                'client': client,
+                'credential': credential,
+                'demo_mode': False
+            }
+            
+            # Also update Streamlit session state if available
+            try:
+                st.session_state.agent_id = created_agent.id
+                st.session_state.agent_created = True
+                st.session_state.client = client
+                st.session_state.credential = credential
+                st.session_state.demo_mode = False
+            except:
+                # Session state not available in thread context
+                pass
+            
+            print(f"[DEBUG] Agent successfully created with ID: {created_agent.id}")
+            return True, new_session_data
+            
+        except Exception as inner_e:
+            print(f"[DEBUG] Inner creation error: {str(inner_e)}")
+            print(f"[DEBUG] Error type: {type(inner_e).__name__}")
+            raise inner_e
+        
+    except Exception as e:
+        error_msg = f"Failed to create agent: {str(e)}"
+        print(f"[DEBUG] {error_msg}")
+        print(f"[DEBUG] Exception type: {type(e).__name__}")
+        return False, {}
+
+async def send_message(message: str, session_data: dict = None):
+    """Send a message to the agent and get response.
+
+    NOTE: This function is executed inside a worker thread (via send_message_wrapper).
+    It SHOULD NOT directly mutate st.session_state (Streamlit is not thread-safe).
+    Instead, it returns the response text and a list of debug log lines plus token usage info.
+    """
+    try:
+        thread_logs = []  # collect logs to merge later in main thread
+
+        def tlog(msg: str):
+            timestamp = datetime.now().strftime("%H:%M:%S")
+            thread_logs.append(f"[{timestamp}] {msg}")
+
+        def normalize_text(obj) -> str:
+            """Best-effort extraction of human-readable text from various response object shapes."""
+            if obj is None:
+                return ""
+            if isinstance(obj, str):
+                return obj
+            # Common agent framework patterns
+            for attr in ("output", "content", "text", "message"):
+                if hasattr(obj, attr):
+                    try:
+                        v = getattr(obj, attr)
+                        if isinstance(v, (str, bytes)):
+                            return v.decode() if isinstance(v, bytes) else v
+                        # If it's a list of messages
+                        if isinstance(v, list):
+                            # Join string-like entries
+                            collected = []
+                            for item in v:
+                                if isinstance(item, str):
+                                    collected.append(item)
+                                elif isinstance(item, dict) and 'content' in item:
+                                    collected.append(str(item['content']))
+                                else:
+                                    collected.append(str(item))
+                            return "\n".join(collected)
+                    except Exception:
+                        pass
+            # Dict / list fallback
+            if isinstance(obj, (dict, list)):
+                try:
+                    return json.dumps(obj, ensure_ascii=False)
+                except Exception:
+                    return str(obj)
+            # Fallback to str
+            return str(obj)
+
+        def safe_token_count(text_like) -> int:
+            text = normalize_text(text_like)
+            if not text:
+                return 0
+            return int(len(text.split()) * 1.3)
+
+        # Use session_data if provided (from thread), otherwise use session_state
+        if session_data:
+            agent_created = session_data.get('agent_created', False)
+            agent_id = session_data.get('agent_id', None)
+            client = session_data.get('client', None)
+            credential = session_data.get('credential', None)
+        else:
+            agent_created = st.session_state.get('agent_created', False)
+            agent_id = st.session_state.get('agent_id', None)
+            client = st.session_state.get('client', None)
+            credential = st.session_state.get('credential', None)
+        
+        if not agent_created:
+            success, new_session_data = await create_agent_with_data(session_data)
+            if not success:
+                return {
+                    'response': "Failed to initialize agent. Please check your Azure configuration.",
+                    'logs': thread_logs,
+                    'usage': None
+                }
+            
+            # Update session data with new values
+            if session_data:
+                session_data.update(new_session_data)
+            agent_created = new_session_data.get('agent_created', False)
+            agent_id = new_session_data.get('agent_id', None)
+            client = new_session_data.get('client', None)
+        
+        tlog(f"Sending message: {message}")
+        
+        # Use the actual Azure AI Agent Framework
+        try:
+            async with ChatAgent(
+                chat_client=AzureAIAgentClient(
+                    project_client=client, 
+                    agent_id=agent_id
+                ),
+                instructions="You are a helpful weather agent. Provide detailed and friendly responses about weather conditions.",
+                tools=get_weather,
+            ) as agent:
+                
+                tlog("Agent initialized, processing request...")
+                result_obj = await agent.run(message)
+                tlog("Agent response received")
+                result = normalize_text(result_obj)
+
+                # Try to extract token usage metadata from agent / underlying response if available
+                usage = None
+                try:
+                    # Common patterns: agent.last_response.usage or agent._last_response
+                    possible = getattr(agent, 'last_response', None) or getattr(agent, '_last_response', None)
+                    if possible and isinstance(possible, dict):
+                        usage_obj = possible.get('usage') or possible.get('token_usage')
+                        if usage_obj:
+                            usage = {
+                                'prompt_tokens': usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens'),
+                                'completion_tokens': usage_obj.get('completion_tokens') or usage_obj.get('output_tokens'),
+                                'total_tokens': usage_obj.get('total_tokens') or (
+                                    (usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens') or 0) +
+                                    (usage_obj.get('completion_tokens') or usage_obj.get('output_tokens') or 0)
+                                )
+                            }
+                except Exception as meta_e:
+                    tlog(f"Token usage metadata extraction failed: {meta_e}")
+
+                if usage is None:
+                    # Fallback heuristic
+                    prompt_tokens = safe_token_count(message)
+                    completion_tokens = safe_token_count(result)
+                    usage = {
+                        'prompt_tokens': prompt_tokens,
+                        'completion_tokens': completion_tokens,
+                        'total_tokens': prompt_tokens + completion_tokens
+                    }
+                    tlog("Using heuristic token counts (library did not expose usage)")
+
+                return {
+                    'response': result,
+                    'logs': thread_logs,
+                    'usage': usage
+                }
+                
+        except Exception as agent_error:
+            tlog(f"Agent error: {str(agent_error)}")
+            # If there's an agent error, try to recreate the agent
+            tlog("Attempting to recreate agent due to error...")
+            success, new_session_data = await create_agent_with_data(session_data)
+            if success:
+                # Update session data
+                if session_data:
+                    session_data.update(new_session_data)
+                client = new_session_data.get('client', None)
+                agent_id = new_session_data.get('agent_id', None)
+                
+                async with ChatAgent(
+                    chat_client=AzureAIAgentClient(
+                        project_client=client, 
+                        agent_id=agent_id
+                    ),
+                    instructions="You are a helpful weather agent. Provide detailed and friendly responses about weather conditions.",
+                    tools=get_weather,
+                ) as agent:
+                    tlog("Agent recreated, processing message again...")
+                    result_obj = await agent.run(message)
+                    tlog("Response received after recreation")
+                    result = normalize_text(result_obj)
+                    prompt_tokens = safe_token_count(message)
+                    completion_tokens = safe_token_count(result)
+                    usage = {
+                        'prompt_tokens': prompt_tokens,
+                        'completion_tokens': completion_tokens,
+                        'total_tokens': prompt_tokens + completion_tokens
+                    }
+                    return {
+                        'response': result,
+                        'logs': thread_logs,
+                        'usage': usage
+                    }
+            else:
+                return {
+                    'response': f"Failed to recreate agent after error: {str(agent_error)}",
+                    'logs': thread_logs,
+                    'usage': None
+                }
+            
+    except Exception as e:
+        error_msg = f"Error processing message: {str(e)}"
+        thread_logs.append(f"[{datetime.now().strftime('%H:%M:%S')}] {error_msg}")
+        return {
+            'response': f"Sorry, I encountered an error: {str(e)}",
+            'logs': thread_logs,
+            'usage': None
+        }
+
+def send_message_wrapper(message: str):
+    """Wrapper to handle async send_message in Streamlit"""
+    import threading
+    import concurrent.futures
+    
+    # Capture current session state values before threading
+    session_data = {
+        'agent_created': st.session_state.get('agent_created', False),
+        'agent_id': st.session_state.get('agent_id', None),
+        'client': st.session_state.get('client', None),
+        'credential': st.session_state.get('credential', None),
+        'demo_mode': st.session_state.get('demo_mode', True)
+    }
+    
+    def run_async_in_thread():
+        """Run async function in a new thread with its own event loop"""
+        try:
+            # Create a new event loop for this thread
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            
+            try:
+                # Run the async function with session data
+                result_dict = loop.run_until_complete(send_message(message, session_data))
+                return result_dict
+            finally:
+                # Clean up the loop
+                loop.close()
+                
+        except Exception as e:
+            error_msg = f"Thread execution error: {str(e)}"
+            # Can't use log_debug here as we're in a different thread
+            print(f"[DEBUG] {error_msg}")
+            return {'response': error_msg, 'logs': [error_msg], 'usage': None}
+    
+    try:
+        # Execute in a separate thread to avoid event loop conflicts
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(run_async_in_thread)
+            result = future.result(timeout=60)  # 60 second timeout
+            
+            # Update session state with any changes that occurred in the thread
+            # This ensures agent creation persists back to the main thread
+            if session_data.get('agent_created', False) and not st.session_state.get('agent_created', False):
+                st.session_state.agent_created = session_data.get('agent_created', False)
+                st.session_state.agent_id = session_data.get('agent_id', None)
+                st.session_state.client = session_data.get('client', None)
+                st.session_state.credential = session_data.get('credential', None)
+                st.session_state.demo_mode = session_data.get('demo_mode', True)
+                log_debug(f"Updated session state with new agent: {session_data.get('agent_id', 'Unknown')}")
+            # Merge thread logs into debug logs
+            if isinstance(result, dict) and result.get('logs'):
+                for line in result['logs']:
+                    # Avoid duplicating lines already added (simple containment check)
+                    if line not in st.session_state.debug_logs:
+                        st.session_state.debug_logs.append(line)
+
+            # Update token usage
+            if isinstance(result, dict) and result.get('usage'):
+                u = result['usage']
+                st.session_state.token_usage['prompt_tokens'] += u.get('prompt_tokens', 0)
+                st.session_state.token_usage['completion_tokens'] += u.get('completion_tokens', 0)
+                st.session_state.token_usage['total_tokens'] += u.get('total_tokens', 0)
+                st.session_state.token_usage['interactions'] += 1
+                st.session_state.token_usage['details'].append({
+                    'timestamp': datetime.now().strftime('%H:%M:%S'),
+                    'prompt_tokens': u.get('prompt_tokens', 0),
+                    'completion_tokens': u.get('completion_tokens', 0),
+                    'total_tokens': u.get('total_tokens', 0)
+                })
+
+            return result.get('response') if isinstance(result, dict) else result
+            
+    except concurrent.futures.TimeoutError:
+        error_msg = "Request timed out after 60 seconds"
+        log_debug(error_msg)
+        return error_msg
+    except Exception as e:
+        error_msg = f"Error in message wrapper: {str(e)}"
+        log_debug(error_msg)
+        return error_msg
+
+def log_debug(message: str):
+    """Add a debug log entry"""
+    # Ensure session state is initialized
+    if 'debug_logs' not in st.session_state:
+        st.session_state.debug_logs = []
+    
+    timestamp = datetime.now().strftime("%H:%M:%S")
+    st.session_state.debug_logs.append(f"[{timestamp}] {message}")
+
+def display_chat_messages():
+    """Display chat messages in the chat container"""
+    if not st.session_state.messages:
+        st.markdown("### Welcome! 👋")
+        st.markdown("Ask me about the weather in any city around the world!")
+        st.markdown("*Example: 'What's the weather like in Tokyo?'*")
+    else:
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"], avatar="🧑‍💼" if message["role"] == "user" else "🤖"):
+                st.markdown(message["content"])
+
+def display_debug_logs():
+    """Display debug logs"""
+    if st.session_state.debug_logs:
+        # Show last 50 logs
+        recent_logs = st.session_state.debug_logs[-50:]
+        for log in recent_logs:
+            st.text(log)
+    else:
+        st.info("🔍 Debug logs will appear here when you start chatting")
+
+def display_tool_calls():
+    """Display tool call history"""
+    if st.session_state.tool_calls:
+        # Show last 20 calls
+        recent_calls = st.session_state.tool_calls[-20:]
+        for i, call in enumerate(recent_calls):
+            with st.expander(f"🔧 {call['tool']} - {call['timestamp']}", expanded=(i == len(recent_calls)-1)):
+                st.write(f"**Tool:** {call['tool']}")
+                st.write(f"**Input:** {call['input']}")
+                st.write(f"**Output:** {call['output']}")
+    else:
+        st.info("🛠️ Tool calls will appear here when the agent uses tools")
+
+def display_token_usage():
+    """Display token usage statistics"""
+    usage = st.session_state.get('token_usage', {})
+    if not usage:
+        st.info("No token usage yet")
+        return
+    cols = st.columns(4)
+    cols[0].metric("Prompt Tokens", usage.get('prompt_tokens', 0))
+    cols[1].metric("Completion Tokens", usage.get('completion_tokens', 0))
+    cols[2].metric("Total Tokens", usage.get('total_tokens', 0))
+    cols[3].metric("Interactions", usage.get('interactions', 0))
+    if usage.get('details'):
+        with st.expander("Detailed Usage (last 10)", expanded=False):
+            for row in usage['details'][-10:]:
+                st.write(f"{row['timestamp']}: prompt={row['prompt_tokens']} completion={row['completion_tokens']} total={row['total_tokens']}")
+
+def cleanup_agent():
+    """Clean up the agent when session ends"""
+    try:
+        if st.session_state.agent_created and st.session_state.agent_id:
+            log_debug(f"Agent {st.session_state.agent_id} session ended")
+            st.session_state.agent_created = False
+            st.session_state.agent_id = None
+    except Exception as e:
+        log_debug(f"Error cleaning up agent: {str(e)}")
+
+def main():
+    # Ensure session state is initialized first
+    initialize_session_state()
+    
+    st.title("🤖 Azure AI Agent Chat Interface")
+    
+    # Check environment variables
+    required_env_vars = ["AZURE_AI_PROJECT_ENDPOINT", "AZURE_AI_MODEL_DEPLOYMENT_NAME"]
+    missing_vars = [var for var in required_env_vars if not os.environ.get(var)]
+    
+    if missing_vars:
+        st.error(f"Missing environment variables: {', '.join(missing_vars)}")
+        st.info("Please set up your .env file with the required Azure AI project settings.")
+        log_debug(f"Missing environment variables: {', '.join(missing_vars)}")
+        return
+    
+    # Create two columns for the main layout
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.subheader("💬 Chat")
+        
+        # Chat container with fixed height and scrolling
+        with st.container(height=500):
+            display_chat_messages()
+    
+    with col2:
+        st.subheader("🔧 Debug, Tools & Usage")
+        
+        # Create tabs for debug, tools, and token usage
+        debug_tab, tools_tab, usage_tab = st.tabs(["Debug Output", "Tool Calls", "Token Usage"])
+        
+        with debug_tab:
+            with st.container(height=450):
+                display_debug_logs()
+        
+        with tools_tab:
+            with st.container(height=450):
+                display_tool_calls()
+        
+        with usage_tab:
+            with st.container(height=450):
+                display_token_usage()
+    
+    # Fixed chat input at the bottom
+    st.markdown("---")
+    
+    # Chat input
+    if prompt := st.chat_input("Ask me about the weather in any location..."):
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        
+        # Get assistant response
+        with st.spinner("Processing your request..."):
+            response = send_message_wrapper(prompt)
+            
+            if response:
+                # Add assistant response to chat history
+                st.session_state.messages.append({"role": "assistant", "content": response})
+            else:
+                error_msg = "Sorry, I encountered an error processing your request."
+                st.session_state.messages.append({"role": "assistant", "content": error_msg})
+        
+        # Rerun to update the display
+        st.rerun()
+    
+    # Sidebar with controls
+    with st.sidebar:
+        st.header("Controls")
+        
+        if st.button("Clear Chat History"):
+            st.session_state.messages = []
+            st.rerun()
+        
+        if st.button("Clear Debug Logs"):
+            st.session_state.debug_logs = []
+            st.rerun()
+        
+        if st.button("Clear Tool Calls"):
+            st.session_state.tool_calls = []
+            st.rerun()
+        
+        st.header("Status")
+        if st.session_state.agent_created:
+            if st.session_state.get('demo_mode', True):
+                st.success("✅ Demo Agent Active")
+                st.info("💡 Using simulated weather agent")
+            else:
+                st.success("✅ Azure AI Agent Connected")
+                st.write(f"Agent ID: `{st.session_state.agent_id}`")
+        else:
+            st.info("🔄 Agent will be created on first message")
+        
+        st.header("Statistics")
+        st.metric("Messages", len(st.session_state.messages))
+        st.metric("Debug Logs", len(st.session_state.debug_logs))
+        st.metric("Tool Calls", len(st.session_state.tool_calls))
+
+async def cleanup_agent():
+    """Clean up the agent when session ends"""
+    try:
+        if st.session_state.agent_created and st.session_state.agent_id and not st.session_state.get('demo_mode', True):
+            client = st.session_state.client
+            await client.agents.delete_agent(st.session_state.agent_id)
+            log_debug(f"Agent {st.session_state.agent_id} cleaned up")
+    except Exception as e:
+        log_debug(f"Error cleaning up agent: {str(e)}")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,6 @@
+agent-framework
+agent-framework-devui
+openai
+python-dotenv
+uv
+streamlit
