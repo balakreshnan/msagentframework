@@ -757,7 +757,7 @@ def main():
         st.session_state.messages.append({"role": "user", "content": prompt})
         
         # Get assistant response
-        with st.spinner("Processing your request..."):
+        with st.spinner("Processing your request...", show_time=True):
             response = send_message_wrapper(prompt)
             
             if response:
