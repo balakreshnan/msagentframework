@@ -56,6 +56,9 @@ def initialize_session_state():
             'interactions': 0,
             'details': []  # per message usage breakdown
         }
+    if 'ephemeral_agents' not in st.session_state:
+        # When True, delete the Azure agent after every response (transaction)
+        st.session_state.ephemeral_agents = False
 
 # Initialize session state immediately
 initialize_session_state()
@@ -145,23 +148,7 @@ def get_weather(
 ) -> str:
     """Get the weather for a given location."""
     conditions = ["sunny", "cloudy", "rainy", "stormy"]
-    weather = f"The weather in {location} is {conditions[randint(0, 3)]} with a high of {randint(10, 30)}°C."
-    
-    # Log tool usage for debugging - ensure session state exists
-    if 'tool_calls' not in st.session_state:
-        st.session_state.tool_calls = []
-    
-    st.session_state.tool_calls.append({
-        'timestamp': datetime.now().strftime("%H:%M:%S"),
-        'tool': 'get_weather',
-        'input': location,
-        'output': weather
-    })
-    
-    # Also log to debug
-    log_debug(f"Weather tool called for {location}: {weather}")
-    
-    return weather
+    return f"The weather in {location} is {conditions[randint(0, 3)]} with a high of {randint(10, 30)}°C."
 
 async def create_agent():
     """Create the Azure AI agent"""
@@ -355,6 +342,15 @@ async def send_message(message: str, session_data: dict = None):
             client = st.session_state.get('client', None)
             credential = st.session_state.get('credential', None)
         
+        ephemeral = None
+        try:
+            # Read ephemeral preference (thread-safe fallback to False)
+            ephemeral = (session_data and session_data.get('ephemeral_agents')) or (
+                hasattr(st, 'session_state') and st.session_state.get('ephemeral_agents', False)
+            )
+        except Exception:
+            ephemeral = False
+
         if not agent_created:
             success, new_session_data = await create_agent_with_data(session_data)
             if not success:
@@ -372,6 +368,21 @@ async def send_message(message: str, session_data: dict = None):
             client = new_session_data.get('client', None)
         
         tlog(f"Sending message: {message}")
+
+        # Per-call captured tool events (to be merged back in main thread)
+        tool_events = []
+
+        def instrumented_get_weather(location: str) -> str:
+            start_ts = datetime.now().strftime('%H:%M:%S')
+            output = get_weather(location)
+            tool_events.append({
+                'timestamp': start_ts,
+                'tool': 'get_weather',
+                'input': location,
+                'output': output
+            })
+            tlog(f"Tool get_weather executed for '{location}'")
+            return output
         
         # Use the actual Azure AI Agent Framework
         try:
@@ -381,7 +392,7 @@ async def send_message(message: str, session_data: dict = None):
                     agent_id=agent_id
                 ),
                 instructions="You are a helpful weather agent. Provide detailed and friendly responses about weather conditions.",
-                tools=get_weather,
+                tools=instrumented_get_weather,
             ) as agent:
                 
                 tlog("Agent initialized, processing request...")
@@ -419,10 +430,31 @@ async def send_message(message: str, session_data: dict = None):
                     }
                     tlog("Using heuristic token counts (library did not expose usage)")
 
+                # Optionally delete agent after response (ephemeral transaction)
+                if ephemeral:
+                    try:
+                        tlog(f"Ephemeral mode enabled - deleting agent {agent_id}")
+                        await client.agents.delete_agent(agent_id)
+                        # reflect deletion in session_data for caller
+                        if session_data is not None:
+                            session_data['agent_created'] = False
+                            session_data['agent_id'] = None
+                        agent_created = False
+                        agent_id = None
+                        tlog("Agent deleted successfully after transaction")
+                    except Exception as del_e:
+                        tlog(f"Agent deletion failed: {del_e}")
+
+                print(f"Ephemeral mode enabled - deleting agent {agent_id}")
+                await client.agents.delete_agent(agent_id)
+
                 return {
                     'response': result,
                     'logs': thread_logs,
-                    'usage': usage
+                    'usage': usage,
+                    'tools': tool_events,
+                    'agent_created': agent_created,
+                    'agent_id': agent_id
                 }
                 
         except Exception as agent_error:
@@ -443,7 +475,7 @@ async def send_message(message: str, session_data: dict = None):
                         agent_id=agent_id
                     ),
                     instructions="You are a helpful weather agent. Provide detailed and friendly responses about weather conditions.",
-                    tools=get_weather,
+                    tools=instrumented_get_weather,
                 ) as agent:
                     tlog("Agent recreated, processing message again...")
                     result_obj = await agent.run(message)
@@ -456,16 +488,38 @@ async def send_message(message: str, session_data: dict = None):
                         'completion_tokens': completion_tokens,
                         'total_tokens': prompt_tokens + completion_tokens
                     }
+                    # Ephemeral deletion on recreated agent path
+                    if ephemeral:
+                        try:
+                            tlog(f"Ephemeral mode enabled - deleting recreated agent {agent_id}")
+                            await client.agents.delete_agent(agent_id)
+                            if session_data is not None:
+                                session_data['agent_created'] = False
+                                session_data['agent_id'] = None
+                            agent_created = False
+                            agent_id = None
+                            tlog("Recreated agent deleted successfully after transaction")
+                        except Exception as del_e:
+                            tlog(f"Recreated agent deletion failed: {del_e}")
+                    print(f"Ephemeral mode enabled - deleting agent {agent_id}")
+                    await client.agents.delete_agent(agent_id)
+
                     return {
                         'response': result,
                         'logs': thread_logs,
-                        'usage': usage
+                        'usage': usage,
+                        'tools': tool_events,
+                        'agent_created': agent_created,
+                        'agent_id': agent_id
                     }
             else:
                 return {
                     'response': f"Failed to recreate agent after error: {str(agent_error)}",
                     'logs': thread_logs,
-                    'usage': None
+                    'usage': None,
+                    'tools': tool_events,
+                    'agent_created': agent_created,
+                    'agent_id': agent_id
                 }
             
     except Exception as e:
@@ -474,7 +528,10 @@ async def send_message(message: str, session_data: dict = None):
         return {
             'response': f"Sorry, I encountered an error: {str(e)}",
             'logs': thread_logs,
-            'usage': None
+            'usage': None,
+            'tools': [],
+            'agent_created': False,
+            'agent_id': None
         }
 
 def send_message_wrapper(message: str):
@@ -488,7 +545,8 @@ def send_message_wrapper(message: str):
         'agent_id': st.session_state.get('agent_id', None),
         'client': st.session_state.get('client', None),
         'credential': st.session_state.get('credential', None),
-        'demo_mode': st.session_state.get('demo_mode', True)
+        'demo_mode': st.session_state.get('demo_mode', True),
+        'ephemeral_agents': st.session_state.get('ephemeral_agents', False)
     }
     
     def run_async_in_thread():
@@ -520,19 +578,37 @@ def send_message_wrapper(message: str):
             
             # Update session state with any changes that occurred in the thread
             # This ensures agent creation persists back to the main thread
-            if session_data.get('agent_created', False) and not st.session_state.get('agent_created', False):
-                st.session_state.agent_created = session_data.get('agent_created', False)
-                st.session_state.agent_id = session_data.get('agent_id', None)
-                st.session_state.client = session_data.get('client', None)
-                st.session_state.credential = session_data.get('credential', None)
-                st.session_state.demo_mode = session_data.get('demo_mode', True)
-                log_debug(f"Updated session state with new agent: {session_data.get('agent_id', 'Unknown')}")
+            # Always sync back agent lifecycle (handles both creation & deletion)
+            if isinstance(result, dict):
+                # Update session_data snapshot with new states from result
+                if 'agent_created' in result:
+                    session_data['agent_created'] = result['agent_created']
+                if 'agent_id' in result:
+                    session_data['agent_id'] = result['agent_id']
+
+            st.session_state.agent_created = session_data.get('agent_created', False)
+            st.session_state.agent_id = session_data.get('agent_id', None)
+            st.session_state.client = session_data.get('client', None)
+            st.session_state.credential = session_data.get('credential', None)
+            st.session_state.demo_mode = session_data.get('demo_mode', True)
+
+            if st.session_state.agent_created:
+                log_debug(f"Agent active: {st.session_state.agent_id}")
+            else:
+                log_debug("No active agent (ephemeral deletion or not yet created)")
             # Merge thread logs into debug logs
             if isinstance(result, dict) and result.get('logs'):
                 for line in result['logs']:
                     # Avoid duplicating lines already added (simple containment check)
                     if line not in st.session_state.debug_logs:
                         st.session_state.debug_logs.append(line)
+
+            # Merge tool events
+            if isinstance(result, dict) and result.get('tools'):
+                if 'tool_calls' not in st.session_state:
+                    st.session_state.tool_calls = []
+                for ev in result['tools']:
+                    st.session_state.tool_calls.append(ev)
 
             # Update token usage
             if isinstance(result, dict) and result.get('usage'):
@@ -709,6 +785,12 @@ def main():
         if st.button("Clear Tool Calls"):
             st.session_state.tool_calls = []
             st.rerun()
+        # Ephemeral agent toggle
+        st.toggle(
+            "Ephemeral Agent (delete after each response)",
+            key="ephemeral_agents",
+            help="When enabled, the Azure Agent is created for each message and deleted immediately after the response."
+        )
         
         st.header("Status")
         if st.session_state.agent_created:
