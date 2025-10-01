@@ -1,0 +1,10 @@
+__pycache__/
+.vscode/
+local.settings.json
+.venv/
+.env
+coding/
+output/
+.cache/
+.scan*/
+finetunedata/
