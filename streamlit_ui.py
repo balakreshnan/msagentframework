@@ -247,7 +247,8 @@ async def create_agent_with_data(session_data: dict = None):
             # Create an agent that will persist for the session
             created_agent = await client.agents.create_agent(
                 model=model, 
-                name=f"StreamlitWeatherAgent_{randint(1000, 9999)}"
+                # name=f"StreamlitWeatherAgent_{randint(1000, 9999)}"
+                name="StreamlitWeatherAgent_1"
             )
             
             # Return session data
@@ -361,21 +362,28 @@ async def send_message(message: str, session_data: dict = None):
         except Exception:
             ephemeral = False
 
-        if not agent_created:
+        # Ensure we have a valid, existing agent – otherwise create one
+        if not (agent_created and agent_id and client):
+            tlog("No active agent found – creating a new agent instance")
             success, new_session_data = await create_agent_with_data(session_data)
             if not success:
                 return {
                     'response': "Failed to initialize agent. Please check your Azure configuration.",
                     'logs': thread_logs,
-                    'usage': None
+                    'usage': None,
+                    'tools': [],
+                    'agent_created': False,
+                    'agent_id': None
                 }
-            
             # Update session data with new values
             if session_data:
                 session_data.update(new_session_data)
             agent_created = new_session_data.get('agent_created', False)
             agent_id = new_session_data.get('agent_id', None)
             client = new_session_data.get('client', None)
+            tlog(f"Agent created with ID {agent_id}")
+        else:
+            tlog(f"Reusing existing agent {agent_id}")
         
         tlog(f"Sending message: {message}")
 
@@ -444,11 +452,10 @@ async def send_message(message: str, session_data: dict = None):
                         tlog("Using heuristic token counts (library did not expose usage)")
 
                     # Optionally delete agent after response (ephemeral transaction)
-                    if ephemeral:
+                    if ephemeral and agent_id:
                         try:
                             tlog(f"Ephemeral mode enabled - deleting agent {agent_id}")
                             await client.agents.delete_agent(agent_id)
-                            # reflect deletion in session_data for caller
                             if session_data is not None:
                                 session_data['agent_created'] = False
                                 session_data['agent_id'] = None
@@ -457,9 +464,6 @@ async def send_message(message: str, session_data: dict = None):
                             tlog("Agent deleted successfully after transaction")
                         except Exception as del_e:
                             tlog(f"Agent deletion failed: {del_e}")
-
-                    print(f"Ephemeral mode enabled - deleting agent {agent_id}")
-                    await client.agents.delete_agent(agent_id)
 
                     return {
                         'response': result,
@@ -505,7 +509,7 @@ async def send_message(message: str, session_data: dict = None):
                             'total_tokens': prompt_tokens + completion_tokens
                         }
                         # Ephemeral deletion on recreated agent path
-                        if ephemeral:
+                        if ephemeral and agent_id:
                             try:
                                 tlog(f"Ephemeral mode enabled - deleting recreated agent {agent_id}")
                                 await client.agents.delete_agent(agent_id)
@@ -517,8 +521,6 @@ async def send_message(message: str, session_data: dict = None):
                                 tlog("Recreated agent deleted successfully after transaction")
                             except Exception as del_e:
                                 tlog(f"Recreated agent deletion failed: {del_e}")
-                        print(f"Ephemeral mode enabled - deleting agent {agent_id}")
-                        await client.agents.delete_agent(agent_id)
 
                         return {
                             'response': result,
