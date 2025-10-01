@@ -12,6 +12,10 @@ from agent_framework import ChatAgent
 from agent_framework.azure import AzureAIAgentClient
 from azure.ai.projects.aio import AIProjectClient
 from azure.identity.aio import AzureCliCredential
+from agent_framework.observability import get_tracer
+from opentelemetry.trace import SpanKind
+from opentelemetry.trace.span import format_trace_id
+from pydantic import Field
 from pydantic import Field
 
 from dotenv import load_dotenv
@@ -232,6 +236,12 @@ async def create_agent_with_data(session_data: dict = None):
                 endpoint=endpoint, 
                 credential=credential
             )
+            async with AzureAIAgentClient(project_client=client) as agentclient:
+                # This will enable tracing and configure the application to send telemetry data to the
+                # Application Insights instance attached to the Azure AI project.
+                # This will override any existing configuration.
+                await agentclient.setup_azure_ai_observability()
+
             
             print(f"[DEBUG] Creating agent...")
             # Create an agent that will persist for the session
@@ -386,76 +396,79 @@ async def send_message(message: str, session_data: dict = None):
         
         # Use the actual Azure AI Agent Framework
         try:
-            async with ChatAgent(
-                chat_client=AzureAIAgentClient(
-                    project_client=client, 
-                    agent_id=agent_id
-                ),
-                instructions="You are a helpful weather agent. Provide detailed and friendly responses about weather conditions.",
-                tools=instrumented_get_weather,
-            ) as agent:
-                
-                tlog("Agent initialized, processing request...")
-                result_obj = await agent.run(message)
-                tlog("Agent response received")
-                result = normalize_text(result_obj)
+            with get_tracer().start_as_current_span("Single Agent framework1", kind=SpanKind.CLIENT) as current_span:
+                print(f"Trace ID: {format_trace_id(current_span.get_span_context().trace_id)}")
 
-                # Try to extract token usage metadata from agent / underlying response if available
-                usage = None
-                try:
-                    # Common patterns: agent.last_response.usage or agent._last_response
-                    possible = getattr(agent, 'last_response', None) or getattr(agent, '_last_response', None)
-                    if possible and isinstance(possible, dict):
-                        usage_obj = possible.get('usage') or possible.get('token_usage')
-                        if usage_obj:
-                            usage = {
-                                'prompt_tokens': usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens'),
-                                'completion_tokens': usage_obj.get('completion_tokens') or usage_obj.get('output_tokens'),
-                                'total_tokens': usage_obj.get('total_tokens') or (
-                                    (usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens') or 0) +
-                                    (usage_obj.get('completion_tokens') or usage_obj.get('output_tokens') or 0)
-                                )
-                            }
-                except Exception as meta_e:
-                    tlog(f"Token usage metadata extraction failed: {meta_e}")
+                async with ChatAgent(
+                    chat_client=AzureAIAgentClient(
+                        project_client=client, 
+                        agent_id=agent_id
+                    ),
+                    instructions="You are a helpful weather agent. Provide detailed and friendly responses about weather conditions.",
+                    tools=instrumented_get_weather,
+                ) as agent:
+                    
+                    tlog("Agent initialized, processing request...")
+                    result_obj = await agent.run(message)
+                    tlog("Agent response received")
+                    result = normalize_text(result_obj)
 
-                if usage is None:
-                    # Fallback heuristic
-                    prompt_tokens = safe_token_count(message)
-                    completion_tokens = safe_token_count(result)
-                    usage = {
-                        'prompt_tokens': prompt_tokens,
-                        'completion_tokens': completion_tokens,
-                        'total_tokens': prompt_tokens + completion_tokens
-                    }
-                    tlog("Using heuristic token counts (library did not expose usage)")
-
-                # Optionally delete agent after response (ephemeral transaction)
-                if ephemeral:
+                    # Try to extract token usage metadata from agent / underlying response if available
+                    usage = None
                     try:
-                        tlog(f"Ephemeral mode enabled - deleting agent {agent_id}")
-                        await client.agents.delete_agent(agent_id)
-                        # reflect deletion in session_data for caller
-                        if session_data is not None:
-                            session_data['agent_created'] = False
-                            session_data['agent_id'] = None
-                        agent_created = False
-                        agent_id = None
-                        tlog("Agent deleted successfully after transaction")
-                    except Exception as del_e:
-                        tlog(f"Agent deletion failed: {del_e}")
+                        # Common patterns: agent.last_response.usage or agent._last_response
+                        possible = getattr(agent, 'last_response', None) or getattr(agent, '_last_response', None)
+                        if possible and isinstance(possible, dict):
+                            usage_obj = possible.get('usage') or possible.get('token_usage')
+                            if usage_obj:
+                                usage = {
+                                    'prompt_tokens': usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens'),
+                                    'completion_tokens': usage_obj.get('completion_tokens') or usage_obj.get('output_tokens'),
+                                    'total_tokens': usage_obj.get('total_tokens') or (
+                                        (usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens') or 0) +
+                                        (usage_obj.get('completion_tokens') or usage_obj.get('output_tokens') or 0)
+                                    )
+                                }
+                    except Exception as meta_e:
+                        tlog(f"Token usage metadata extraction failed: {meta_e}")
 
-                print(f"Ephemeral mode enabled - deleting agent {agent_id}")
-                await client.agents.delete_agent(agent_id)
+                    if usage is None:
+                        # Fallback heuristic
+                        prompt_tokens = safe_token_count(message)
+                        completion_tokens = safe_token_count(result)
+                        usage = {
+                            'prompt_tokens': prompt_tokens,
+                            'completion_tokens': completion_tokens,
+                            'total_tokens': prompt_tokens + completion_tokens
+                        }
+                        tlog("Using heuristic token counts (library did not expose usage)")
 
-                return {
-                    'response': result,
-                    'logs': thread_logs,
-                    'usage': usage,
-                    'tools': tool_events,
-                    'agent_created': agent_created,
-                    'agent_id': agent_id
-                }
+                    # Optionally delete agent after response (ephemeral transaction)
+                    if ephemeral:
+                        try:
+                            tlog(f"Ephemeral mode enabled - deleting agent {agent_id}")
+                            await client.agents.delete_agent(agent_id)
+                            # reflect deletion in session_data for caller
+                            if session_data is not None:
+                                session_data['agent_created'] = False
+                                session_data['agent_id'] = None
+                            agent_created = False
+                            agent_id = None
+                            tlog("Agent deleted successfully after transaction")
+                        except Exception as del_e:
+                            tlog(f"Agent deletion failed: {del_e}")
+
+                    print(f"Ephemeral mode enabled - deleting agent {agent_id}")
+                    await client.agents.delete_agent(agent_id)
+
+                    return {
+                        'response': result,
+                        'logs': thread_logs,
+                        'usage': usage,
+                        'tools': tool_events,
+                        'agent_created': agent_created,
+                        'agent_id': agent_id
+                    }
                 
         except Exception as agent_error:
             tlog(f"Agent error: {str(agent_error)}")
@@ -468,50 +481,53 @@ async def send_message(message: str, session_data: dict = None):
                     session_data.update(new_session_data)
                 client = new_session_data.get('client', None)
                 agent_id = new_session_data.get('agent_id', None)
-                
-                async with ChatAgent(
-                    chat_client=AzureAIAgentClient(
-                        project_client=client, 
-                        agent_id=agent_id
-                    ),
-                    instructions="You are a helpful weather agent. Provide detailed and friendly responses about weather conditions.",
-                    tools=instrumented_get_weather,
-                ) as agent:
-                    tlog("Agent recreated, processing message again...")
-                    result_obj = await agent.run(message)
-                    tlog("Response received after recreation")
-                    result = normalize_text(result_obj)
-                    prompt_tokens = safe_token_count(message)
-                    completion_tokens = safe_token_count(result)
-                    usage = {
-                        'prompt_tokens': prompt_tokens,
-                        'completion_tokens': completion_tokens,
-                        'total_tokens': prompt_tokens + completion_tokens
-                    }
-                    # Ephemeral deletion on recreated agent path
-                    if ephemeral:
-                        try:
-                            tlog(f"Ephemeral mode enabled - deleting recreated agent {agent_id}")
-                            await client.agents.delete_agent(agent_id)
-                            if session_data is not None:
-                                session_data['agent_created'] = False
-                                session_data['agent_id'] = None
-                            agent_created = False
-                            agent_id = None
-                            tlog("Recreated agent deleted successfully after transaction")
-                        except Exception as del_e:
-                            tlog(f"Recreated agent deletion failed: {del_e}")
-                    print(f"Ephemeral mode enabled - deleting agent {agent_id}")
-                    await client.agents.delete_agent(agent_id)
 
-                    return {
-                        'response': result,
-                        'logs': thread_logs,
-                        'usage': usage,
-                        'tools': tool_events,
-                        'agent_created': agent_created,
-                        'agent_id': agent_id
-                    }
+                with get_tracer().start_as_current_span("Single Agent framework-excep", kind=SpanKind.CLIENT) as current_span:
+                    print(f"Trace ID: {format_trace_id(current_span.get_span_context().trace_id)}")
+                
+                    async with ChatAgent(
+                        chat_client=AzureAIAgentClient(
+                            project_client=client, 
+                            agent_id=agent_id
+                        ),
+                        instructions="You are a helpful weather agent. Provide detailed and friendly responses about weather conditions.",
+                        tools=instrumented_get_weather,
+                    ) as agent:
+                        tlog("Agent recreated, processing message again...")
+                        result_obj = await agent.run(message)
+                        tlog("Response received after recreation")
+                        result = normalize_text(result_obj)
+                        prompt_tokens = safe_token_count(message)
+                        completion_tokens = safe_token_count(result)
+                        usage = {
+                            'prompt_tokens': prompt_tokens,
+                            'completion_tokens': completion_tokens,
+                            'total_tokens': prompt_tokens + completion_tokens
+                        }
+                        # Ephemeral deletion on recreated agent path
+                        if ephemeral:
+                            try:
+                                tlog(f"Ephemeral mode enabled - deleting recreated agent {agent_id}")
+                                await client.agents.delete_agent(agent_id)
+                                if session_data is not None:
+                                    session_data['agent_created'] = False
+                                    session_data['agent_id'] = None
+                                agent_created = False
+                                agent_id = None
+                                tlog("Recreated agent deleted successfully after transaction")
+                            except Exception as del_e:
+                                tlog(f"Recreated agent deletion failed: {del_e}")
+                        print(f"Ephemeral mode enabled - deleting agent {agent_id}")
+                        await client.agents.delete_agent(agent_id)
+
+                        return {
+                            'response': result,
+                            'logs': thread_logs,
+                            'usage': usage,
+                            'tools': tool_events,
+                            'agent_created': agent_created,
+                            'agent_id': agent_id
+                        }
             else:
                 return {
                     'response': f"Failed to recreate agent after error: {str(agent_error)}",
