@@ -6,16 +6,17 @@ import json
 from datetime import datetime
 from random import randint
 from typing import Annotated, Dict, List, Any
+import requests
 import streamlit as st
 
 from agent_framework import ChatAgent
+from agent_framework import AgentProtocol, AgentThread, HostedMCPTool
 from agent_framework.azure import AzureAIAgentClient
 from azure.ai.projects.aio import AIProjectClient
 from azure.identity.aio import AzureCliCredential
 from agent_framework.observability import get_tracer
 from opentelemetry.trace import SpanKind
 from opentelemetry.trace.span import format_trace_id
-from pydantic import Field
 from pydantic import Field
 
 from dotenv import load_dotenv
@@ -151,8 +152,37 @@ def get_weather(
     location: Annotated[str, Field(description="The location to get the weather for.")],
 ) -> str:
     """Get the weather for a given location."""
-    conditions = ["sunny", "cloudy", "rainy", "stormy"]
-    return f"The weather in {location} is {conditions[randint(0, 3)]} with a high of {randint(10, 30)}°C."
+    try:
+        # Step 1: Convert location -> lat/lon using Open-Meteo Geocoding
+        geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={location}&count=1"
+        geo_response = requests.get(geo_url)
+
+        if geo_response.status_code != 200:
+            return f"Failed to get coordinates. Status code: {geo_response.status_code}"
+
+        geo_data = geo_response.json()
+        if "results" not in geo_data or len(geo_data["results"]) == 0:
+            return f"Could not find location: {location}"
+
+        lat = geo_data["results"][0]["latitude"]
+        lon = geo_data["results"][0]["longitude"]
+
+        # Step 2: Get weather for that lat/lon
+        url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            data = response.json()
+            current_weather = data.get("current_weather", {})
+            temperature = current_weather.get("temperature")
+            windspeed = current_weather.get("windspeed")
+            return f"Weather in {location}: {temperature}°C, Wind speed: {windspeed} km/h"
+        else:
+            return f"Failed to get weather data. Status code: {response.status_code}"
+
+    except Exception as e:
+        import traceback
+        return f"Error fetching weather data: {str(e)}\n{traceback.format_exc()}"
 
 async def create_agent():
     """Create the Azure AI agent"""
@@ -401,7 +431,12 @@ async def send_message(message: str, session_data: dict = None):
             })
             tlog(f"Tool get_weather executed for '{location}'")
             return output
-        
+        # Add Microsoft Learn MCP tool
+        mcplearn = HostedMCPTool(
+                name="Microsoft Learn MCP",
+                url="https://learn.microsoft.com/api/mcp",
+                approval_mode='never_require'
+            )
         # Use the actual Azure AI Agent Framework
         try:
             with get_tracer().start_as_current_span("Single Agent framework1", kind=SpanKind.CLIENT) as current_span:
@@ -412,8 +447,16 @@ async def send_message(message: str, session_data: dict = None):
                         project_client=client, 
                         agent_id=agent_id
                     ),
-                    instructions="You are a helpful weather agent. Provide detailed and friendly responses about weather conditions.",
-                    tools=instrumented_get_weather,
+                    instructions="""You are a helpful weather agent. 
+                    Tools Provided:
+                    1. get_weather(location: str) -> str : Get the current weather for a specified location.
+                    2. mcplearn MCP Tool : Query Microsoft Learn for documentation and tutorials.
+                    Provide detailed and friendly responses about weather conditions and Microsoft Learn resources.
+                    for learn resources from Microsoft please provide links and references.
+                    """,
+                    tools=[instrumented_get_weather, mcplearn],
+                    temperature=0.0,
+                    max_tokens=2500,
                 ) as agent:
                     
                     tlog("Agent initialized, processing request...")
@@ -494,8 +537,15 @@ async def send_message(message: str, session_data: dict = None):
                             project_client=client, 
                             agent_id=agent_id
                         ),
-                        instructions="You are a helpful weather agent. Provide detailed and friendly responses about weather conditions.",
-                        tools=instrumented_get_weather,
+                        instructions="""You are a helpful weather agent. 
+                        Tools Provided:
+                        1. get_weather(location: str) -> str : Get the current weather for a specified location.
+                        2. mcplearn(query: str) -> str : Query Microsoft Learn for documentation and tutorials.
+                        Provide detailed and friendly responses about weather conditions and Microsoft Learn resources.
+                        """,
+                        tools=[instrumented_get_weather, mcplearn],
+                        temperature=0.0,
+                        max_tokens=2500,
                     ) as agent:
                         tlog("Agent recreated, processing message again...")
                         result_obj = await agent.run(message)
