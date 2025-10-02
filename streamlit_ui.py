@@ -13,10 +13,10 @@ from agent_framework import ChatAgent, ChatMessage
 from agent_framework import AgentProtocol, AgentThread, HostedMCPTool
 from agent_framework.azure import AzureAIAgentClient
 from azure.ai.projects.aio import AIProjectClient
-from azure.identity.aio import AzureCliCredential
-from agent_framework.observability import get_tracer
+from azure.identity.aio import AzureCliCredential, DefaultAzureCredential
 from opentelemetry.trace import SpanKind
 from opentelemetry.trace.span import format_trace_id
+from agent_framework.observability import get_tracer, setup_observability
 from pydantic import Field
 
 from dotenv import load_dotenv
@@ -190,6 +190,7 @@ async def create_agent():
         # Check if environment variables are set
         endpoint = os.environ.get("AZURE_AI_PROJECT_ENDPOINT")
         model = os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME")
+        api_key = os.environ.get("AZURE_OPENAI_API_KEY")
         
         if not endpoint or not model:
             log_debug("Missing Azure environment variables - cannot create agent")
@@ -205,12 +206,16 @@ async def create_agent():
         try:
             log_debug("Initializing Azure CLI credential...")
             credential = AzureCliCredential()
+            # credential = DefaultAzureCredential()
             
             log_debug("Creating AI Project client...")
             client = AIProjectClient(
                 endpoint=endpoint, 
-                credential=credential
+                credential=credential,
+                # api_key=api_key
             )
+
+            # await client.setup_azure_ai_observability()
             
             log_debug("Creating agent...")
             # Create an agent that will persist for the session
@@ -246,6 +251,7 @@ async def create_agent_with_data(session_data: dict = None):
         # Check if environment variables are set
         endpoint = os.environ.get("AZURE_AI_PROJECT_ENDPOINT")
         model = os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME")
+        api_key = os.environ.get("AZURE_OPENAI_API_KEY")
         
         if not endpoint or not model:
             print(f"[DEBUG] Missing Azure environment variables - cannot create agent")
@@ -261,16 +267,21 @@ async def create_agent_with_data(session_data: dict = None):
             print(f"[DEBUG] Initializing Azure CLI credential...")
             credential = AzureCliCredential()
             
+            # credential = DefaultAzureCredential()
+            
             print(f"[DEBUG] Creating AI Project client...")
             client = AIProjectClient(
                 endpoint=endpoint, 
-                credential=credential
+                credential=credential,
+                # api_key=api_key
             )
-            async with AzureAIAgentClient(project_client=client) as agentclient:
-                # This will enable tracing and configure the application to send telemetry data to the
-                # Application Insights instance attached to the Azure AI project.
-                # This will override any existing configuration.
-                await agentclient.setup_azure_ai_observability()
+            #await client.setup_azure_ai_observability()
+
+            # async with AzureAIAgentClient(project_client=client) as agentclient:
+            #     # This will enable tracing and configure the application to send telemetry data to the
+            #     # Application Insights instance attached to the Azure AI project.
+            #     # This will override any existing configuration.
+            #     await agentclient.setup_azure_ai_observability()
 
             
             print(f"[DEBUG] Creating agent...")
@@ -858,4 +869,5 @@ async def cleanup_agent():
         log_debug(f"Error cleaning up agent: {str(e)}")
 
 if __name__ == "__main__":
+    setup_observability()
     main()
