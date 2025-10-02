@@ -338,7 +338,8 @@ def instrumented_get_weather(location: str) -> str:
         'timestamp': start_ts,
         'tool': 'get_weather',
         'input': location,
-        'output': output
+        'output': output,
+        'source': 'local'
     })
     tlog(f"Tool get_weather executed for '{location}'")
     return output
@@ -412,13 +413,16 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
             agent_id=agent_id
         ),
         instructions=(
-            "You are a helpful weather agent. Always call the 'get_weather' tool to obtain current "
+            "You are a helpful AI agent. Always call the 'get_weather' tool to obtain current "
             "conditions whenever the user asks about weather, temperature, forecast, climate or related info. "
             "If the user prompt is not about weather you may answer normally. "
             "If a force tool flag is set (developer toggle), you must call the tool at least once before answering. "
             "After calling the tool, craft a friendly answer that cites the tool result."
+            "If the users asks for microsoft or azure learning resources, use the Microsoft Learn MCP tool."
+            "if the user asks for HuggingFace related resources, use the HuggingFace MCP tool."
+            "provide details and also links to the resources from the MCP tool."
         ),
-        tools=[instrumented_get_weather],
+        tools=[instrumented_get_weather, mcplearn, hfmcp],
         temperature=0.0,
         max_tokens=2500,
     ) as agent:
@@ -450,6 +454,76 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
                     }
         except Exception as meta_e:
             tlog(f"Token usage metadata extraction failed: {meta_e}")
+        
+        # ---- MCP TOOL CALL EXTRACTION (primary success path) ----
+        def extract_mcp_tool_calls(raw_obj):
+            calls = []
+            if not raw_obj:
+                return calls
+            try:
+                # Accept dict-like or object with attributes
+                candidate = raw_obj
+                if hasattr(raw_obj, 'model_dump'):
+                    candidate = raw_obj.model_dump()
+                if not isinstance(candidate, (dict, list)):
+                    return calls
+                # Normalize to list of messages if fits OpenAI / function-calling pattern
+                container = []
+                if isinstance(candidate, dict):
+                    # Look for 'choices' style
+                    if 'choices' in candidate and isinstance(candidate['choices'], list):
+                        container = candidate['choices']
+                    else:
+                        container = [candidate]
+                else:
+                    container = candidate
+                for entry in container:
+                    # OpenAI style: entry['message']['tool_calls']
+                    msg = entry.get('message') if isinstance(entry, dict) else None
+                    if isinstance(msg, dict) and 'tool_calls' in msg:
+                        for tc in msg['tool_calls']:
+                            name = tc.get('function', {}).get('name') or tc.get('name') or 'unknown_function'
+                            args = tc.get('function', {}).get('arguments') or tc.get('arguments') or {}
+                            calls.append({
+                                'timestamp': datetime.now().strftime('%H:%M:%S'),
+                                'tool': name,
+                                'input': args if isinstance(args, str) else json.dumps(args, ensure_ascii=False),
+                                'output': '(result not directly exposed)',
+                                'source': 'mcp'
+                            })
+                    # Azure / generic pattern: entry.get('toolInvocations')
+                    if isinstance(entry, dict) and 'toolInvocations' in entry and isinstance(entry['toolInvocations'], list):
+                        for inv in entry['toolInvocations']:
+                            name = inv.get('name') or inv.get('toolName') or 'unknown_tool'
+                            args = inv.get('input') or inv.get('arguments') or {}
+                            out = inv.get('output') or inv.get('result') or '(no output field)'
+                            calls.append({
+                                'timestamp': datetime.now().strftime('%H:%M:%S'),
+                                'tool': name,
+                                'input': args if isinstance(args, str) else json.dumps(args, ensure_ascii=False),
+                                'output': out if isinstance(out, str) else json.dumps(out, ensure_ascii=False),
+                                'source': 'mcp'
+                            })
+                return calls
+            except Exception as mcp_e:
+                tlog(f"MCP extraction error: {mcp_e}")
+                return calls
+
+        # Attempt extraction from multiple possible objects
+        mcp_sources = []
+        try:
+            possible_last = getattr(agent, 'last_response', None) or getattr(agent, '_last_response', None)
+            if possible_last:
+                mcp_sources.append(possible_last)
+            mcp_sources.append(result_obj)
+        except Exception:
+            pass
+        for src_obj in mcp_sources:
+            for mcpcall in extract_mcp_tool_calls(src_obj):
+                # Avoid duplicates by (tool,input,source) triple
+                signature = (mcpcall['tool'], mcpcall['input'], mcpcall['source'])
+                if not any((e['tool'], e['input'], e.get('source','local')) == signature for e in tool_events):
+                    tool_events.append(mcpcall)
 
         if usage is None:
             # Fallback heuristic
@@ -468,7 +542,8 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
                 'timestamp': datetime.now().strftime('%H:%M:%S'),
                 'tool': 'NO_TOOL_INVOKED',
                 'input': '(n/a)',
-                'output': 'Model responded without invoking any tool.'
+                'output': 'Model responded without invoking any registered or MCP tool.',
+                'source': 'synthetic'
             })
 
         # Optionally delete agent after response (ephemeral transaction)
@@ -749,15 +824,26 @@ def display_tool_calls():
         # Show last 20 calls
         recent_calls = st.session_state.tool_calls[-20:]
         for i, call in enumerate(recent_calls):
-            icon = "🔧" if call['tool'] != 'NO_TOOL_INVOKED' else "🛈"
-            with st.expander(f\"{icon} {call['tool']} - {call['timestamp']}\", expanded=(i == len(recent_calls)-1)):
-                st.write(f"**Tool:** {call['tool']}")
-                st.write(f"**Input:** {call['input']}")
-                st.write(f"**Output:** {call['output']}")
-                if call['tool'] == 'NO_TOOL_INVOKED':
-                    st.caption(\"ℹ️ The agent produced an answer without calling any tool. (Synthetic entry)\")
+            source = call.get('source', 'local')
+            if call['tool'] == 'NO_TOOL_INVOKED':
+                icon = "🛈"
+            elif source == 'mcp':
+                icon = "🧩"
+            elif source == 'synthetic':
+                icon = "ℹ️"
+            else:
+                icon = "🔧"
+            with st.expander(f"{icon} {call['tool']} - {call['timestamp']}", expanded=(i == len(recent_calls)-1)):
+                 st.write(f"**Tool:** {call['tool']}")
+                 st.write(f"**Input:** {call['input']}")
+                 st.write(f"**Output:** {call['output']}")
+                 st.write(f"**Source:** {source}")
+                 if source == 'mcp':
+                    st.caption("🔗 Extracted from MCP / function-calling metadata.")
+                 elif call['tool'] == 'NO_TOOL_INVOKED':
+                    st.caption("ℹ️ No tool calls detected (synthetic).")
     else:
-        st.info(\"🛠️ Tool calls will appear here when the agent uses tools (a synthetic entry will note when none were used).\" )
+        st.info("🛠️ Tool calls will appear here when the agent uses tools (a synthetic entry will note when none were used).")
 
 def display_token_usage():
     """Display token usage statistics"""
