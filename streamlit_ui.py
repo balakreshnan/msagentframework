@@ -64,6 +64,8 @@ def initialize_session_state():
     if 'ephemeral_agents' not in st.session_state:
         # When True, delete the Azure agent after every response (transaction)
         st.session_state.ephemeral_agents = False
+    if 'force_tool_use' not in st.session_state:
+        st.session_state.force_tool_use = False
 
 # Initialize session state immediately
 initialize_session_state()
@@ -347,6 +349,13 @@ mcplearn = HostedMCPTool(
         approval_mode='never_require'
     )
 
+hfmcp = HostedMCPTool(
+        name="HuggingFace MCP",
+        url="https://huggingface.co/mcp",
+        # approval_mode='always_require'  # for testing approval flow
+        approval_mode='never_require'
+    )
+
 thread_logs = []  # collect logs to merge later in main thread
 
 def tlog(msg: str):
@@ -402,14 +411,14 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
             project_client=client, 
             agent_id=agent_id
         ),
-        instructions="""You are a helpful weather agent. 
-        Tools Provided:
-        1. get_weather(location: str) -> str : Get the current weather for a specified location.
-        2. mcplearn MCP Tool : Query Microsoft Learn for documentation and tutorials.
-        Provide detailed and friendly responses about weather conditions and Microsoft Learn resources.
-        for learn resources from Microsoft please provide links and references.
-        """,
-        tools=[instrumented_get_weather, mcplearn],
+        instructions=(
+            "You are a helpful weather agent. Always call the 'get_weather' tool to obtain current "
+            "conditions whenever the user asks about weather, temperature, forecast, climate or related info. "
+            "If the user prompt is not about weather you may answer normally. "
+            "If a force tool flag is set (developer toggle), you must call the tool at least once before answering. "
+            "After calling the tool, craft a friendly answer that cites the tool result."
+        ),
+        tools=[instrumented_get_weather],
         temperature=0.0,
         max_tokens=2500,
     ) as agent:
@@ -452,6 +461,15 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
                 'total_tokens': prompt_tokens + completion_tokens
             }
             tlog("Using heuristic token counts (library did not expose usage)")
+
+        # Synthetic fallback tool event if none occurred (clarity in UI)
+        if not tool_events:
+            tool_events.append({
+                'timestamp': datetime.now().strftime('%H:%M:%S'),
+                'tool': 'NO_TOOL_INVOKED',
+                'input': '(n/a)',
+                'output': 'Model responded without invoking any tool.'
+            })
 
         # Optionally delete agent after response (ephemeral transaction)
         if ephemeral and agent_id:
@@ -507,6 +525,15 @@ async def send_message(message: str, session_data: dict = None):
             )
         except Exception:
             ephemeral = False
+
+        # Determine whether to force tool usage
+        force_tool = False
+        try:
+            force_tool = (session_data and session_data.get('force_tool_use')) or (
+                hasattr(st, 'session_state') and st.session_state.get('force_tool_use', False)
+            )
+        except Exception:
+            force_tool = False
 
         # Ensure we have a valid, existing agent – otherwise create one
         if not (agent_created and agent_id and client):
@@ -591,13 +618,14 @@ def send_message_wrapper(message: str):
     
     # Capture current session state values before threading
     session_data = {
-        'agent_created': st.session_state.get('agent_created', False),
-        'agent_id': st.session_state.get('agent_id', None),
-        'client': st.session_state.get('client', None),
-        'credential': st.session_state.get('credential', None),
-        'demo_mode': st.session_state.get('demo_mode', True),
-        'ephemeral_agents': st.session_state.get('ephemeral_agents', False)
-    }
+         'agent_created': st.session_state.get('agent_created', False),
+         'agent_id': st.session_state.get('agent_id', None),
+         'client': st.session_state.get('client', None),
+         'credential': st.session_state.get('credential', None),
+         'demo_mode': st.session_state.get('demo_mode', True),
+         'ephemeral_agents': st.session_state.get('ephemeral_agents', False),
+         'force_tool_use': st.session_state.get('force_tool_use', False)
+     }
     
     def run_async_in_thread():
         """Run async function in a new thread with its own event loop"""
@@ -721,12 +749,15 @@ def display_tool_calls():
         # Show last 20 calls
         recent_calls = st.session_state.tool_calls[-20:]
         for i, call in enumerate(recent_calls):
-            with st.expander(f"🔧 {call['tool']} - {call['timestamp']}", expanded=(i == len(recent_calls)-1)):
+            icon = "🔧" if call['tool'] != 'NO_TOOL_INVOKED' else "🛈"
+            with st.expander(f\"{icon} {call['tool']} - {call['timestamp']}\", expanded=(i == len(recent_calls)-1)):
                 st.write(f"**Tool:** {call['tool']}")
                 st.write(f"**Input:** {call['input']}")
                 st.write(f"**Output:** {call['output']}")
+                if call['tool'] == 'NO_TOOL_INVOKED':
+                    st.caption(\"ℹ️ The agent produced an answer without calling any tool. (Synthetic entry)\")
     else:
-        st.info("🛠️ Tool calls will appear here when the agent uses tools")
+        st.info(\"🛠️ Tool calls will appear here when the agent uses tools (a synthetic entry will note when none were used).\" )
 
 def display_token_usage():
     """Display token usage statistics"""
@@ -840,6 +871,11 @@ def main():
             "Ephemeral Agent (delete after each response)",
             key="ephemeral_agents",
             help="When enabled, the Azure Agent is created for each message and deleted immediately after the response."
+        )
+        st.toggle(
+            "Force Weather Tool",
+            key="force_tool_use",
+            help="Force at least one weather tool invocation before responding."
         )
         
         st.header("Status")
