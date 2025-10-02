@@ -9,7 +9,7 @@ from typing import Annotated, Dict, List, Any
 import requests
 import streamlit as st
 
-from agent_framework import ChatAgent
+from agent_framework import ChatAgent, ChatMessage
 from agent_framework import AgentProtocol, AgentThread, HostedMCPTool
 from agent_framework.azure import AzureAIAgentClient
 from azure.ai.projects.aio import AIProjectClient
@@ -314,6 +314,157 @@ async def create_agent_with_data(session_data: dict = None):
         print(f"[DEBUG] {error_msg}")
         print(f"[DEBUG] Exception type: {type(e).__name__}")
         return False, {}
+    
+# Per-call captured tool events (to be merged back in main thread)
+tool_events = []
+
+def instrumented_get_weather(location: str) -> str:
+    start_ts = datetime.now().strftime('%H:%M:%S')
+    output = get_weather(location)
+    tool_events.append({
+        'timestamp': start_ts,
+        'tool': 'get_weather',
+        'input': location,
+        'output': output
+    })
+    tlog(f"Tool get_weather executed for '{location}'")
+    return output
+# Add Microsoft Learn MCP tool
+mcplearn = HostedMCPTool(
+        name="Microsoft Learn MCP",
+        url="https://learn.microsoft.com/api/mcp",
+        approval_mode='never_require'
+    )
+
+thread_logs = []  # collect logs to merge later in main thread
+
+def tlog(msg: str):
+    timestamp = datetime.now().strftime("%H:%M:%S")
+    thread_logs.append(f"[{timestamp}] {msg}")
+
+def normalize_text(obj) -> str:
+    """Best-effort extraction of human-readable text from various response object shapes."""
+    if obj is None:
+        return ""
+    if isinstance(obj, str):
+        return obj
+    # Common agent framework patterns
+    for attr in ("output", "content", "text", "message"):
+        if hasattr(obj, attr):
+            try:
+                v = getattr(obj, attr)
+                if isinstance(v, (str, bytes)):
+                    return v.decode() if isinstance(v, bytes) else v
+                # If it's a list of messages
+                if isinstance(v, list):
+                    # Join string-like entries
+                    collected = []
+                    for item in v:
+                        if isinstance(item, str):
+                            collected.append(item)
+                        elif isinstance(item, dict) and 'content' in item:
+                            collected.append(str(item['content']))
+                        else:
+                            collected.append(str(item))
+                    return "\n".join(collected)
+            except Exception:
+                pass
+    # Dict / list fallback
+    if isinstance(obj, (dict, list)):
+        try:
+            return json.dumps(obj, ensure_ascii=False)
+        except Exception:
+            return str(obj)
+    # Fallback to str
+    return str(obj)
+
+def safe_token_count(text_like) -> int:
+    text = normalize_text(text_like)
+    if not text:
+        return 0
+    return int(len(text.split()) * 1.3)
+
+async def process_agent(message, client, ephemeral, session_data, agent_id, agent_created):
+    """Process a message through the agent and return the response."""
+    async with ChatAgent(
+        chat_client=AzureAIAgentClient(
+            project_client=client, 
+            agent_id=agent_id
+        ),
+        instructions="""You are a helpful weather agent. 
+        Tools Provided:
+        1. get_weather(location: str) -> str : Get the current weather for a specified location.
+        2. mcplearn MCP Tool : Query Microsoft Learn for documentation and tutorials.
+        Provide detailed and friendly responses about weather conditions and Microsoft Learn resources.
+        for learn resources from Microsoft please provide links and references.
+        """,
+        tools=[instrumented_get_weather, mcplearn],
+        temperature=0.0,
+        max_tokens=2500,
+    ) as agent:
+        
+        tlog("Agent initialized, processing request...")
+        # result_obj = await agent.run(message)
+        created_thread = await client.agents.threads.create()
+        thread = agent.get_new_thread(service_thread_id=created_thread.id)
+
+        result_obj = await agent.run(message, thread=thread)
+        tlog("Agent response received")
+        result = normalize_text(result_obj)
+
+        # Try to extract token usage metadata from agent / underlying response if available
+        usage = None
+        try:
+            # Common patterns: agent.last_response.usage or agent._last_response
+            possible = getattr(agent, 'last_response', None) or getattr(agent, '_last_response', None)
+            if possible and isinstance(possible, dict):
+                usage_obj = possible.get('usage') or possible.get('token_usage')
+                if usage_obj:
+                    usage = {
+                        'prompt_tokens': usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens'),
+                        'completion_tokens': usage_obj.get('completion_tokens') or usage_obj.get('output_tokens'),
+                        'total_tokens': usage_obj.get('total_tokens') or (
+                            (usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens') or 0) +
+                            (usage_obj.get('completion_tokens') or usage_obj.get('output_tokens') or 0)
+                        )
+                    }
+        except Exception as meta_e:
+            tlog(f"Token usage metadata extraction failed: {meta_e}")
+
+        if usage is None:
+            # Fallback heuristic
+            prompt_tokens = safe_token_count(message)
+            completion_tokens = safe_token_count(result)
+            usage = {
+                'prompt_tokens': prompt_tokens,
+                'completion_tokens': completion_tokens,
+                'total_tokens': prompt_tokens + completion_tokens
+            }
+            tlog("Using heuristic token counts (library did not expose usage)")
+
+        # Optionally delete agent after response (ephemeral transaction)
+        if ephemeral and agent_id:
+            try:
+                tlog(f"Ephemeral mode enabled - deleting agent {agent_id}")
+                await client.agents.delete_agent(agent_id)
+                await client.agents.threads.delete(created_thread.id)
+                if session_data is not None:
+                    session_data['agent_created'] = False
+                    session_data['agent_id'] = None
+                agent_created = False
+                agent_id = None
+                tlog("Agent deleted successfully after transaction")
+            except Exception as del_e:
+                tlog(f"Agent deletion failed: {del_e}")
+
+        return {
+            'response': result,
+            'logs': thread_logs,
+            'usage': usage,
+            'tools': tool_events,
+            'agent_created': agent_created,
+            'agent_id': agent_id
+        }
 
 async def send_message(message: str, session_data: dict = None):
     """Send a message to the agent and get response.
@@ -323,53 +474,7 @@ async def send_message(message: str, session_data: dict = None):
     Instead, it returns the response text and a list of debug log lines plus token usage info.
     """
     try:
-        thread_logs = []  # collect logs to merge later in main thread
 
-        def tlog(msg: str):
-            timestamp = datetime.now().strftime("%H:%M:%S")
-            thread_logs.append(f"[{timestamp}] {msg}")
-
-        def normalize_text(obj) -> str:
-            """Best-effort extraction of human-readable text from various response object shapes."""
-            if obj is None:
-                return ""
-            if isinstance(obj, str):
-                return obj
-            # Common agent framework patterns
-            for attr in ("output", "content", "text", "message"):
-                if hasattr(obj, attr):
-                    try:
-                        v = getattr(obj, attr)
-                        if isinstance(v, (str, bytes)):
-                            return v.decode() if isinstance(v, bytes) else v
-                        # If it's a list of messages
-                        if isinstance(v, list):
-                            # Join string-like entries
-                            collected = []
-                            for item in v:
-                                if isinstance(item, str):
-                                    collected.append(item)
-                                elif isinstance(item, dict) and 'content' in item:
-                                    collected.append(str(item['content']))
-                                else:
-                                    collected.append(str(item))
-                            return "\n".join(collected)
-                    except Exception:
-                        pass
-            # Dict / list fallback
-            if isinstance(obj, (dict, list)):
-                try:
-                    return json.dumps(obj, ensure_ascii=False)
-                except Exception:
-                    return str(obj)
-            # Fallback to str
-            return str(obj)
-
-        def safe_token_count(text_like) -> int:
-            text = normalize_text(text_like)
-            if not text:
-                return 0
-            return int(len(text.split()) * 1.3)
 
         # Use session_data if provided (from thread), otherwise use session_state
         if session_data:
@@ -417,105 +522,15 @@ async def send_message(message: str, session_data: dict = None):
         
         tlog(f"Sending message: {message}")
 
-        # Per-call captured tool events (to be merged back in main thread)
-        tool_events = []
-
-        def instrumented_get_weather(location: str) -> str:
-            start_ts = datetime.now().strftime('%H:%M:%S')
-            output = get_weather(location)
-            tool_events.append({
-                'timestamp': start_ts,
-                'tool': 'get_weather',
-                'input': location,
-                'output': output
-            })
-            tlog(f"Tool get_weather executed for '{location}'")
-            return output
-        # Add Microsoft Learn MCP tool
-        mcplearn = HostedMCPTool(
-                name="Microsoft Learn MCP",
-                url="https://learn.microsoft.com/api/mcp",
-                approval_mode='never_require'
-            )
+        
         # Use the actual Azure AI Agent Framework
         try:
             with get_tracer().start_as_current_span("Single Agent framework1", kind=SpanKind.CLIENT) as current_span:
                 print(f"Trace ID: {format_trace_id(current_span.get_span_context().trace_id)}")
+                rs = process_agent(message, client, ephemeral, session_data, agent_id, agent_created)
 
-                async with ChatAgent(
-                    chat_client=AzureAIAgentClient(
-                        project_client=client, 
-                        agent_id=agent_id
-                    ),
-                    instructions="""You are a helpful weather agent. 
-                    Tools Provided:
-                    1. get_weather(location: str) -> str : Get the current weather for a specified location.
-                    2. mcplearn MCP Tool : Query Microsoft Learn for documentation and tutorials.
-                    Provide detailed and friendly responses about weather conditions and Microsoft Learn resources.
-                    for learn resources from Microsoft please provide links and references.
-                    """,
-                    tools=[instrumented_get_weather, mcplearn],
-                    temperature=0.0,
-                    max_tokens=2500,
-                ) as agent:
-                    
-                    tlog("Agent initialized, processing request...")
-                    result_obj = await agent.run(message)
-                    tlog("Agent response received")
-                    result = normalize_text(result_obj)
-
-                    # Try to extract token usage metadata from agent / underlying response if available
-                    usage = None
-                    try:
-                        # Common patterns: agent.last_response.usage or agent._last_response
-                        possible = getattr(agent, 'last_response', None) or getattr(agent, '_last_response', None)
-                        if possible and isinstance(possible, dict):
-                            usage_obj = possible.get('usage') or possible.get('token_usage')
-                            if usage_obj:
-                                usage = {
-                                    'prompt_tokens': usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens'),
-                                    'completion_tokens': usage_obj.get('completion_tokens') or usage_obj.get('output_tokens'),
-                                    'total_tokens': usage_obj.get('total_tokens') or (
-                                        (usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens') or 0) +
-                                        (usage_obj.get('completion_tokens') or usage_obj.get('output_tokens') or 0)
-                                    )
-                                }
-                    except Exception as meta_e:
-                        tlog(f"Token usage metadata extraction failed: {meta_e}")
-
-                    if usage is None:
-                        # Fallback heuristic
-                        prompt_tokens = safe_token_count(message)
-                        completion_tokens = safe_token_count(result)
-                        usage = {
-                            'prompt_tokens': prompt_tokens,
-                            'completion_tokens': completion_tokens,
-                            'total_tokens': prompt_tokens + completion_tokens
-                        }
-                        tlog("Using heuristic token counts (library did not expose usage)")
-
-                    # Optionally delete agent after response (ephemeral transaction)
-                    if ephemeral and agent_id:
-                        try:
-                            tlog(f"Ephemeral mode enabled - deleting agent {agent_id}")
-                            await client.agents.delete_agent(agent_id)
-                            if session_data is not None:
-                                session_data['agent_created'] = False
-                                session_data['agent_id'] = None
-                            agent_created = False
-                            agent_id = None
-                            tlog("Agent deleted successfully after transaction")
-                        except Exception as del_e:
-                            tlog(f"Agent deletion failed: {del_e}")
-
-                    return {
-                        'response': result,
-                        'logs': thread_logs,
-                        'usage': usage,
-                        'tools': tool_events,
-                        'agent_created': agent_created,
-                        'agent_id': agent_id
-                    }
+            result = await rs     
+            return result           
                 
         except Exception as agent_error:
             tlog(f"Agent error: {str(agent_error)}")
@@ -532,54 +547,10 @@ async def send_message(message: str, session_data: dict = None):
                 with get_tracer().start_as_current_span("Single Agent framework-excep", kind=SpanKind.CLIENT) as current_span:
                     print(f"Trace ID: {format_trace_id(current_span.get_span_context().trace_id)}")
                 
-                    async with ChatAgent(
-                        chat_client=AzureAIAgentClient(
-                            project_client=client, 
-                            agent_id=agent_id
-                        ),
-                        instructions="""You are a helpful weather agent. 
-                        Tools Provided:
-                        1. get_weather(location: str) -> str : Get the current weather for a specified location.
-                        2. mcplearn(query: str) -> str : Query Microsoft Learn for documentation and tutorials.
-                        Provide detailed and friendly responses about weather conditions and Microsoft Learn resources.
-                        """,
-                        tools=[instrumented_get_weather, mcplearn],
-                        temperature=0.0,
-                        max_tokens=2500,
-                    ) as agent:
-                        tlog("Agent recreated, processing message again...")
-                        result_obj = await agent.run(message)
-                        tlog("Response received after recreation")
-                        result = normalize_text(result_obj)
-                        prompt_tokens = safe_token_count(message)
-                        completion_tokens = safe_token_count(result)
-                        usage = {
-                            'prompt_tokens': prompt_tokens,
-                            'completion_tokens': completion_tokens,
-                            'total_tokens': prompt_tokens + completion_tokens
-                        }
-                        # Ephemeral deletion on recreated agent path
-                        if ephemeral and agent_id:
-                            try:
-                                tlog(f"Ephemeral mode enabled - deleting recreated agent {agent_id}")
-                                await client.agents.delete_agent(agent_id)
-                                if session_data is not None:
-                                    session_data['agent_created'] = False
-                                    session_data['agent_id'] = None
-                                agent_created = False
-                                agent_id = None
-                                tlog("Recreated agent deleted successfully after transaction")
-                            except Exception as del_e:
-                                tlog(f"Recreated agent deletion failed: {del_e}")
+                    rs = process_agent(message, client, ephemeral, session_data, agent_id, agent_created)
 
-                        return {
-                            'response': result,
-                            'logs': thread_logs,
-                            'usage': usage,
-                            'tools': tool_events,
-                            'agent_created': agent_created,
-                            'agent_id': agent_id
-                        }
+                result = await rs
+                return result
             else:
                 return {
                     'response': f"Failed to recreate agent after error: {str(agent_error)}",
