@@ -4,6 +4,7 @@ import asyncio
 import os
 import json
 from datetime import datetime
+from pathlib import Path
 from random import randint
 from typing import Annotated, Dict, List, Any
 import requests
@@ -11,7 +12,7 @@ import streamlit as st
 from utils import get_weather, fetch_stock_data
 
 from agent_framework import ChatAgent, ChatMessage
-from agent_framework import AgentProtocol, AgentThread, HostedMCPTool
+from agent_framework import AgentProtocol, AgentThread, HostedMCPTool, HostedFileSearchTool, HostedVectorStoreContent
 from agent_framework.azure import AzureAIAgentClient
 from azure.ai.projects.aio import AIProjectClient
 from azure.identity.aio import AzureCliCredential, DefaultAzureCredential
@@ -19,6 +20,8 @@ from opentelemetry.trace import SpanKind
 from opentelemetry.trace.span import format_trace_id
 from agent_framework.observability import get_tracer, setup_observability
 from pydantic import Field
+from azure.ai.agents.models import FileInfo, VectorStore
+from azure.ai.agents.models import AzureAISearchTool, AzureAISearchQueryType
 
 from dotenv import load_dotenv
 
@@ -64,7 +67,7 @@ def initialize_session_state():
         }
     if 'ephemeral_agents' not in st.session_state:
         # When True, delete the Azure agent after every response (transaction)
-        st.session_state.ephemeral_agents = False
+        st.session_state.ephemeral_agents = True
     if 'force_tool_use' not in st.session_state:
         st.session_state.force_tool_use = False
 
@@ -152,68 +155,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-
-# async def create_agent():
-#     """Create the Azure AI agent"""
-#     try:
-#         # Check if environment variables are set
-#         endpoint = os.environ.get("AZURE_AI_PROJECT_ENDPOINT")
-#         model = os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME")
-#         api_key = os.environ.get("AZURE_OPENAI_API_KEY")
-        
-#         if not endpoint or not model:
-#             log_debug("Missing Azure environment variables - cannot create agent")
-#             log_debug(f"AZURE_AI_PROJECT_ENDPOINT: {'SET' if endpoint else 'NOT SET'}")
-#             log_debug(f"AZURE_AI_MODEL_DEPLOYMENT_NAME: {'SET' if model else 'NOT SET'}")
-#             st.error("Missing required environment variables: AZURE_AI_PROJECT_ENDPOINT and/or AZURE_AI_MODEL_DEPLOYMENT_NAME")
-#             return False
-        
-#         log_debug("Creating Azure AI agent...")
-#         log_debug(f"Endpoint: {endpoint}")
-#         log_debug(f"Model: {model}")
-        
-#         try:
-#             log_debug("Initializing Azure CLI credential...")
-#             credential = AzureCliCredential()
-#             # credential = DefaultAzureCredential()
-            
-#             log_debug("Creating AI Project client...")
-#             client = AIProjectClient(
-#                 endpoint=endpoint, 
-#                 credential=credential,
-#                 # api_key=api_key
-#             )
-
-#             # await client.setup_azure_ai_observability()
-            
-#             log_debug("Creating agent...")
-#             # Create an agent that will persist for the session
-#             created_agent = await client.agents.create_agent(
-#                 model=model, 
-#                 name=f"StreamlitWeatherAgent_{randint(1000, 9999)}"
-#             )
-            
-#             st.session_state.agent_id = created_agent.id
-#             st.session_state.agent_created = True
-#             st.session_state.client = client
-#             st.session_state.credential = credential
-#             st.session_state.demo_mode = False
-            
-#             log_debug(f"Agent successfully created with ID: {created_agent.id}")
-#             return True
-            
-#         except Exception as inner_e:
-#             log_debug(f"Inner creation error: {str(inner_e)}")
-#             log_debug(f"Error type: {type(inner_e).__name__}")
-#             raise inner_e
-        
-#     except Exception as e:
-#         error_msg = f"Failed to create agent: {str(e)}"
-#         log_debug(error_msg)
-#         log_debug(f"Exception type: {type(e).__name__}")
-#         st.error(error_msg)
-#         return False
-
 async def create_agent_with_data(session_data: dict = None):
     """Create the Azure AI agent and return session data"""
     try:
@@ -258,7 +199,7 @@ async def create_agent_with_data(session_data: dict = None):
             created_agent = await client.agents.create_agent(
                 model=model, 
                 # name=f"StreamlitWeatherAgent_{randint(1000, 9999)}"
-                name="StreamlitWeatherAgent_1"
+                name="MicrosoftAgentFramework-1"
             )
             
             # Return session data
@@ -387,11 +328,48 @@ def safe_token_count(text_like) -> int:
 
 async def process_agent(message, client, ephemeral, session_data, agent_id, agent_created):
     """Process a message through the agent and return the response."""
-    async with ChatAgent(
-        chat_client=AzureAIAgentClient(
+    # agentclient = AzureAIAgentClient(async_credential=AzureCliCredential())
+    file: FileInfo | None = None
+    vector_store: VectorStore | None = None
+
+    chat_client = AzureAIAgentClient(
             project_client=client, 
             agent_id=agent_id
-        ),
+        )
+
+     # 1. Upload file and create vector store
+    # pdf_file_path = Path(__file__).parent.parent / "papers" / "ssrn-4072178.pdf"
+    pdf_file_path = "papers/ssrn-4072178.pdf"
+    print(f"Uploading file from: {pdf_file_path}")
+
+    # file = await chat_client.project_client.agents.files.upload_and_poll(
+    #     file_path=str(pdf_file_path), purpose="assistants"
+    # )
+    # print(f"Uploaded file, file ID: {file.id}")
+
+    # vector_store = await chat_client.project_client.agents.vector_stores.create_and_poll(
+    #     file_ids=[file.id], name="sustainability_vectorstore"
+    # )
+    # print(f"Created vector store, vector store ID: {vector_store.id}")
+
+    # # 2. Create file search tool with uploaded resources
+    # file_search_tool = HostedFileSearchTool(inputs=[HostedVectorStoreContent(vector_store_id=vector_store.id)])
+
+    # # Define the Azure AI Search connection ID and index name
+    # azure_ai_conn_id = "stdagentvecstore"
+    # index_name = "rfpindex"
+
+    # # Initialize the Azure AI Search tool
+    # ai_search = AzureAISearchTool(
+    #     index_connection_id=azure_ai_conn_id,
+    #     index_name=index_name,
+    #     query_type=AzureAISearchQueryType.SIMPLE,  # Use SIMPLE query type
+    #     top_k=5,  # Retrieve the top 3 results
+    #     filter="",  # Optional filter for search results
+    # )
+
+    async with ChatAgent(
+        chat_client=chat_client,
         # instructions="""You are a helpful AI agent, assisting the user with their requests.
         # please use the tools provided and also respond which tool was used.
         # Tools:
@@ -445,18 +423,24 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
         Microsoft Learn Agent (Tool: Microsoft Learn MCP): Searches and accesses Microsoft Learn documentation, tutorials, certifications, and resources on topics like Azure, Power Platform, or .NET. Input: Search query (e.g., "Azure AI fundamentals"). Output: Relevant article summaries, key takeaways, and direct links. Use for Microsoft tech learning or certification queries.
         HuggingFace Agent (Tool: HuggingFace MCP): Explores Hugging Face Hub for models, datasets, spaces, and ML resources. Input: Search query (e.g., "BERT fine-tuning tutorial"). Output: Model/dataset details, usage examples, and links to repos/spaces. Use for AI/ML model discovery or open-source NLP/CV resources.
         Stock Agent (Tool: fetch_stock_data): Fetches real-time or historical stock info (price, volume, trends) for a specified company (e.g., ticker symbol like "AAPL"). Input: Company/ticker. Output: Structured data (e.g., {"current_price": 150.25, "change": "+2.5%"}). Use for financial market queries.
-
+        
         You are helpful, proactive, and user-focused. 
         Respond only after completing the necessary steps—never guess or fabricate data. 
         If the query is outside scope, politely say "I don't know" and suggest alternatives.
         Also provide the citations and sources for your information.        
         """,
-        tools=[instrumented_get_weather, mcplearn, hfmcp, instrumented_fetch_stock_data],
+        tools=[instrumented_get_weather, mcplearn, hfmcp, 
+               instrumented_fetch_stock_data, 
+               # file_search_tool, ai_search
+               ],
         temperature=0.0,
         max_tokens=2500,
     ) as agent:
         
         tlog("Agent initialized, processing request...")
+        # Sustainability Document Search Agent (Tool: file_search_tool): Searches a custom vector store built from sustainability-related documents. Input: Natural language query related to sustainability topics. Output: Relevant document excerpts, summaries, and direct links to the source documents. Use for in-depth research or information retrieval on sustainability issues.
+        # RFP Documents Search Agent (Tool: ai_search): Searches a custom Azure AI Search index built from RFP-related documents. Input: Natural language query related to RFP topics. Output: Relevant document excerpts, summaries, and direct links to the source documents. Use for in-depth research or information retrieval on RFP issues.
+
         # result_obj = await agent.run(message)
         created_thread = await client.agents.threads.create()
         thread = agent.get_new_thread(service_thread_id=created_thread.id)
@@ -579,8 +563,11 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
         if ephemeral and agent_id:
             try:
                 tlog(f"Ephemeral mode enabled - deleting agent {agent_id}")
+                
                 await client.agents.delete_agent(agent_id)
                 await client.agents.threads.delete(created_thread.id)
+                await chat_client.project_client.agents.vector_stores.delete(vector_store.id)
+                await chat_client.project_client.agents.files.delete(file.id)
                 if session_data is not None:
                     session_data['agent_created'] = False
                     session_data['agent_id'] = None
