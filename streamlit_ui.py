@@ -8,6 +8,7 @@ from random import randint
 from typing import Annotated, Dict, List, Any
 import requests
 import streamlit as st
+from utils import get_weather, fetch_stock_data
 
 from agent_framework import ChatAgent, ChatMessage
 from agent_framework import AgentProtocol, AgentThread, HostedMCPTool
@@ -150,102 +151,68 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-def get_weather(
-    location: Annotated[str, Field(description="The location to get the weather for.")],
-) -> str:
-    """Get the weather for a given location."""
-    try:
-        # Step 1: Convert location -> lat/lon using Open-Meteo Geocoding
-        geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={location}&count=1"
-        geo_response = requests.get(geo_url)
 
-        if geo_response.status_code != 200:
-            return f"Failed to get coordinates. Status code: {geo_response.status_code}"
 
-        geo_data = geo_response.json()
-        if "results" not in geo_data or len(geo_data["results"]) == 0:
-            return f"Could not find location: {location}"
-
-        lat = geo_data["results"][0]["latitude"]
-        lon = geo_data["results"][0]["longitude"]
-
-        # Step 2: Get weather for that lat/lon
-        url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
-        response = requests.get(url)
-
-        if response.status_code == 200:
-            data = response.json()
-            current_weather = data.get("current_weather", {})
-            temperature = current_weather.get("temperature")
-            windspeed = current_weather.get("windspeed")
-            return f"Weather in {location}: {temperature}°C, Wind speed: {windspeed} km/h"
-        else:
-            return f"Failed to get weather data. Status code: {response.status_code}"
-
-    except Exception as e:
-        import traceback
-        return f"Error fetching weather data: {str(e)}\n{traceback.format_exc()}"
-
-async def create_agent():
-    """Create the Azure AI agent"""
-    try:
-        # Check if environment variables are set
-        endpoint = os.environ.get("AZURE_AI_PROJECT_ENDPOINT")
-        model = os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME")
-        api_key = os.environ.get("AZURE_OPENAI_API_KEY")
+# async def create_agent():
+#     """Create the Azure AI agent"""
+#     try:
+#         # Check if environment variables are set
+#         endpoint = os.environ.get("AZURE_AI_PROJECT_ENDPOINT")
+#         model = os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME")
+#         api_key = os.environ.get("AZURE_OPENAI_API_KEY")
         
-        if not endpoint or not model:
-            log_debug("Missing Azure environment variables - cannot create agent")
-            log_debug(f"AZURE_AI_PROJECT_ENDPOINT: {'SET' if endpoint else 'NOT SET'}")
-            log_debug(f"AZURE_AI_MODEL_DEPLOYMENT_NAME: {'SET' if model else 'NOT SET'}")
-            st.error("Missing required environment variables: AZURE_AI_PROJECT_ENDPOINT and/or AZURE_AI_MODEL_DEPLOYMENT_NAME")
-            return False
+#         if not endpoint or not model:
+#             log_debug("Missing Azure environment variables - cannot create agent")
+#             log_debug(f"AZURE_AI_PROJECT_ENDPOINT: {'SET' if endpoint else 'NOT SET'}")
+#             log_debug(f"AZURE_AI_MODEL_DEPLOYMENT_NAME: {'SET' if model else 'NOT SET'}")
+#             st.error("Missing required environment variables: AZURE_AI_PROJECT_ENDPOINT and/or AZURE_AI_MODEL_DEPLOYMENT_NAME")
+#             return False
         
-        log_debug("Creating Azure AI agent...")
-        log_debug(f"Endpoint: {endpoint}")
-        log_debug(f"Model: {model}")
+#         log_debug("Creating Azure AI agent...")
+#         log_debug(f"Endpoint: {endpoint}")
+#         log_debug(f"Model: {model}")
         
-        try:
-            log_debug("Initializing Azure CLI credential...")
-            credential = AzureCliCredential()
-            # credential = DefaultAzureCredential()
+#         try:
+#             log_debug("Initializing Azure CLI credential...")
+#             credential = AzureCliCredential()
+#             # credential = DefaultAzureCredential()
             
-            log_debug("Creating AI Project client...")
-            client = AIProjectClient(
-                endpoint=endpoint, 
-                credential=credential,
-                # api_key=api_key
-            )
+#             log_debug("Creating AI Project client...")
+#             client = AIProjectClient(
+#                 endpoint=endpoint, 
+#                 credential=credential,
+#                 # api_key=api_key
+#             )
 
-            # await client.setup_azure_ai_observability()
+#             # await client.setup_azure_ai_observability()
             
-            log_debug("Creating agent...")
-            # Create an agent that will persist for the session
-            created_agent = await client.agents.create_agent(
-                model=model, 
-                name=f"StreamlitWeatherAgent_{randint(1000, 9999)}"
-            )
+#             log_debug("Creating agent...")
+#             # Create an agent that will persist for the session
+#             created_agent = await client.agents.create_agent(
+#                 model=model, 
+#                 name=f"StreamlitWeatherAgent_{randint(1000, 9999)}"
+#             )
             
-            st.session_state.agent_id = created_agent.id
-            st.session_state.agent_created = True
-            st.session_state.client = client
-            st.session_state.credential = credential
-            st.session_state.demo_mode = False
+#             st.session_state.agent_id = created_agent.id
+#             st.session_state.agent_created = True
+#             st.session_state.client = client
+#             st.session_state.credential = credential
+#             st.session_state.demo_mode = False
             
-            log_debug(f"Agent successfully created with ID: {created_agent.id}")
-            return True
+#             log_debug(f"Agent successfully created with ID: {created_agent.id}")
+#             return True
             
-        except Exception as inner_e:
-            log_debug(f"Inner creation error: {str(inner_e)}")
-            log_debug(f"Error type: {type(inner_e).__name__}")
-            raise inner_e
+#         except Exception as inner_e:
+#             log_debug(f"Inner creation error: {str(inner_e)}")
+#             log_debug(f"Error type: {type(inner_e).__name__}")
+#             raise inner_e
         
-    except Exception as e:
-        error_msg = f"Failed to create agent: {str(e)}"
-        log_debug(error_msg)
-        log_debug(f"Exception type: {type(e).__name__}")
-        st.error(error_msg)
-        return False
+#     except Exception as e:
+#         error_msg = f"Failed to create agent: {str(e)}"
+#         log_debug(error_msg)
+#         log_debug(f"Exception type: {type(e).__name__}")
+#         st.error(error_msg)
+#         return False
 
 async def create_agent_with_data(session_data: dict = None):
     """Create the Azure AI agent and return session data"""
@@ -343,6 +310,19 @@ def instrumented_get_weather(location: str) -> str:
     })
     tlog(f"Tool get_weather executed for '{location}'")
     return output
+
+def instrumented_fetch_stock_data(company_name: str, period: str = "1mo", interval: str = "1d") -> str:
+    start_ts = datetime.now().strftime('%H:%M:%S')
+    output = fetch_stock_data(company_name)
+    tool_events.append({
+        'timestamp': start_ts,
+        'tool': 'fetch_stock_data',
+        'input': company_name,
+        'output': output,
+        'source': 'local'
+    })
+    tlog(f"Tool fetch_stock_data executed for '{company_name}'")
+    return output
 # Add Microsoft Learn MCP tool
 mcplearn = HostedMCPTool(
         name="Microsoft Learn MCP",
@@ -412,17 +392,66 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
             project_client=client, 
             agent_id=agent_id
         ),
-        instructions=(
-            "You are a helpful AI agent. Always call the 'get_weather' tool to obtain current "
-            "conditions whenever the user asks about weather, temperature, forecast, climate or related info. "
-            "If the user prompt is not about weather you may answer normally. "
-            "If a force tool flag is set (developer toggle), you must call the tool at least once before answering. "
-            "After calling the tool, craft a friendly answer that cites the tool result."
-            "If the users asks for microsoft or azure learning resources, use the Microsoft Learn MCP tool."
-            "if the user asks for HuggingFace related resources, use the HuggingFace MCP tool."
-            "provide details and also links to the resources from the MCP tool."
-        ),
-        tools=[instrumented_get_weather, mcplearn, hfmcp],
+        # instructions="""You are a helpful AI agent, assisting the user with their requests.
+        # please use the tools provided and also respond which tool was used.
+        # Tools:
+        # - get_weather: Get the current weather for a specified location.
+        # - Microsoft Learn MCP: Access Microsoft Learn resources.
+        # - HuggingFace MCP: Access HuggingFace resources.
+        # - fetch_stock_data: Get stock information for a specified company.
+        # - If you cannot answer the question, say "I don't know".
+        # Also please provide details and also citations, links to sources where applicable.
+        # """,
+        instructions= """You are a multi-tool AI agent system designed to assist users with diverse queries by intelligently routing them to specialized sub-agents. Each sub-agent handles a specific tool and executes tasks sequentially or in parallel as needed to achieve the final result. Your goal is to break down the user's query, select the most relevant sub-agents based on the query's intent, and orchestrate their execution in a logical sequence (e.g., fetch data first, then analyze or cross-reference it). Always aim for accuracy, completeness, and efficiency—only invoke sub-agents when necessary, and avoid unnecessary steps.
+        Core System Instructions:
+
+        Understand the Query: Begin by analyzing the user's question. Identify key elements: topic (e.g., weather, tech resources, stocks), required actions (e.g., fetch data, search resources), and any dependencies (e.g., location for weather, company for stocks).
+        Agent Selection and Sequencing:
+
+        Choose 1–3 sub-agents based on relevance. Prioritize the most direct match(es).
+        Sequence execution logically: e.g., use get_weather first if location data is needed, then cross-reference with another tool if the query requires comparison.
+        If the query spans multiple tools (e.g., "Compare stock trends for tech companies and check weather in Seattle"), invoke them in parallel or sequence as fits.
+        If no tools match, respond with "I don't know" and explain why (e.g., "This query requires real-time news analysis, which isn't covered by my tools").
+        please use the tools provided and also respond which tool was used.
+
+        Tool Usage Rules:
+
+        Invoke tools only with precise parameters (e.g., for get_weather, specify a city like "New York").
+        If a tool returns incomplete data, note it and suggest alternatives or follow up with another tool.
+        After each tool execution, log it transparently in your response.
+
+
+        Response Structure:
+
+        Summary: Briefly restate the query and outline the plan (e.g., "I'll use Tool A then Tool B to answer this").
+        Execution Log: For each sub-agent/tool used, state: "Tool Used: [Tool Name]. Input: [Parameters]. Output: [Key Results]."
+        Final Answer: Provide a clear, detailed synthesis of results. Include explanations, insights, and any computations or inferences drawn.
+        Citations and Sources: Always cite sources with full links (e.g., "Source: [Tool Name] via [URL if applicable]"). For external resources like Microsoft Learn or HuggingFace, include direct permalinks to relevant pages or models.
+        Transparency: End with "Tools invoked: [List]. If this doesn't fully address your query, provide more details!"
+
+
+        Edge Cases:
+
+        Ambiguous queries: Ask for clarification before proceeding.
+        Errors: If a tool fails, report it (e.g., "Tool X returned an error: Invalid location") and fallback to "I don't know" if unresolvable.
+        Privacy/Safety: Never invoke tools with sensitive user data; anonymize where possible.
+        Conciseness: Keep responses focused but detailed—use bullet points or tables for clarity.
+
+
+
+        Available Sub-Agents and Tools:
+
+        Weather Agent (Tool: get_weather): Retrieves current weather data (temperature, conditions, forecast) for a specified location (e.g., city, country). Input: Location string. Output: JSON-like summary (e.g., {"temp": 72, "conditions": "Sunny"}). Use for location-based environmental queries.
+        Microsoft Learn Agent (Tool: Microsoft Learn MCP): Searches and accesses Microsoft Learn documentation, tutorials, certifications, and resources on topics like Azure, Power Platform, or .NET. Input: Search query (e.g., "Azure AI fundamentals"). Output: Relevant article summaries, key takeaways, and direct links. Use for Microsoft tech learning or certification queries.
+        HuggingFace Agent (Tool: HuggingFace MCP): Explores Hugging Face Hub for models, datasets, spaces, and ML resources. Input: Search query (e.g., "BERT fine-tuning tutorial"). Output: Model/dataset details, usage examples, and links to repos/spaces. Use for AI/ML model discovery or open-source NLP/CV resources.
+        Stock Agent (Tool: fetch_stock_data): Fetches real-time or historical stock info (price, volume, trends) for a specified company (e.g., ticker symbol like "AAPL"). Input: Company/ticker. Output: Structured data (e.g., {"current_price": 150.25, "change": "+2.5%"}). Use for financial market queries.
+
+        You are helpful, proactive, and user-focused. 
+        Respond only after completing the necessary steps—never guess or fabricate data. 
+        If the query is outside scope, politely say "I don't know" and suggest alternatives.
+        Also provide the citations and sources for your information.        
+        """,
+        tools=[instrumented_get_weather, mcplearn, hfmcp, instrumented_fetch_stock_data],
         temperature=0.0,
         max_tokens=2500,
     ) as agent:
