@@ -372,11 +372,12 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
     # vector_store = await chat_client.project_client.agents.vector_stores.create_and_poll(name=azure_ai_conn_id, )
     # print(f"Using vector store, vector store ID: {vector_store.id}")
     ai_search_tool = HostedFileSearchTool(index_name=aisearchindex, 
-                                          query_type=AzureAISearchQueryType.SIMPLE,
+                                          query_type=AzureAISearchQueryType.VECTOR_SIMPLE_HYBRID,
                                           top_k=5,
-                                          # vector_store=azure_ai_conn_id,
+                                          #vector_store=azure_ai_conn_id,
                                           )
     # ai_search_tool = HostedFileSearchTool(ai_search)
+    # summarize RFP for Virginia railway express?
 
     async with ChatAgent(
         chat_client=chat_client,
