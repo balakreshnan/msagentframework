@@ -356,7 +356,7 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
     # file_search_tool = HostedFileSearchTool(inputs=[HostedVectorStoreContent(vector_store_id=vector_store.id)])
 
     # # Define the Azure AI Search connection ID and index name
-    # azure_ai_conn_id = "stdagentvecstore"
+    azure_ai_conn_id = "stdagentvecstore"
     # index_name = "rfpindex"
 
     # # Initialize the Azure AI Search tool
@@ -367,6 +367,16 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
     #     top_k=5,  # Retrieve the top 3 results
     #     filter="",  # Optional filter for search results
     # )
+
+    aisearchindex = os.getenv("AZURE_AI_SEARCH_INDEX_NAME", "rfpdocs")
+    # vector_store = await chat_client.project_client.agents.vector_stores.create_and_poll(name=azure_ai_conn_id, )
+    # print(f"Using vector store, vector store ID: {vector_store.id}")
+    ai_search_tool = HostedFileSearchTool(index_name=aisearchindex, 
+                                          query_type=AzureAISearchQueryType.SIMPLE,
+                                          top_k=5,
+                                          # vector_store=azure_ai_conn_id,
+                                          )
+    # ai_search_tool = HostedFileSearchTool(ai_search)
 
     async with ChatAgent(
         chat_client=chat_client,
@@ -423,6 +433,7 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
         Microsoft Learn Agent (Tool: Microsoft Learn MCP): Searches and accesses Microsoft Learn documentation, tutorials, certifications, and resources on topics like Azure, Power Platform, or .NET. Input: Search query (e.g., "Azure AI fundamentals"). Output: Relevant article summaries, key takeaways, and direct links. Use for Microsoft tech learning or certification queries.
         HuggingFace Agent (Tool: HuggingFace MCP): Explores Hugging Face Hub for models, datasets, spaces, and ML resources. Input: Search query (e.g., "BERT fine-tuning tutorial"). Output: Model/dataset details, usage examples, and links to repos/spaces. Use for AI/ML model discovery or open-source NLP/CV resources.
         Stock Agent (Tool: fetch_stock_data): Fetches real-time or historical stock info (price, volume, trends) for a specified company (e.g., ticker symbol like "AAPL"). Input: Company/ticker. Output: Structured data (e.g., {"current_price": 150.25, "change": "+2.5%"}). Use for financial market queries.
+        RFP Document Search Agent (Tool: ai_search_tool): Searches a custom Azure AI Search index built from RFP-related documents. Input: Natural language query related to RFP topics. Output: Relevant document excerpts, summaries, and direct links to the source documents. Use for in-depth research or information retrieval on RFP issues.
         
         You are helpful, proactive, and user-focused. 
         Respond only after completing the necessary steps—never guess or fabricate data. 
@@ -432,6 +443,7 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
         tools=[instrumented_get_weather, mcplearn, hfmcp, 
                instrumented_fetch_stock_data, 
                # file_search_tool, ai_search
+               ai_search_tool,
                ],
         temperature=0.0,
         max_tokens=2500,
@@ -566,8 +578,8 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
                 
                 await client.agents.delete_agent(agent_id)
                 await client.agents.threads.delete(created_thread.id)
-                await chat_client.project_client.agents.vector_stores.delete(vector_store.id)
-                await chat_client.project_client.agents.files.delete(file.id)
+                #await chat_client.project_client.agents.vector_stores.delete(vector_store.id)
+                #await chat_client.project_client.agents.files.delete(file.id)
                 if session_data is not None:
                     session_data['agent_created'] = False
                     session_data['agent_id'] = None
