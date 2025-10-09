@@ -890,15 +890,6 @@ def display_token_usage():
             for row in usage['details'][-10:]:
                 st.write(f"{row['timestamp']}: prompt={row['prompt_tokens']} completion={row['completion_tokens']} total={row['total_tokens']}")
 
-def cleanup_agent():
-    """Clean up the agent when session ends"""
-    try:
-        if st.session_state.agent_created and st.session_state.agent_id:
-            log_debug(f"Agent {st.session_state.agent_id} session ended")
-            st.session_state.agent_created = False
-            st.session_state.agent_id = None
-    except Exception as e:
-        log_debug(f"Error cleaning up agent: {str(e)}")
 
 def main():
     # Ensure session state is initialized first
@@ -1009,15 +1000,6 @@ def main():
         st.metric("Debug Logs", len(st.session_state.debug_logs))
         st.metric("Tool Calls", len(st.session_state.tool_calls))
 
-async def cleanup_agent():
-    """Clean up the agent when session ends"""
-    try:
-        if st.session_state.agent_created and st.session_state.agent_id and not st.session_state.get('demo_mode', True):
-            client = st.session_state.client
-            await client.agents.delete_agent(st.session_state.agent_id)
-            log_debug(f"Agent {st.session_state.agent_id} cleaned up")
-    except Exception as e:
-        log_debug(f"Error cleaning up agent: {str(e)}")
 
 if __name__ == "__main__":
     setup_observability()

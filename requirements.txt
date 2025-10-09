@@ -5,3 +5,8 @@ python-dotenv
 uv
 streamlit
 yfinance
+azure-ai-evaluation
+pyrit
+duckdb
+azure-identity
+aiofiles
