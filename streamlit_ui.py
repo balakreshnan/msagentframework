@@ -339,8 +339,8 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
 
      # 1. Upload file and create vector store
     # pdf_file_path = Path(__file__).parent.parent / "papers" / "ssrn-4072178.pdf"
-    pdf_file_path = "papers/ssrn-4072178.pdf"
-    print(f"Uploading file from: {pdf_file_path}")
+    # pdf_file_path = "papers/ssrn-4072178.pdf"
+    # print(f"Uploading file from: {pdf_file_path}")
 
     # file = await chat_client.project_client.agents.files.upload_and_poll(
     #     file_path=str(pdf_file_path), purpose="assistants"
