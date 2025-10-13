@@ -57,6 +57,7 @@ async def main() -> None:
                 print(f"Result: {result}\n")
         finally:
             # Clean up the agent manually
+            
             await client.agents.delete_agent(created_agent.id)
 
 
