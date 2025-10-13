@@ -66,6 +66,7 @@ async def main():
     print("User: What do you see in this image? [Image provided]")
     result = await agent.run(user_message)
     print(f"Agent: {result.text}")
+    print(f"Usage Details: {result.usage_details}")
     print()
     
 

@@ -462,24 +462,71 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
         tlog("Agent response received")
         result = normalize_text(result_obj)
 
+        print(f"Usage Details: {result_obj.usage_details}")
+        usagedetails = result_obj.usage_details
         # Try to extract token usage metadata from agent / underlying response if available
         usage = None
-        try:
-            # Common patterns: agent.last_response.usage or agent._last_response
-            possible = getattr(agent, 'last_response', None) or getattr(agent, '_last_response', None)
-            if possible and isinstance(possible, dict):
-                usage_obj = possible.get('usage') or possible.get('token_usage')
-                if usage_obj:
+        # Try to extract token usage metadata from agent / underlying response if available
+
+        # usage = {
+        #     'prompt_tokens': usagedetails.get("input_token_count", 0),
+        #     'completion_tokens': usagedetails.get("output_token_count", 0),
+        #     'total_tokens': usagedetails.get("total_token_count", 0)
+        # }
+        # print(f"Extracted token usage: {usage}")
+        raw_usage = getattr(result_obj, "usage_details", None)
+        if raw_usage is not None:
+            try:
+                if hasattr(raw_usage, "model_dump"):
+                    usage_dict = raw_usage.model_dump()
+                elif hasattr(raw_usage, "to_dict"):
+                    usage_dict = raw_usage.to_dict()
+                elif hasattr(raw_usage, "__dict__"):
+                    usage_dict = raw_usage.__dict__
+                else:
+                    usage_dict = raw_usage  # hope it is already a dict
+
+                if isinstance(usage_dict, dict):
                     usage = {
-                        'prompt_tokens': usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens'),
-                        'completion_tokens': usage_obj.get('completion_tokens') or usage_obj.get('output_tokens'),
-                        'total_tokens': usage_obj.get('total_tokens') or (
-                            (usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens') or 0) +
-                            (usage_obj.get('completion_tokens') or usage_obj.get('output_tokens') or 0)
-                        )
+                        "prompt_tokens": usage_dict.get("input_token_count", 0),
+                        "completion_tokens": usage_dict.get("output_token_count", 0),
+                        "total_tokens": usage_dict.get(
+                            "total_token_count",
+                            usage_dict.get("input_token_count", 0)
+                            + usage_dict.get("output_token_count", 0),
+                        ),
                     }
-        except Exception as meta_e:
-            tlog(f"Token usage metadata extraction failed: {meta_e}")
+            except Exception as meta_err:
+                tlog(f"Usage extraction failed: {meta_err}")
+        print(f"Extracted token usage: {usage}")
+        # try:
+        #     # Try to extract token usage metadata from agent / underlying response if available
+        #     usagedetails = result_obj.get("usage_details", result_obj)  # fallback if usage_details is at top level
+
+        #     usage = {
+        #         'prompt_tokens': usagedetails.get("input_token_count", 0),
+        #         'completion_tokens': usagedetails.get("output_token_count", 0),
+        #         'total_tokens': usagedetails.get("total_token_count", 0)
+        #     }
+        #     print(f"Extracted token usage: {usage}")
+        # except Exception as meta_e:
+        #     tlog(f"Token usage metadata extraction failed: {meta_e}")
+        # try:
+        #     # Common patterns: agent.last_response.usage or agent._last_response
+        #     possible = getattr(agent, 'last_response', None) or getattr(agent, '_last_response', None)
+        #     if possible and isinstance(possible, dict):
+        #         usage_obj = possible.get('usage') or possible.get('token_usage')
+        #         if usage_obj:
+        #             usage = {
+        #                 'prompt_tokens': usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens'),
+        #                 'completion_tokens': usage_obj.get('completion_tokens') or usage_obj.get('output_tokens'),
+        #                 'total_tokens': usage_obj.get('total_tokens') or (
+        #                     (usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens') or 0) +
+        #                     (usage_obj.get('completion_tokens') or usage_obj.get('output_tokens') or 0)
+        #                 )
+        #             }
+        # except Exception as meta_e:
+        #     tlog(f"Token usage metadata extraction failed: {meta_e}")
         
         # ---- MCP TOOL CALL EXTRACTION (primary success path) ----
         def extract_mcp_tool_calls(raw_obj):
@@ -551,16 +598,16 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
                 if not any((e['tool'], e['input'], e.get('source','local')) == signature for e in tool_events):
                     tool_events.append(mcpcall)
 
-        if usage is None:
-            # Fallback heuristic
-            prompt_tokens = safe_token_count(message)
-            completion_tokens = safe_token_count(result)
-            usage = {
-                'prompt_tokens': prompt_tokens,
-                'completion_tokens': completion_tokens,
-                'total_tokens': prompt_tokens + completion_tokens
-            }
-            tlog("Using heuristic token counts (library did not expose usage)")
+        # if usage is None:
+        #     # Fallback heuristic
+        #     prompt_tokens = safe_token_count(message)
+        #     completion_tokens = safe_token_count(result)
+        #     usage = {
+        #         'prompt_tokens': prompt_tokens,
+        #         'completion_tokens': completion_tokens,
+        #         'total_tokens': prompt_tokens + completion_tokens
+        #     }
+        #     tlog("Using heuristic token counts (library did not expose usage)")
 
         # Synthetic fallback tool event if none occurred (clarity in UI)
         if not tool_events:
