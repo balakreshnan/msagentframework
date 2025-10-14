@@ -10,3 +10,4 @@ pyrit
 duckdb
 azure-identity
 aiofiles
+agent-framework[viz] --pre
