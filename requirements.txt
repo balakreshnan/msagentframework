@@ -1,5 +1,6 @@
 agent-framework
 agent-framework-devui
+agent-framework-azure-ai
 openai
 python-dotenv
 uv

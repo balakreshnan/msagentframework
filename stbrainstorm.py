@@ -164,6 +164,36 @@ async def multi_agent_interaction(query: str) -> str:
             """,
             #tools=... # tools to help the agent get stock prices
         )
+        # Define the Azure AI Search connection ID and index name
+        business_analyst = chat_client.create_agent(
+            name="businessanalyst",
+            instructions="""
+            You are a Business Analyst specializing in market and financial analysis.
+            
+            Your role is to:
+            - Analyze market potential and sizing
+            - Evaluate revenue models and financial viability
+            - Assess competitive landscape
+            - Identify target customer segments
+            - Evaluate business model feasibility
+            
+            Structure your responses as:
+            ## 💼 Business Analysis
+            ### Market Opportunity
+            - Market size and growth potential
+            - Target customer segments
+            ### Revenue Model
+            - Potential revenue streams
+            - Pricing strategies
+            ### Competitive Landscape
+            - Key competitors and differentiation
+            ### Financial Viability
+            - Investment requirements and ROI projections
+            
+            Provide data-driven insights and realistic business assessments.
+            """,
+            #tools=... # tools to help the agent get stock prices
+        )
 
         # Build the workflow using the fluent builder.
         # Add agents to workflow with custom settings using add_agent.
@@ -172,10 +202,14 @@ async def multi_agent_interaction(query: str) -> str:
         # Set the start node and connect an edge from writer to reviewer.
         workflow = (
             WorkflowBuilder()
-            .add_agent(ideation_agent, id="ideation_agent")
-            .add_agent(inquiry_agent, id="inquiry_agent", output_response=True)
+            #.add_agent(ideation_agent, id="ideation_agent")
+            #.add_agent(inquiry_agent, id="inquiry_agent", output_response=True)
             .set_start_executor(ideation_agent)
             .add_edge(ideation_agent, inquiry_agent)
+            .add_edge(inquiry_agent, business_analyst)
+            # .add_multi_selection_edge_group(ideation_agent, 
+            #                                 [inquiry_agent, business_analyst], 
+            #                                 selection_func=lambda x: x)  # Example of multi-selection edge
             .build()
         )
 
@@ -198,12 +232,16 @@ async def multi_agent_interaction(query: str) -> str:
                 print("\n===== Final output =====")
                 print(event.data)
 
-        chat_client.delete_agent(ideation_agent.id)
-        chat_client.delete_agent(inquiry_agent.id)
+        #chat_client.delete_agent(ideation_agent.id)
+        #chat_client.delete_agent(inquiry_agent.id)
+        # await chat_client.project_client.agents.delete_agent(ideation_agent.id)
+        # await chat_client.project_client.agents.delete_agent(inquiry_agent.id)
+        # chat_client.project_client.agents.threads.delete(ideation_agent.id)
 
     return "Done"
 
 if __name__ == "__main__":
     #asyncio.run(create_agents())
-    query = "Create me a catchy phrase for humanoid enabling better remote work."
+    # query = "Create me a catchy phrase for humanoid enabling better remote work."
+    query = "Create a AI Data center to handle 1GW capacity with 10MW power usage effectiveness.With 250000 GPU's."
     asyncio.run(multi_agent_interaction(query))
