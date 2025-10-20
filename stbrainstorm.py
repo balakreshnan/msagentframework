@@ -5,6 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from random import randint
 from typing import Annotated, Dict, List, Any
+from openai import AzureOpenAI
 import requests
 import streamlit as st
 from utils import get_weather, fetch_stock_data
@@ -109,6 +110,77 @@ async def create_agents():
             #tools=... # tools to help the agent get stock prices
         )
 
+def normalize_token_usage(usage) -> dict:
+    """Normalize various usage objects/dicts into a standard dict.
+    Returns {'prompt_tokens', 'completion_tokens', 'total_tokens'} or {} if unavailable.
+    """
+    try:
+        if not usage:
+            return {}
+        # If it's already a dict, use it directly
+        if isinstance(usage, dict):
+            d = usage
+        else:
+            # Attempt attribute access (e.g., ResponseUsage pydantic model)
+            d = {}
+            for name in ("prompt_tokens", "completion_tokens", "total_tokens", "input_tokens", "output_tokens"):
+                val = getattr(usage, name, None)
+                if val is not None:
+                    d[name] = val
+
+        prompt = int(d.get("prompt_tokens", d.get("input_tokens", 0)) or 0)
+        completion = int(d.get("completion_tokens", d.get("output_tokens", 0)) or 0)
+        total = int(d.get("total_tokens", prompt + completion) or 0)
+        return {"prompt_tokens": prompt, "completion_tokens": completion, "total_tokens": total}
+    except Exception:
+        return {}
+
+def get_chat_response_gpt5_response(query: str) -> str:
+    returntxt = ""
+
+    responseclient = AzureOpenAI(
+        base_url = os.getenv("AZURE_OPENAI_ENDPOINT") + "/openai/v1/",  
+        api_key= os.getenv("AZURE_OPENAI_KEY"),
+        api_version="preview"
+        )
+    deployment = "gpt-5"
+
+    prompt = """You are a brainstorming assistant. Given the following query, 
+    provide creative ideas and suggestions.
+    Here are the agents available to you:
+    - Ideation Catalyst: Generates creative and innovative ideas.
+    - Inquiry Specialist: Asks strategic follow-up questions to uncover insights.
+    - Business Analyst: Analyzes market potential and financial viability.
+
+    Based on the query, pick the most relevant agents to assist you in brainstorming.
+    Query: {query}
+    
+    Respond only the agents to use as array of strings.
+    """
+
+    # Some new parameters!  
+    response = responseclient.responses.create(
+        input=prompt.format(query=query),
+        model=deployment,
+        reasoning={
+            "effort": "medium",
+            "summary": "auto" # auto, concise, or detailed 
+        },
+        text={
+            "verbosity": "low" # New with GPT-5 models
+        }
+    )
+
+    # # Token usage details
+    usage = normalize_token_usage(response.usage)
+
+    # print("--------------------------------")
+    # print("Output:")
+    # print(output_text)
+    returntxt = response.output_text
+
+    return returntxt, usage
+
 async def multi_agent_interaction(query: str) -> str:
     async with (
         AzureCliCredential() as credential,
@@ -205,11 +277,11 @@ async def multi_agent_interaction(query: str) -> str:
             #.add_agent(ideation_agent, id="ideation_agent")
             #.add_agent(inquiry_agent, id="inquiry_agent", output_response=True)
             .set_start_executor(ideation_agent)
-            .add_edge(ideation_agent, inquiry_agent)
-            .add_edge(inquiry_agent, business_analyst)
-            # .add_multi_selection_edge_group(ideation_agent, 
-            #                                 [inquiry_agent, business_analyst], 
-            #                                 selection_func=lambda x: x)  # Example of multi-selection edge
+            # .add_edge(ideation_agent, inquiry_agent)
+            # .add_edge(inquiry_agent, business_analyst)
+            .add_multi_selection_edge_group(ideation_agent, 
+                                            [inquiry_agent, business_analyst], 
+                                            selection_func=get_chat_response_gpt5_response(query=query))  # Example of multi-selection edge
             .build()
         )
 
