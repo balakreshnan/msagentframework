@@ -277,11 +277,11 @@ async def multi_agent_interaction(query: str) -> str:
             #.add_agent(ideation_agent, id="ideation_agent")
             #.add_agent(inquiry_agent, id="inquiry_agent", output_response=True)
             .set_start_executor(ideation_agent)
-            # .add_edge(ideation_agent, inquiry_agent)
-            # .add_edge(inquiry_agent, business_analyst)
-            .add_multi_selection_edge_group(ideation_agent, 
-                                            [inquiry_agent, business_analyst], 
-                                            selection_func=get_chat_response_gpt5_response(query=query))  # Example of multi-selection edge
+            .add_edge(ideation_agent, inquiry_agent)
+            .add_edge(inquiry_agent, business_analyst)
+            # .add_multi_selection_edge_group(ideation_agent, 
+            #                                 [inquiry_agent, business_analyst], 
+            #                                 selection_func=get_chat_response_gpt5_response(query=query))  # Example of multi-selection edge
             .build()
         )
 
