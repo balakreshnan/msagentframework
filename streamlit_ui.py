@@ -22,6 +22,7 @@ from agent_framework.observability import get_tracer, setup_observability
 from pydantic import Field
 from azure.ai.agents.models import FileInfo, VectorStore
 from azure.ai.agents.models import AzureAISearchTool, AzureAISearchQueryType
+from azure.ai.projects.models import ConnectionType
 
 from dotenv import load_dotenv
 
@@ -326,6 +327,61 @@ def safe_token_count(text_like) -> int:
         return 0
     return int(len(text.split()) * 1.3)
 
+async def extract_search_tool_results(agent, thread):
+    """Extract Azure AI Search / File Search tool results from run steps"""
+    search_results = []
+    try:
+        # Get the last run from the thread
+        runs = []
+        async for run in agent._chat_client.project_client.agents.runs.list(thread_id=thread.id):
+            runs.append(run)
+        
+        if not runs:
+            return search_results
+        
+        last_run = runs[0]  # Most recent run
+        
+        # Get run steps which contain tool call details
+        async for step in agent._chat_client.project_client.agents.run_steps.list(
+            thread_id=thread.id,
+            run_id=last_run.id
+        ):
+            if hasattr(step, 'step_details') and step.step_details:
+                step_details = step.step_details
+                
+                # Check for tool calls in step details
+                if hasattr(step_details, 'tool_calls') and step_details.tool_calls:
+                    for tool_call in step_details.tool_calls:
+                        # File search / Azure AI Search tool
+                        if hasattr(tool_call, 'file_search') and tool_call.file_search:
+                            fs_results = tool_call.file_search
+                            if hasattr(fs_results, 'results') and fs_results.results:
+                                for result in fs_results.results:
+                                    search_results.append({
+                                        'timestamp': datetime.now().strftime('%H:%M:%S'),
+                                        'tool': 'azure_ai_search',
+                                        'input': '(search query embedded in context)',
+                                        'output': f"Found in: {getattr(result, 'file_name', 'document')} - {getattr(result, 'content', str(result)[:200])}",
+                                        'source': 'azure_ai_search',
+                                        'status': 'success'
+                                    })
+                        
+                        # Also check for function calls
+                        elif hasattr(tool_call, 'function') and tool_call.function:
+                            func = tool_call.function
+                            search_results.append({
+                                'timestamp': datetime.now().strftime('%H:%M:%S'),
+                                'tool': getattr(func, 'name', 'unknown_function'),
+                                'input': getattr(func, 'arguments', '{}'),
+                                'output': getattr(func, 'output', '(output not captured)'),
+                                'source': 'function_call',
+                                'status': 'success' if hasattr(func, 'output') else 'completed'
+                            })
+    except Exception as e:
+        tlog(f"Search result extraction error: {e}")
+    
+    return search_results
+
 async def process_agent(message, client, ephemeral, session_data, agent_id, agent_created):
     """Process a message through the agent and return the response."""
     # agentclient = AzureAIAgentClient(async_credential=AzureCliCredential())
@@ -376,8 +432,14 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
                                           top_k=5,
                                           #vector_store=azure_ai_conn_id,
                                           )
-    # ai_search_tool = HostedFileSearchTool(ai_search)
+    credential = session_data.get('credential')
+    client = AIProjectClient(endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"], credential=credential)
     # summarize RFP for Virginia railway express?
+    ai_search_conn_id = ""
+    async for connection in client.connections.list():
+        if connection.type == ConnectionType.AZURE_AI_SEARCH:
+            ai_search_conn_id = connection.id
+            break
 
     async with ChatAgent(
         chat_client=chat_client,
@@ -434,7 +496,7 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
         Microsoft Learn Agent (Tool: Microsoft Learn MCP): Searches and accesses Microsoft Learn documentation, tutorials, certifications, and resources on topics like Azure, Power Platform, or .NET. Input: Search query (e.g., "Azure AI fundamentals"). Output: Relevant article summaries, key takeaways, and direct links. Use for Microsoft tech learning or certification queries.
         HuggingFace Agent (Tool: HuggingFace MCP): Explores Hugging Face Hub for models, datasets, spaces, and ML resources. Input: Search query (e.g., "BERT fine-tuning tutorial"). Output: Model/dataset details, usage examples, and links to repos/spaces. Use for AI/ML model discovery or open-source NLP/CV resources.
         Stock Agent (Tool: fetch_stock_data): Fetches real-time or historical stock info (price, volume, trends) for a specified company (e.g., ticker symbol like "AAPL"). Input: Company/ticker. Output: Structured data (e.g., {"current_price": 150.25, "change": "+2.5%"}). Use for financial market queries.
-        RFP Document Search Agent (Tool: ai_search_tool): Searches a custom Azure AI Search index built from RFP-related documents. Input: Natural language query related to RFP topics. Output: Relevant document excerpts, summaries, and direct links to the source documents. Use for in-depth research or information retrieval on RFP issues.
+        RFP Document Search Agent (Tool: azure_ai_search): Searches a custom Azure AI Search index built from RFP-related documents. Input: Natural language query related to RFP topics. Output: Relevant document excerpts, summaries, and direct links to the source documents. Use for in-depth research or information retrieval on RFP issues.
         
         You are helpful, proactive, and user-focused. 
         Respond only after completing the necessary steps—never guess or fabricate data. 
@@ -444,8 +506,20 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
         tools=[instrumented_get_weather, mcplearn, hfmcp, 
                instrumented_fetch_stock_data, 
                # file_search_tool, ai_search
-               ai_search_tool,
+               # ai_search_tool,
+               {"type": "azure_ai_search"},
                ],
+        tool_resources={
+                "azure_ai_search": {
+                    "indexes": [
+                        {
+                            "index_connection_id": ai_search_conn_id,
+                            "index_name": "rfpdocs",
+                            "query_type": "vector",
+                        }
+                    ]
+                }
+            },
         temperature=0.0,
         max_tokens=2500,
     ) as agent:
@@ -461,6 +535,14 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
         result_obj = await agent.run(message, thread=thread)
         tlog("Agent response received")
         result = normalize_text(result_obj)
+        # Extract search tool results from run steps
+        search_tool_results = await extract_search_tool_results(agent, thread)
+        for search_result in search_tool_results:
+            tool_events.append(search_result)
+            tlog(f"Extracted search result from {search_result['tool']}")
+
+        print(f"Usage Details: {result_obj.usage_details}")
+        # ... rest of your code
 
         print(f"Usage Details: {result_obj.usage_details}")
         usagedetails = result_obj.usage_details
@@ -499,35 +581,7 @@ async def process_agent(message, client, ephemeral, session_data, agent_id, agen
             except Exception as meta_err:
                 tlog(f"Usage extraction failed: {meta_err}")
         print(f"Extracted token usage: {usage}")
-        # try:
-        #     # Try to extract token usage metadata from agent / underlying response if available
-        #     usagedetails = result_obj.get("usage_details", result_obj)  # fallback if usage_details is at top level
 
-        #     usage = {
-        #         'prompt_tokens': usagedetails.get("input_token_count", 0),
-        #         'completion_tokens': usagedetails.get("output_token_count", 0),
-        #         'total_tokens': usagedetails.get("total_token_count", 0)
-        #     }
-        #     print(f"Extracted token usage: {usage}")
-        # except Exception as meta_e:
-        #     tlog(f"Token usage metadata extraction failed: {meta_e}")
-        # try:
-        #     # Common patterns: agent.last_response.usage or agent._last_response
-        #     possible = getattr(agent, 'last_response', None) or getattr(agent, '_last_response', None)
-        #     if possible and isinstance(possible, dict):
-        #         usage_obj = possible.get('usage') or possible.get('token_usage')
-        #         if usage_obj:
-        #             usage = {
-        #                 'prompt_tokens': usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens'),
-        #                 'completion_tokens': usage_obj.get('completion_tokens') or usage_obj.get('output_tokens'),
-        #                 'total_tokens': usage_obj.get('total_tokens') or (
-        #                     (usage_obj.get('prompt_tokens') or usage_obj.get('input_tokens') or 0) +
-        #                     (usage_obj.get('completion_tokens') or usage_obj.get('output_tokens') or 0)
-        #                 )
-        #             }
-        # except Exception as meta_e:
-        #     tlog(f"Token usage metadata extraction failed: {meta_e}")
-        
         # ---- MCP TOOL CALL EXTRACTION (primary success path) ----
         def extract_mcp_tool_calls(raw_obj):
             calls = []
@@ -1049,5 +1103,7 @@ def main():
 
 
 if __name__ == "__main__":
+    # summarize the RFP for Virginia Railway Express project
     setup_observability()
     main()
+
