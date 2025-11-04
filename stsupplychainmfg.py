@@ -20,7 +20,7 @@ from opentelemetry.trace import SpanKind
 from opentelemetry.trace.span import format_trace_id
 from agent_framework.observability import get_tracer, setup_observability
 from pydantic import Field
-from agent_framework import AgentRunUpdateEvent, WorkflowBuilder, WorkflowOutputEvent
+from agent_framework import AgentRunUpdateEvent, WorkflowBuilder, WorkflowOutputEvent, SequentialBuilder, GroupChatBuilder
 from typing import Final
 
 from agent_framework import (
