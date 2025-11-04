@@ -1,4 +1,5 @@
 import asyncio
+from contextlib import AsyncExitStack
 import os
 import json
 from datetime import datetime
@@ -127,96 +128,112 @@ def get_chat_response_gpt5_response(query: str) -> str:
     return returntxt, usage
 
 async def multi_agent_interaction(query: str) -> str:
-    deployment = "gpt-5-chat-2"
-    credential = AzureCliCredential()
-    project_client = AIProjectClient(endpoint=os.environ["AZURE_AI_PROJECT"], credential=credential)
-    async with (
-        AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential, 
-                           project_client=project_client,
-                           model_deployment_name=deployment
-                           ) as chat_client,
-    ):
-        await chat_client.setup_azure_ai_observability()
+    returntxt = ""
+    try:
+        deployment = "gpt-5-chat-2"
+        credential = AzureCliCredential()
+        project_client = AIProjectClient(endpoint=os.environ["AZURE_AI_PROJECT"], 
+                                         credential=credential)
+        async with (
+            AzureCliCredential() as credential,
+            AzureAIAgentClient(async_credential=credential, 
+                            project_client=project_client,
+                            model_deployment_name=deployment
+                            ) as chat_client,
+        ):
+            await chat_client.setup_azure_ai_observability()
 
-        with get_tracer().start_as_current_span("SupplyChainAgent", kind=SpanKind.CLIENT) as current_span:
-            print(f"Trace ID: {format_trace_id(current_span.get_span_context().trace_id)}")
-        
-            supplychainmonitoragent = chat_client.create_agent(
-                name="supplychainmonitoragent",
-                instructions="""Continuously collect and analyze data from various tiers of the supply chain. 
-            Identify anomalies and report status updates.
-                """,
-                #tools=... # tools to help the agent get stock prices
-            )
+            with get_tracer().start_as_current_span("SupplyChainAgent", kind=SpanKind.CLIENT) as current_span:
+                print(f"Trace ID: {format_trace_id(current_span.get_span_context().trace_id)}")
+            
+                supplychainmonitoragent = chat_client.create_agent(
+                    name="supplychainmonitoragent",
+                    instructions="""Continuously collect and analyze data from various tiers of the supply chain. 
+                    Identify anomalies and report status updates.
+                    """,
+                    #tools=... # tools to help the agent get stock prices
+                )
 
-            disruptionpredictionagent = chat_client.create_agent(
-                name="disruptionpredictionagent",
-                instructions="""Use historical and real-time data to forecast potential disruptions. 
-            Provide risk scores and mitigation suggestions.
-                """,
-                #tools=... # tools to help the agent get stock prices
-            )
+                disruptionpredictionagent = chat_client.create_agent(
+                    name="disruptionpredictionagent",
+                    instructions="""Use historical and real-time data to forecast potential disruptions. 
+                    Provide risk scores and mitigation suggestions.
+                    """,
+                    #tools=... # tools to help the agent get stock prices
+                )
 
-            scenariosimulationagent = chat_client.create_agent(
-                name="scenariosimulationagent",
-                instructions="""Generate and evaluate alternative sourcing scenarios based on current supply chain data and predicted disruptions.
-                """,
-                #tools=... # tools to help the agent get stock prices
-            )
+                scenariosimulationagent = chat_client.create_agent(
+                    name="scenariosimulationagent",
+                    instructions="""Generate and evaluate alternative sourcing scenarios based on current supply chain data and predicted disruptions.
+                    """,
+                    #tools=... # tools to help the agent get stock prices
+                )
 
-            inventoryoptimizationagent = chat_client.create_agent(
-                name="inventoryoptimizationagent",
-                instructions="""Analyze inventory levels across global facilities and recommend adjustments to maintain resilience and efficiency.
-                """,
-                #tools=... # tools to help the agent get stock prices
-            )
-            workflow = (
-                WorkflowBuilder()
-                #.add_agent(ideation_agent, id="ideation_agent")
-                #.add_agent(inquiry_agent, id="inquiry_agent", output_response=True)
-                .set_start_executor(supplychainmonitoragent)
-                .add_edge(supplychainmonitoragent, disruptionpredictionagent)
-                .add_edge(disruptionpredictionagent, scenariosimulationagent)
-                .add_edge(scenariosimulationagent, inventoryoptimizationagent)
-                # .add_multi_selection_edge_group(supplychainmonitoragent, 
-                #                                 [disruptionpredictionagent, 
-                #                                  scenariosimulationagent, 
-                #                                  inventoryoptimizationagent], 
-                #                                 selection_func=get_chat_response_gpt5_response(query=query))  # Example of multi-selection edge
-                .build()
-            )
+                inventoryoptimizationagent = chat_client.create_agent(
+                    name="inventoryoptimizationagent",
+                    instructions="""Analyze inventory levels across global facilities and recommend adjustments to maintain resilience and efficiency.
+                    """,
+                    #tools=... # tools to help the agent get stock prices
+                )
+                workflow = (
+                    WorkflowBuilder()
+                    #.add_agent(ideation_agent, id="ideation_agent")
+                    #.add_agent(inquiry_agent, id="inquiry_agent", output_response=True)
+                    .set_start_executor(supplychainmonitoragent)
+                    .add_edge(supplychainmonitoragent, disruptionpredictionagent)
+                    .add_edge(disruptionpredictionagent, scenariosimulationagent)
+                    .add_edge(scenariosimulationagent, inventoryoptimizationagent)
+                    # .add_multi_selection_edge_group(supplychainmonitoragent, 
+                    #                                 [disruptionpredictionagent, 
+                    #                                  scenariosimulationagent, 
+                    #                                  inventoryoptimizationagent], 
+                    #                                 selection_func=get_chat_response_gpt5_response(query=query))  # Example of multi-selection edge
+                    .build()
+                )
 
-            # Stream events from the workflow. We aggregate partial token updates per executor for readable output.
-            last_executor_id: str | None = None
+                # Stream events from the workflow. We aggregate partial token updates per executor for readable output.
+                last_executor_id: str | None = None
+                
+                try:
+                    events = workflow.run_stream(query)
+                    async for event in events:
+                        if isinstance(event, AgentRunUpdateEvent):
+                            # AgentRunUpdateEvent contains incremental text deltas from the underlying agent.
+                            # Print a prefix when the executor changes, then append updates on the same line.
+                            eid = event.executor_id
+                            if eid != last_executor_id:
+                                if last_executor_id is not None:
+                                    print()
+                                print(f"{eid}:", end=" ", flush=True)
+                                last_executor_id = eid
+                            print(event.data, end="", flush=True)
+                        elif isinstance(event, WorkflowOutputEvent):
+                            print("\n===== Final output =====")
+                            print(event.data)
+                            returntxt = event.data
+                except Exception as e:
+                    print(f"Error during workflow execution: {e}")
+                    pass
 
-            events = workflow.run_stream(query)
-            async for event in events:
-                if isinstance(event, AgentRunUpdateEvent):
-                    # AgentRunUpdateEvent contains incremental text deltas from the underlying agent.
-                    # Print a prefix when the executor changes, then append updates on the same line.
-                    eid = event.executor_id
-                    if eid != last_executor_id:
-                        if last_executor_id is not None:
-                            print()
-                        print(f"{eid}:", end=" ", flush=True)
-                        last_executor_id = eid
-                    print(event.data, end="", flush=True)
-                elif isinstance(event, WorkflowOutputEvent):
-                    print("\n===== Final output =====")
-                    print(event.data)
+                #chat_client.delete_agent(ideation_agent.id)
+                #chat_client.delete_agent(inquiry_agent.id)
+                # await supplychainmonitoragent.delete()
+                # await chat_client.project_client.agents.delete_agent(ideation_agent.id)
+                # await chat_client.project_client.agents.delete_agent(inquiry_agent.id)
+                # chat_client.project_client.agents.threads.delete(ideation_agent.id)
+    except Exception as e:
+        print(f"Error during multi-agent interaction: {e}")
+        pass
 
-            #chat_client.delete_agent(ideation_agent.id)
-            #chat_client.delete_agent(inquiry_agent.id)
-            # await supplychainmonitoragent.delete()
-            # await chat_client.project_client.agents.delete_agent(ideation_agent.id)
-            # await chat_client.project_client.agents.delete_agent(inquiry_agent.id)
-            # chat_client.project_client.agents.threads.delete(ideation_agent.id)
+    return returntxt
 
-    return "Done"
 
 if __name__ == "__main__":
     #asyncio.run(create_agents())
     # query = "Create me a catchy phrase for humanoid enabling better remote work."
     query = "Create a AI Data center to handle 1GW capacity with 10MW power usage effectiveness.With 250000 GPU's."
-    asyncio.run(multi_agent_interaction(query))
+    try:
+        asyncio.run(multi_agent_interaction(query))
+    except Exception as e:
+        print(f"Error during multi-agent interaction: {e}")
+        pass
