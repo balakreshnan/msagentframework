@@ -1,0 +1,101 @@
+Sample_ID,Lot_ID,Temperature,Pressure,Deposition_Time,Etch_Rate,Particle_Count,Line_Width_Variation,Defect_Type,Root_Cause,Is_Defective
+S001,Lot04,354.97,0.99,87.08,5.76,1,0.079,Bridge,Operator Error,Yes
+S002,Lot08,345.31,1.03,57.68,4.77,15,-0.0506,Particle,Contamination,Yes
+S003,Lot19,353.14,1.07,58.87,5.03,1,-0.0712,None,None,No
+S004,Lot01,338.49,1.02,57.0,6.85,2,-0.0267,Void,Equipment Malfunction,Yes
+S005,Lot17,347.71,1.02,53.67,5.55,4,0.0369,None,None,No
+S006,Lot18,351.71,0.46,58.49,4.26,3,-0.036,Scratch,Parameter Deviation,Yes
+S007,Lot19,346.15,0.97,63.06,5.52,18,0.0466,Particle,Contamination,Yes
+S008,Lot14,348.22,0.98,65.9,4.55,3,0.0486,None,None,No
+S009,Lot05,357.96,1.07,74.6,6.69,1,-0.046,Bridge,Operator Error,Yes
+S010,Lot04,360.42,1.05,60.1,4.73,14,-0.0748,Discoloration,Contamination,Yes
+S011,Lot12,359.15,1.02,57.35,5.26,5,-0.0196,None,None,No
+S012,Lot02,335.36,1.01,61.31,5.0,2,-0.0117,None,None,No
+S013,Lot18,354.53,0.99,61.07,3.99,5,0.1471,Misalignment,Material Issue,Yes
+S014,Lot03,351.02,0.98,56.7,5.0,3,0.017,None,None,No
+S015,Lot20,349.93,1.04,54.25,4.61,5,0.0387,None,None,No
+S016,Lot12,345.07,1.05,68.53,5.44,0,-0.0775,None,None,No
+S017,Lot03,350.69,0.95,62.37,6.36,2,0.0775,Void,Equipment Malfunction,Yes
+S018,Lot10,355.56,1.05,62.63,5.68,1,0.127,None,None,No
+S019,Lot08,335.6,1.06,66.5,4.57,4,0.0147,None,None,No
+S020,Lot13,342.86,1.09,87.19,4.4,3,0.0328,Bridge,Operator Error,Yes
+S021,Lot06,354.13,1.04,69.48,4.88,3,-0.0377,None,None,No
+S022,Lot07,352.77,1.04,60.07,5.73,3,-0.0535,None,None,No
+S023,Lot03,354.82,0.99,63.57,5.24,5,-0.0036,None,None,No
+S024,Lot06,352.14,0.94,60.87,5.19,2,0.0529,None,None,No
+S025,Lot08,350.51,1.04,65.33,4.52,6,0.4262,Misalignment,Material Issue,Yes
+S026,Lot09,361.36,1.05,63.26,4.84,1,0.0379,None,None,No
+S027,Lot18,345.15,1.0,89.9,4.07,2,-0.0447,Bridge,Operator Error,Yes
+S028,Lot02,365.6,1.01,62.75,4.36,18,0.1195,Discoloration,Contamination,Yes
+S029,Lot13,368.43,1.0,62.21,7.78,2,-0.0314,Void,Equipment Malfunction,Yes
+S030,Lot19,358.66,0.94,58.33,4.76,6,-0.0327,None,None,No
+S031,Lot11,336.73,1.09,56.35,4.36,1,0.4753,Misalignment,Material Issue,Yes
+S032,Lot13,349.81,0.95,53.53,4.95,4,0.0721,None,None,No
+S033,Lot15,335.64,1.06,60.05,6.54,1,0.0231,Void,Equipment Malfunction,Yes
+S034,Lot08,346.15,1.01,63.31,5.79,6,-0.0619,None,None,No
+S035,Lot18,345.14,1.6,64.42,4.77,0,-0.0295,Bridge,Parameter Deviation,Yes
+S036,Lot08,353.57,0.97,64.5,5.15,3,0.0374,None,None,No
+S037,Lot05,356.1,1.0,60.59,5.64,6,-0.0296,None,None,No
+S038,Lot03,350.12,1.05,57.38,5.47,2,0.0162,None,None,No
+S039,Lot04,348.7,1.0,62.98,6.9,3,0.1046,Void,Equipment Malfunction,Yes
+S040,Lot14,356.28,1.0,55.51,5.04,3,-0.0339,None,None,No
+S041,Lot13,354.13,0.97,55.89,5.12,2,0.028,None,None,No
+S042,Lot15,358.73,1.06,57.61,4.67,2,0.068,None,None,No
+S043,Lot18,358.58,0.99,59.9,4.5,0,-0.0341,None,None,No
+S044,Lot01,349.52,1.06,63.85,5.25,3,0.0044,None,None,No
+S045,Lot04,350.7,1.05,62.37,5.03,5,-0.0055,None,None,No
+S046,Lot18,359.76,0.93,63.92,4.92,2,-0.0678,None,None,No
+S047,Lot11,353.42,1.09,64.75,4.71,6,0.3218,Misalignment,Material Issue,Yes
+S048,Lot06,349.26,0.99,61.48,4.45,6,0.0003,None,None,No
+S049,Lot09,350.47,0.98,63.11,4.47,5,-0.0071,None,None,No
+S050,Lot06,353.32,0.96,67.76,5.06,5,0.0323,None,None,No
+S051,Lot04,363.69,0.95,63.43,5.53,4,-0.0879,None,None,No
+S052,Lot10,345.13,1.07,64.91,5.17,4,0.0192,None,None,No
+S053,Lot17,349.67,0.9,59.55,4.35,1,0.0335,None,None,No
+S054,Lot05,353.67,0.95,57.43,4.47,3,-0.0265,None,None,No
+S055,Lot06,342.07,0.99,54.82,4.72,2,-0.0599,None,None,No
+S056,Lot17,355.15,1.06,64.26,4.69,2,-0.0138,None,None,No
+S057,Lot20,326.98,0.92,66.83,5.82,0,-0.0125,None,None,No
+S058,Lot01,358.51,0.95,81.16,5.48,2,-0.0803,Bridge,Operator Error,Yes
+S059,Lot10,342.44,0.93,56.77,7.2,3,-0.0004,Void,Equipment Malfunction,Yes
+S060,Lot19,350.77,0.96,67.62,5.27,2,0.0698,None,None,No
+S061,Lot03,336.9,0.9,64.71,5.01,1,0.0064,None,None,No
+S062,Lot03,345.42,0.97,58.09,4.79,1,-0.1251,None,None,No
+S063,Lot18,356.85,1.02,59.58,5.12,1,0.0137,None,None,No
+S064,Lot05,355.28,1.01,70.22,5.81,2,-0.0382,None,None,No
+S065,Lot18,331.95,0.92,89.16,5.13,2,-0.0452,Void,Parameter Deviation,Yes
+S066,Lot18,333.89,0.99,57.96,4.7,5,0.038,None,None,No
+S067,Lot07,351.7,1.0,62.44,5.79,3,-0.0159,None,None,No
+S068,Lot13,346.81,1.03,65.17,3.9,4,0.018,None,None,No
+S069,Lot12,331.29,0.98,60.09,5.84,3,0.0118,None,None,No
+S070,Lot17,357.71,0.93,65.72,5.17,4,-0.0208,None,None,No
+S071,Lot08,339.09,0.96,85.33,5.2,3,0.0643,Bridge,Operator Error,Yes
+S072,Lot01,345.73,0.97,64.82,5.49,4,-0.0889,None,None,No
+S073,Lot08,364.96,1.03,59.72,5.14,2,-0.0563,None,None,No
+S074,Lot01,367.82,1.03,61.08,5.22,25,0.0092,Particle,Contamination,Yes
+S075,Lot03,351.0,1.13,62.62,4.71,2,-0.0067,None,None,No
+S076,Lot11,339.88,0.92,64.12,6.29,3,-0.013,Void,Equipment Malfunction,Yes
+S077,Lot09,347.54,0.99,46.52,4.97,4,-0.0509,None,None,No
+S078,Lot07,355.17,0.96,59.18,5.0,1,0.0079,None,None,No
+S079,Lot19,342.17,1.03,59.43,5.08,1,0.1285,None,None,No
+S080,Lot08,338.93,1.07,46.7,3.96,2,-0.062,None,None,No
+S081,Lot14,335.92,0.96,54.45,5.88,17,0.0243,Discoloration,Contamination,Yes
+S082,Lot12,342.27,0.96,56.36,5.05,2,-0.0065,None,None,No
+S083,Lot15,347.6,0.98,63.55,5.22,3,0.0297,None,None,No
+S084,Lot02,346.9,1.02,53.74,5.46,3,-0.0092,None,None,No
+S085,Lot04,334.43,1.03,79.11,5.88,5,-0.0019,Bridge,Operator Error,Yes
+S086,Lot04,351.14,1.01,58.18,6.88,3,0.0085,Void,Equipment Malfunction,Yes
+S087,Lot18,350.18,1.02,57.3,4.61,0,-0.0815,None,None,No
+S088,Lot14,355.52,1.1,63.59,4.77,0,0.3519,Misalignment,Material Issue,Yes
+S089,Lot08,359.83,1.08,65.07,4.08,1,-0.064,None,None,No
+S090,Lot03,355.18,0.96,60.93,4.62,2,0.0671,None,None,No
+S091,Lot18,295.09,1.03,51.23,6.04,3,-0.0152,Void,Parameter Deviation,Yes
+S092,Lot06,334.81,1.0,56.71,4.16,2,0.0494,None,None,No
+S093,Lot16,349.65,1.09,56.87,5.91,4,0.3263,Misalignment,Material Issue,Yes
+S094,Lot02,336.81,0.99,65.32,5.06,17,0.0215,Discoloration,Contamination,Yes
+S095,Lot09,352.08,0.95,65.27,4.98,4,0.0341,None,None,No
+S096,Lot15,335.95,1.03,60.14,5.64,1,0.0206,Void,Parameter Deviation,Yes
+S097,Lot07,343.49,1.05,64.34,5.14,20,0.0041,Particle,Contamination,Yes
+S098,Lot11,360.65,0.75,58.19,4.78,3,0.0727,Particle,Parameter Deviation,Yes
+S099,Lot17,340.81,0.95,56.16,6.9,4,0.0117,Void,Equipment Malfunction,Yes
+S100,Lot03,341.74,1.12,56.68,5.58,2,0.0811,None,None,No
