@@ -10,7 +10,7 @@ import streamlit as st
 from PIL import Image
 from io import BytesIO
 
-async def test_image(img_base64: str) -> str:
+async def test_image(img_base64: str, query: str) -> str:
     returntxt = ""
     """Test image analysis with Azure OpenAI."""
     # For authentication, run `az login` command in terminal or replace AzureCliCredential with preferred
@@ -41,7 +41,7 @@ async def test_image(img_base64: str) -> str:
 
     message = ChatMessage(
         role=Role.USER,
-        contents=[TextContent(text="Create a Readiology report?"), DataContent(uri=data_uri, media_type="image/jpeg")],
+        contents=[TextContent(text=query), DataContent(uri=data_uri, media_type="image/jpeg")],
     )
 
     response = await client.get_response(message)
@@ -139,26 +139,28 @@ async def run_app():
     # Right column - Analysis and Results
     with col2:
         st.subheader("🔍 Analysis & Results")
+
+        # Input for analysis query
+        analysis_query = st.text_area(
+            "What would you like to know about this image?",
+            placeholder="E.g., 'Identify any abnormalities', 'Analyze lung fields', 'Check for fractures'",
+            height=100
+        )
         
         with st.container(border=True, height=500):
             if uploaded_file is not None and 'uploaded_image' in st.session_state:
                 # Analysis section
                 st.markdown("### AI Analysis")
                 
-                # Input for analysis query
-                analysis_query = st.text_area(
-                    "What would you like to know about this image?",
-                    placeholder="E.g., 'Identify any abnormalities', 'Analyze lung fields', 'Check for fractures'",
-                    height=100
-                )
+                
                 
                 # Analysis button
                 if st.button("🚀 Run Analysis", type="primary", use_container_width=True):
-                    with st.spinner("Analyzing image..."):
+                    with st.spinner("Analyzing image...", show_time=True):
                         # Your agent analysis code here
                         # Example placeholder:
                         if img_base64:
-                            test_result = await test_image(img_base64)
+                            test_result = await test_image(img_base64, analysis_query)
                             # Display results
                             st.markdown("#### Findings:")
                             st.write("Analysis results will appear here...")
