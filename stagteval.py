@@ -12,8 +12,10 @@ from pydantic import Field
 import os
 from azure.ai.evaluation import ToolCallAccuracyEvaluator, AzureOpenAIModelConfiguration
 from azure.ai.evaluation import IntentResolutionEvaluator, TaskAdherenceEvaluator, ResponseCompletenessEvaluator
-
 from pprint import pprint
+from agent_framework.observability import get_tracer, setup_observability
+from opentelemetry.trace import SpanKind
+from opentelemetry.trace.span import format_trace_id
 
 from dotenv import load_dotenv
 
@@ -45,64 +47,73 @@ async def main() -> None:
         AzureCliCredential() as credential,
         AIProjectClient(endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"], credential=credential) as client,
     ):
-        # Create an agent that will persist
-        created_agent = await client.agents.create_agent(
-            model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"], name="WeatherAgent"
-        )
-        query = "What's the weather like in Tokyo?"
-        try:
-            async with ChatAgent(
-                # passing in the client is optional here, so if you take the agent_id from the portal
-                # you can use it directly without the two lines above.
-                chat_client=AzureAIAgentClient(project_client=client, agent_id=created_agent.id),
-                instructions="You are a helpful weather agent.",
-                tools=get_weather,
-            ) as agent:
-                result = await agent.run(query)
-                print(f"Result: {result}\n")
+        deployment = "gpt-5-chat-2"
+        chat_client = AzureAIAgentClient(async_credential=credential, 
+                            project_client=client,
+                            model_deployment_name=deployment
+                            )
+        await chat_client.setup_azure_ai_observability()
+        with get_tracer().start_as_current_span("IndAgentEvalRealtime", kind=SpanKind.CLIENT) as current_span:
+                print(f"Trace ID: {format_trace_id(current_span.get_span_context().trace_id)}")
 
-                # query = "How is the weather in Seattle ?"
-                tool_call = {
-                    "type": "tool_call",
-                    "tool_call_id": "call_CUdbkBfvVBla2YP3p24uhElJ",
-                    "name": "fetch_weather",
-                    "arguments": {"location": "Seattle"},
-                }
+                # Create an agent that will persist
+                created_agent = await client.agents.create_agent(
+                    model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"], name="TestEvalAgent"
+                )
+                query = "What's the weather like in Tokyo?"
+                try:
+                    async with ChatAgent(
+                        # passing in the client is optional here, so if you take the agent_id from the portal
+                        # you can use it directly without the two lines above.
+                        chat_client=AzureAIAgentClient(project_client=client, agent_id=created_agent.id),
+                        instructions="You are a helpful weather agent.",
+                        tools=get_weather,
+                    ) as agent:
+                        result = await agent.run(query)
+                        print(f"Result: {result}\n")
 
-                tool_definition = {
-                    "id": "fetch_weather",
-                    "name": "fetch_weather",
-                    "description": "Fetches the weather information for the specified location.",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {"location": {"type": "string", "description": "The location to fetch weather for."}},
-                    },
-                }
-                response = tool_call_accuracy(query=query, tool_calls=tool_call, tool_definitions=tool_definition)
-                pprint(response)
-                response_completeness_evaluator = ResponseCompletenessEvaluator(model_config=model_config)
-                result = response_completeness_evaluator(
-                    response=result,
-                    ground_truth=result,
-                )
-                pprint(result)
-                intent_resolution_evaluator = IntentResolutionEvaluator(model_config)
-                # Success example. Intent is identified and understood and the response correctly resolves user intent
-                result = intent_resolution_evaluator(
-                    query=query,
-                    response=result,
-                )
-                pprint(result)
-                task_adherence_evaluator = TaskAdherenceEvaluator(model_config)
-                result = task_adherence_evaluator(
-                    query=query,
-                    response=result,
-                )
-                pprint(result)
-        finally:
-            # Clean up the agent manually
-            
-            await client.agents.delete_agent(created_agent.id)
+                        # query = "How is the weather in Seattle ?"
+                        tool_call = {
+                            "type": "tool_call",
+                            "tool_call_id": "call_CUdbkBfvVBla2YP3p24uhElJ",
+                            "name": "fetch_weather",
+                            "arguments": {"location": "Seattle"},
+                        }
+
+                        tool_definition = {
+                            "id": "fetch_weather",
+                            "name": "fetch_weather",
+                            "description": "Fetches the weather information for the specified location.",
+                            "parameters": {
+                                "type": "object",
+                                "properties": {"location": {"type": "string", "description": "The location to fetch weather for."}},
+                            },
+                        }
+                        response = tool_call_accuracy(query=query, tool_calls=tool_call, tool_definitions=tool_definition)
+                        pprint(response)
+                        response_completeness_evaluator = ResponseCompletenessEvaluator(model_config=model_config)
+                        result = response_completeness_evaluator(
+                            response=result,
+                            ground_truth=result,
+                        )
+                        pprint(result)
+                        intent_resolution_evaluator = IntentResolutionEvaluator(model_config)
+                        # Success example. Intent is identified and understood and the response correctly resolves user intent
+                        result = intent_resolution_evaluator(
+                            query=query,
+                            response=result,
+                        )
+                        pprint(result)
+                        task_adherence_evaluator = TaskAdherenceEvaluator(model_config)
+                        result = task_adherence_evaluator(
+                            query=query,
+                            response=result,
+                        )
+                        pprint(result)
+                finally:
+                    # Clean up the agent manually
+                    
+                    await client.agents.delete_agent(created_agent.id)
 
 
 if __name__ == "__main__":
