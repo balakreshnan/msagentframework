@@ -24,7 +24,7 @@ async def main():
         AzureAIAgentClient(
             project_endpoint=os.getenv("AZURE_AI_PROJECT"),
             model_deployment_name=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
-            async_credential=credential,
+            credential=credential,
         ) as client,
         # Create an agent grounded in your Knowledge Base
         ChatAgent(chat_client=client, context_providers=[search]) as agent,

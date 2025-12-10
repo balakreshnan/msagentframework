@@ -130,7 +130,7 @@ async def multi_agent_interaction(query: str) -> str:
     credentialdefault = DefaultAzureCredential()
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credentialdefault) as chat_client,
+        AzureAIAgentClient(credential=credentialdefault) as chat_client,
     ):
         
         taskplanner_agent = chat_client.create_agent(
