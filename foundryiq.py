@@ -15,15 +15,18 @@ async def main():
     async with (
         # Connect to Foundry IQ Knowledge Base for agentic retrieval
         AzureAISearchContextProvider(
-            endpoint="https://stdagentvecstore.search.windows.net",
-            knowledge_base_name="rfpdocs",
+            endpoint="https://vecdb.search.windows.net",
+            knowledge_base_name="constructionrfpdocs1",
             credential=credential,
             mode="agentic",
+            azure_openai_resource_url=os.getenv("AZURE_OPENAI_ENDPOINT_BASIC"),  # Azure OpenAI only
+            model_deployment_name="gpt-4o",
+            retrieval_reasoning_effort="medium",  # Full query planning
         ) as search,
         # Connect to Azure AI Foundry for model inference
         AzureAIAgentClient(
-            project_endpoint=os.getenv("AZURE_AI_PROJECT"),
-            model_deployment_name=os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME"),
+            project_endpoint=os.getenv("AZURE_AI_PROJECT_BASIC"),
+            model_deployment_name=os.getenv("AZURE_OPENAI_DEPLOYMENT_BASIC"),
             credential=credential,
         ) as client,
         # Create an agent grounded in your Knowledge Base
