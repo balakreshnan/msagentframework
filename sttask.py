@@ -127,9 +127,10 @@ def get_chat_response_gpt5_response(query: str) -> str:
 
 async def multi_agent_interaction(query: str) -> str:
     returntxt = ""
+    credentialdefault = DefaultAzureCredential()
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential) as chat_client,
+        AzureAIAgentClient(async_credential=credentialdefault) as chat_client,
     ):
         
         taskplanner_agent = chat_client.create_agent(
