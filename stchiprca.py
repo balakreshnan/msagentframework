@@ -109,7 +109,7 @@ async def multi_agent_interaction(query: str) -> str:
         
         async with (
             AzureCliCredential() as credential,
-            AzureAIAgentClient(async_credential=credential, 
+            AzureAIAgentClient(credential=credential, 
                             project_client=project_client,
                             model_deployment_name=deployment
                             ) as chat_client,

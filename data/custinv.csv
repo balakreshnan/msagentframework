@@ -1,0 +1,89 @@
+Customer_ID,First_Name,Last_Name,Product_ID,Product_Name,Category,Interaction_Type,Date_Added,Quantity,Total_Spent_On_Item,Notes
+CUST-1001,Maria,Garcia,PROD-0010,Product 10,Electronics,Purchased,2025-11-15,1,469.48,Upgraded laptop
+CUST-1001,Maria,Garcia,PROD-0019,Product 19,Electronics,Wishlist,2025-12-10,1,0.00,Wants noise-cancelling headphones
+CUST-1001,Maria,Garcia,PROD-0075,Product 75,Electronics,Purchased,2025-10-20,2,951.54,Monitor bundle
+CUST-1001,Maria,Garcia,PROD-0138,Product 138,Electronics,Frequent,2025-12-01,3,968.91,Buys chargers often
+CUST-1001,Maria,Garcia,PROD-0091,Product 91,Electronics,Purchased,2025-09-05,1,136.95,Wireless mouse
+CUST-1001,Maria,Garcia,PROD-0027,Product 27,Electronics,Purchased,2025-08-12,1,328.87,Webcam
+CUST-1001,Maria,Garcia,PROD-0140,Product 140,Electronics,Wishlist,2025-12-08,1,0.00,Considering gaming chair
+CUST-1001,Maria,Garcia,PROD-0087,Product 87,Electronics,Frequent,2025-11-20,2,586.82,Headsets
+CUST-1002,James,Wilson,PROD-0006,Product 6,Sports,Purchased,2025-12-05,1,181.07,Running shoes
+CUST-1002,James,Wilson,PROD-0034,Product 34,Sports,Purchased,2025-11-10,4,323.88,Protein & accessories
+CUST-1002,James,Wilson,PROD-0103,Product 103,Sports,Wishlist,2025-12-09,1,0.00,Smart watch
+CUST-1002,James,Wilson,PROD-0018,Product 18,Sports,Purchased,2025-10-18,2,47.76,Gym towel set
+CUST-1002,James,Wilson,PROD-0042,Product 42,Sports,Frequent,2025-12-03,5,1615.80,Running gear rotation
+CUST-1002,James,Wilson,PROD-0057,Product 57,Sports,Purchased,2025-09-22,1,442.63,Yoga mat premium
+CUST-1002,James,Wilson,PROD-0026,Product 26,Sports,Wishlist,2025-12-07,1,0.00,New trail shoes
+CUST-1003,Sofia,Chen,PROD-0001,Product 1,Beauty,Purchased,2025-12-07,2,530.44,Skincare set
+CUST-1003,Sofia,Chen,PROD-0055,Product 55,Beauty,Purchased,2025-11-25,1,359.32,Serum
+CUST-1003,Sofia,Chen,PROD-0099,Product 99,Beauty,Wishlist,2025-12-10,1,0.00,New foundation
+CUST-1003,Sofia,Chen,PROD-0064,Product 64,Beauty,Purchased,2025-11-01,3,369.75,Korean skincare
+CUST-1003,Sofia,Chen,PROD-0118,Product 118,Beauty,Frequent,2025-12-05,4,541.96,Makeup monthly
+CUST-1003,Sofia,Chen,PROD-0053,Product 53,Beauty,Purchased,2025-10-10,1,450.92,Luxury palette
+CUST-1003,Sofia,Chen,PROD-0060,Product 60,Beauty,Wishlist,2025-12-06,1,0.00,LED mask
+CUST-1004,David,Martinez,PROD-0004,Product 4,Home Appliances,Purchased,2025-09-18,1,295.45,New fridge
+CUST-1004,David,Martinez,PROD-0023,Product 23,Home Appliances,Purchased,2025-10-05,1,218.53,Washer-dryer
+CUST-1004,David,Martinez,PROD-0145,Product 145,Home Appliances,Frequent,2025-12-01,5,1830.45,Filters & bulbs
+CUST-1004,David,Martinez,PROD-0078,Product 78,Home Appliances,Purchased,2025-11-12,1,405.86,Air purifier
+CUST-1004,David,Martinez,PROD-0100,Product 100,Home Appliances,Purchased,2025-08-20,1,219.46,Smart thermostat
+CUST-1004,David,Martinez,PROD-0131,Product 131,Home Appliances,Wishlist,2025-12-09,1,0.00,Robot vacuum
+CUST-1005,Linda,Johnson,PROD-0022,Product 22,Clothing,Purchased,2025-11-28,3,337.32,Sustainable jackets
+CUST-1005,Linda,Johnson,PROD-0089,Product 89,Clothing,Purchased,2025-12-06,2,541.68,Eco jeans
+CUST-1005,Linda,Johnson,PROD-0063,Product 63,Clothing,Frequent,2025-11-15,5,1043.10,T-shirts
+CUST-1005,Linda,Johnson,PROD-0122,Product 122,Clothing,Purchased,2025-10-30,4,1062.04,Hoodies
+CUST-1005,Linda,Johnson,PROD-0130,Product 130,Clothing,Wishlist,2025-12-10,1,0.00,Winter coat
+CUST-1006,Ryan,Patel,PROD-0015,Product 15,Groceries,Purchased,2025-12-11,10,1937.80,Weekly organic
+CUST-1006,Ryan,Patel,PROD-0043,Product 43,Groceries,Frequent,2025-12-04,8,3239.00,Bulk grains
+CUST-1006,Ryan,Patel,PROD-0092,Product 92,Groceries,Purchased,2025-11-27,6,2384.82,Snacks
+CUST-1006,Ryan,Patel,PROD-0012,Product 12,Groceries,Frequent,2025-12-08,12,5523.60,Monthly staples
+CUST-1007,Aisha,Khan,PROD-0053,Product 53,Beauty,Purchased,2025-12-05,1,450.92,Makeup palette
+CUST-1007,Aisha,Khan,PROD-0118,Product 118,Beauty,Purchased,2025-11-20,2,270.98,Perfume
+CUST-1007,Aisha,Khan,PROD-0119,Product 119,Beauty,Wishlist,2025-12-10,1,0.00,New perfume
+CUST-1007,Aisha,Khan,PROD-0066,Product 66,Beauty,Frequent,2025-11-30,3,352.47,Lip products
+CUST-1008,Carlos,Rodriguez,PROD-0008,Product 8,Automotive,Purchased,2025-11-15,1,175.57,Cleaning kit
+CUST-1008,Carlos,Rodriguez,PROD-0085,Product 85,Automotive,Frequent,2025-12-08,6,583.68,Oil & tools
+CUST-1008,Carlos,Rodriguez,PROD-0025,Product 25,Automotive,Purchased,2025-10-25,2,444.24,Tires accessories
+CUST-1008,Carlos,Rodriguez,PROD-0110,Product 110,Automotive,Wishlist,2025-12-07,1,0.00,Dash cam
+CUST-1009,Emma,Thompson,PROD-0020,Product 20,Books,Purchased,2025-12-04,5,361.60,Fantasy series
+CUST-1009,Emma,Thompson,PROD-0067,Product 67,Books,Wishlist,2025-12-10,1,0.00,New release
+CUST-1009,Emma,Thompson,PROD-0082,Product 82,Books,Purchased,2025-11-10,3,1494.24,Self-help bundle
+CUST-1009,Emma,Thompson,PROD-0125,Product 125,Books,Frequent,2025-12-01,4,1134.36,Monthly reads
+CUST-1010,Oliver,Nguyen,PROD-0087,Product 87,Electronics,Purchased,2025-11-30,1,293.41,Gaming headset
+CUST-1010,Oliver,Nguyen,PROD-0091,Product 91,Electronics,Purchased,2025-10-22,1,136.95,Keyboard
+CUST-1010,Oliver,Nguyen,PROD-0011,Product 11,Electronics,Purchased,2025-09-15,1,8.10,Webcam upgrade
+CUST-1010,Oliver,Nguyen,PROD-0132,Product 132,Toys,Wishlist,2025-12-09,1,0.00,Mechanical keyboard
+CUST-1011,Natalie,Brown,PROD-0079,Product 79,Toys,Purchased,2025-12-01,3,833.10,STEM kits
+CUST-1011,Natalie,Brown,PROD-0147,Product 147,Toys,Wishlist,2025-12-09,1,0.00,Birthday gift
+CUST-1011,Natalie,Brown,PROD-0109,Product 109,Toys,Purchased,2025-11-05,2,799.54,Educational toys
+CUST-1011,Natalie,Brown,PROD-0148,Product 148,Toys,Frequent,2025-12-06,4,1721.96,Monthly toy rotation
+CUST-1012,Ahmed,Ali,PROD-0041,Product 41,Furniture,Purchased,2025-08-15,1,385.75,Sofa
+CUST-1012,Ahmed,Ali,PROD-0139,Product 139,Furniture,Purchased,2025-09-20,2,608.14,Coffee tables
+CUST-1012,Ahmed,Ali,PROD-0073,Product 73,Furniture,Purchased,2025-10-10,1,400.99,Bookshelf
+CUST-1012,Ahmed,Ali,PROD-0144,Product 144,Furniture,Wishlist,2025-12-08,1,0.00,Dining set
+CUST-1013,Chloe,Park,PROD-0063,Product 63,Clothing,Purchased,2025-12-09,4,834.48,Streetwear drop
+CUST-1013,Chloe,Park,PROD-0122,Product 122,Clothing,Frequent,2025-11-18,6,1593.06,Hoodies & sneakers
+CUST-1013,Chloe,Park,PROD-0136,Product 136,Clothing,Purchased,2025-10-25,3,536.25,Cargo pants
+CUST-1013,Chloe,Park,PROD-0105,Product 105,Clothing,Wishlist,2025-12-10,1,0.00,Limited jacket
+CUST-1014,Michael,Lee,PROD-0078,Product 78,Home Appliances,Purchased,2025-07-10,1,405.86,Air purifier
+CUST-1014,Michael,Lee,PROD-0100,Product 100,Home Appliances,Purchased,2025-11-05,1,219.46,Smart thermostat
+CUST-1014,Michael,Lee,PROD-0081,Product 81,Home Appliances,Purchased,2025-09-01,1,458.64,Coffee machine
+CUST-1014,Michael,Lee,PROD-0062,Product 62,Home Appliances,Frequent,2025-12-02,3,637.35,Filters
+CUST-1015,Isabella,Rossi,PROD-0064,Product 64,Beauty,Purchased,2025-12-08,2,246.50,Italian skincare
+CUST-1015,Isabella,Rossi,PROD-0119,Product 119,Beauty,Wishlist,2025-12-10,1,0.00,New perfume
+CUST-1015,Isabella,Rossi,PROD-0121,Product 121,Beauty,Purchased,2025-11-12,3,108.42,Sheet masks
+CUST-1015,Isabella,Rossi,PROD-0098,Product 98,Beauty,Frequent,2025-12-05,4,604.80,Monthly skincare
+CUST-1001,Maria,Garcia,PROD-0040,Product 40,Electronics,Purchased,2025-07-18,1,366.18,External SSD
+CUST-1002,James,Wilson,PROD-0057,Product 57,Sports,Purchased,2025-08-30,1,442.63,Dumbbells
+CUST-1003,Sofia,Chen,PROD-0031,Product 31,Beauty,Purchased,2025-10-05,2,287.66,Moisturizer duo
+CUST-1004,David,Martinez,PROD-0086,Product 86,Home Appliances,Purchased,2025-06-22,1,69.86,Microwave
+CUST-1005,Linda,Johnson,PROD-0115,Product 115,Clothing,Purchased,2025-09-15,2,585.62,Winter coat
+CUST-1006,Ryan,Patel,PROD-0077,Product 77,Groceries,Purchased,2025-11-20,15,3098.25,Pantry restock
+CUST-1007,Aisha,Khan,PROD-0051,Product 51,Beauty,Purchased,2025-10-28,1,121.22,Lipstick set
+CUST-1008,Carlos,Rodriguez,PROD-0090,Product 90,Automotive,Purchased,2025-09-10,3,412.08,Car mats
+CUST-1009,Emma,Thompson,PROD-0046,Product 46,Books,Purchased,2025-10-15,4,247.08,Romance bundle
+CUST-1010,Oliver,Nguyen,PROD-0014,Product 14,Electronics,Purchased,2025-08-05,1,401.25,Graphics card
+CUST-1011,Natalie,Brown,PROD-0132,Product 132,Toys,Purchased,2025-10-20,2,246.48,Building blocks
+CUST-1012,Ahmed,Ali,PROD-0095,Product 95,Furniture,Purchased,2025-07-25,1,487.66,Office chair
+CUST-1013,Chloe,Park,PROD-0084,Product 84,Clothing,Purchased,2025-09-30,5,2030.50,Sneaker drop
+CUST-1014,Michael,Lee,PROD-0054,Product 54,Home Appliances,Purchased,2025-05-18,1,464.62,Blender
+CUST-1015,Isabella,Rossi,PROD-0035,Product 35,Beauty,Purchased,2025-09-08,1,239.59,Body lotion

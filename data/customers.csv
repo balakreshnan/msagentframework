@@ -1,0 +1,16 @@
+Customer_ID,First_Name,Last_Name,Email,Phone,Date_Of_Birth,Loyalty_ID,Loyalty_Tier,Total_Points,Total_Spend,Preferred_Category,Street_Address,City,State,Zip_Code,Join_Date,Last_Visit_Date,Notes
+CUST-1001,Maria,Garcia,maria.garcia@email.com,+1-555-0101,1988-03-15,LD-889901,Platinum,8420,12450.75,Electronics,"123 Oak Street",Austin,TX,78701,2021-06-12,2025-12-10,Frequent buyer of laptops & accessories
+CUST-1002,James,Wilson,james.w92@email.com,+1-555-0102,1992-07-22,LD-889902,Gold,5670,8930.40,Sports,"456 Elm Avenue",Seattle,WA,98101,2022-01-18,2025-12-08,Buys running gear every season
+CUST-1003,Sofia,Chen,sofia.chen@email.com,+1-555-0103,1995-11-30,LD-889903,Silver,3120,4210.20,Beauty,"789 Pine Road",Miami,FL,33101,2022-09-05,2025-12-07,Loves skincare bundles
+CUST-1004,David,Martinez,dmartinez@email.com,+1-555-0104,1985-05-10,LD-889904,Platinum,10150,18920.60,Home Appliances,"321 Maple Drive",Denver,CO,80202,2020-11-20,2025-12-09,Recently bought fridge & washer
+CUST-1005,Linda,Johnson,linda.j@email.com,+1-555-0105,1979-09-18,LD-889905,Gold,4890,7120.80,Clothing,"555 Cedar Lane",Portland,OR,97201,2021-08-30,2025-11-30,Prefers sustainable fashion
+CUST-1006,Ryan,Patel,ryan.patel@email.com,+1-555-0106,1990-12-04,LD-889906,Silver,1980,2980.50,Groceries,"987 Birch Street",Chicago,IL,60601,2023-03-14,2025-12-11,Buys organic products weekly
+CUST-1007,Aisha,Khan,aisha.k@email.com,+1-555-0107,1994-02-27,LD-889907,Gold,6200,9450.30,Beauty,"246 Walnut Blvd",Los Angeles,CA,90001,2022-04-22,2025-12-05,High-end makeup enthusiast
+CUST-1008,Carlos,Rodriguez,carlos.r@email.com,+1-555-0108,1982-08-08,LD-889908,Platinum,11980,22100.90,Automotive,"1352 Aspen Court",Phoenix,AZ,85001,2020-07-10,2025-12-06,Buys car accessories & tools
+CUST-1009,Emma,Thompson,emma.t@email.com,+1-555-0109,1997-04-19,LD-889909,Silver,2540,3650.00,Books,"88 Riverside Dr",Boston,MA,02101,2023-01-27,2025-12-04,Loves fantasy & self-help
+CUST-1010,Oliver,Nguyen,oliver.n@email.com,+1-555-0110,1989-10-31,LD-889910,Gold,7100,10850.25,Electronics,"7422 Lakeview Ave",San Francisco,CA,94101,2021-12-05,2025-12-10,Gamer – buys monitors & peripherals
+CUST-1011,Natalie,Brown,natalie.b@email.com,+1-555-0111,1993-06-14,LD-889911,Silver,1780,2450.60,Toys,"419 Sunset Blvd",Orlando,FL,32801,2023-06-18,2025-11-28,Buys educational toys for kids
+CUST-1012,Ahmed,Ali,ahmed.ali@email.com,+1-555-0112,1987-01-25,LD-889912,Platinum,9800,17300.80,Furniture,"6301 Hillcrest Rd",Dallas,TX,75201,2021-03-09,2025-12-07,Recently renovated home
+CUST-1013,Chloe,Park,chloe.park@email.com,+1-555-0113,1996-09-03,LD-889913,Gold,5350,7890.15,Clothing,"2800 Riverwalk",Atlanta,GA,30301,2022-07-11,2025-12-09,Fashion-forward, loves streetwear
+CUST-1014,Michael,Lee,michael.lee@email.com,+1-555-0114,1980-11-12,LD-889914,Platinum,13200,25600.45,Home Appliances,"9510 Northridge Dr",Houston,TX,77001,2020-05-15,2025-12-11,High-value repeat customer
+CUST-1015,Isabella,Rossi,isabella.rossi@email.com,+1-555-0115,1991-07-07,LD-889915,Silver,2890,3980.90,Beauty,"88 Via Roma",New York,NY,10001,2023-02-20,2025-12-08,Italian skincare & perfume lover

@@ -57,7 +57,7 @@ hfmcp = HostedMCPTool(
 async def create_agents():
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential) as chat_client,
+        AzureAIAgentClient(credential=credential) as chat_client,
     ):
         
         ideation_agent = chat_client.create_agent(
@@ -88,7 +88,7 @@ async def create_agents():
         inquiry_agent = chat_client.create_agent(
             name="inquiryagent",
             instructions="""You are an Inquiry Specialist, focused on asking the right questions to uncover insights.
-            
+                    AzureAIAgentClient(credential=credential) as chat_client,
             Your role is to:
             - Ask strategic follow-up questions
             - Probe deeper into assumptions and ideas
@@ -184,7 +184,7 @@ def get_chat_response_gpt5_response(query: str) -> str:
 async def multi_agent_interaction(query: str) -> str:
     async with (
         AzureCliCredential() as credential,
-        AzureAIAgentClient(async_credential=credential) as chat_client,
+        AzureAIAgentClient(credential=credential) as chat_client,
     ):
         
         ideation_agent = chat_client.create_agent(
@@ -254,7 +254,7 @@ async def multi_agent_interaction(query: str) -> str:
             ### Market Opportunity
             - Market size and growth potential
             - Target customer segments
-            ### Revenue Model
+                    AzureAIAgentClient(credential=credential) as chat_client,
             - Potential revenue streams
             - Pricing strategies
             ### Competitive Landscape

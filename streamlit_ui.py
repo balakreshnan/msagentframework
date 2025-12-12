@@ -384,7 +384,7 @@ async def extract_search_tool_results(agent, thread):
 
 async def process_agent(message, client, ephemeral, session_data, agent_id, agent_created):
     """Process a message through the agent and return the response."""
-    # agentclient = AzureAIAgentClient(async_credential=AzureCliCredential())
+    # agentclient = AzureAIAgentClient(credential=AzureCliCredential())
     file: FileInfo | None = None
     vector_store: VectorStore | None = None
 

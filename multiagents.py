@@ -43,7 +43,7 @@ async def create_azure_ai_agent() -> tuple[Callable[..., Awaitable[Any]], Callab
     stack = AsyncExitStack()
     cred = await stack.enter_async_context(AzureCliCredential())
 
-    client = await stack.enter_async_context(AzureAIAgentClient(async_credential=cred))
+    client = await stack.enter_async_context(AzureAIAgentClient(credential=cred))
 
     async def agent(**kwargs: Any) -> Any:
         return await stack.enter_async_context(client.create_agent(**kwargs))

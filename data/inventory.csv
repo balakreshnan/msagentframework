@@ -1,0 +1,151 @@
+Product_ID,Product_Name,Category,Total_Quantity,Remaining_Quantity,Cost,Perishable,Frozen,Shelf_Life_Days,Supplier,Description
+PROD-0001,Product 1,Beauty,143,38,265.22,No,No,N/A,Supplier 6,Description for Product 1 in Beauty category.
+PROD-0002,Product 2,Home Appliances,190,85,288.9,No,No,N/A,Supplier 2,Description for Product 2 in Home Appliances category.
+PROD-0003,Product 3,Clothing,378,343,161.4,Yes,No,13,Supplier 18,Description for Product 3 in Clothing category.
+PROD-0004,Product 4,Home Appliances,403,128,295.45,Yes,Yes,17,Supplier 12,Description for Product 4 in Home Appliances category.
+PROD-0005,Product 5,Beauty,135,129,14.48,No,No,N/A,Supplier 20,Description for Product 5 in Beauty category.
+PROD-0006,Product 6,Sports,157,44,181.07,No,No,N/A,Supplier 2,Description for Product 6 in Sports category.
+PROD-0007,Product 7,Clothing,797,58,157.17,No,No,N/A,Supplier 1,Description for Product 7 in Clothing category.
+PROD-0008,Product 8,Automotive,982,488,175.57,Yes,No,269,Supplier 15,Description for Product 8 in Automotive category.
+PROD-0009,Product 9,Sports,262,104,497.61,No,No,N/A,Supplier 10,Description for Product 9 in Sports category.
+PROD-0010,Product 10,Electronics,329,291,469.48,Yes,Yes,340,Supplier 3,Description for Product 10 in Electronics category.
+PROD-0011,Product 11,Electronics,502,1,8.1,Yes,No,277,Supplier 9,Description for Product 11 in Electronics category.
+PROD-0012,Product 12,Groceries,150,139,460.3,No,No,N/A,Supplier 14,Description for Product 12 in Groceries category.
+PROD-0013,Product 13,Electronics,333,0,354.62,No,No,N/A,Supplier 19,Description for Product 13 in Electronics category.
+PROD-0014,Product 14,Electronics,727,114,401.25,Yes,No,141,Supplier 2,Description for Product 14 in Electronics category.
+PROD-0015,Product 15,Groceries,162,98,193.78,No,No,N/A,Supplier 16,Description for Product 15 in Groceries category.
+PROD-0016,Product 16,Furniture,560,373,347.01,No,No,N/A,Supplier 1,Description for Product 16 in Furniture category.
+PROD-0017,Product 17,Toys,426,34,427.5,No,No,N/A,Supplier 9,Description for Product 17 in Toys category.
+PROD-0018,Product 18,Sports,883,532,23.88,No,No,N/A,Supplier 6,Description for Product 18 in Sports category.
+PROD-0019,Product 19,Electronics,917,706,402.06,No,No,N/A,Supplier 17,Description for Product 19 in Electronics category.
+PROD-0020,Product 20,Books,189,35,72.32,No,No,N/A,Supplier 1,Description for Product 20 in Books category.
+PROD-0021,Product 21,Clothing,986,926,243.9,No,No,N/A,Supplier 9,Description for Product 21 in Clothing category.
+PROD-0022,Product 22,Clothing,221,163,112.44,Yes,No,18,Supplier 19,Description for Product 22 in Clothing category.
+PROD-0023,Product 23,Home Appliances,607,1,218.53,Yes,Yes,238,Supplier 16,Description for Product 23 in Home Appliances category.
+PROD-0024,Product 24,Books,422,206,167.72,No,No,N/A,Supplier 2,Description for Product 24 in Books category.
+PROD-0025,Product 25,Automotive,777,326,222.12,Yes,No,233,Supplier 18,Description for Product 25 in Automotive category.
+PROD-0026,Product 26,Sports,874,458,53.38,No,No,N/A,Supplier 19,Description for Product 26 in Sports category.
+PROD-0027,Product 27,Electronics,377,229,328.87,No,No,N/A,Supplier 4,Description for Product 27 in Electronics category.
+PROD-0028,Product 28,Automotive,213,213,7.4,No,No,N/A,Supplier 15,Description for Product 28 in Automotive category.
+PROD-0029,Product 29,Automotive,411,355,364.48,Yes,No,162,Supplier 14,Description for Product 29 in Automotive category.
+PROD-0030,Product 30,Electronics,586,460,294.87,No,No,N/A,Supplier 19,Description for Product 30 in Electronics category.
+PROD-0031,Product 31,Beauty,146,48,143.83,No,No,N/A,Supplier 7,Description for Product 31 in Beauty category.
+PROD-0032,Product 32,Electronics,377,109,169.62,Yes,No,128,Supplier 15,Description for Product 32 in Electronics category.
+PROD-0033,Product 33,Books,193,158,105.5,Yes,No,149,Supplier 18,Description for Product 33 in Books category.
+PROD-0034,Product 34,Sports,507,194,80.97,Yes,Yes,3,Supplier 2,Description for Product 34 in Sports category.
+PROD-0035,Product 35,Beauty,672,197,239.59,No,No,N/A,Supplier 7,Description for Product 35 in Beauty category.
+PROD-0036,Product 36,Electronics,271,0,215.42,No,No,N/A,Supplier 3,Description for Product 36 in Electronics category.
+PROD-0037,Product 37,Home Appliances,991,231,317.29,Yes,No,140,Supplier 2,Description for Product 37 in Home Appliances category.
+PROD-0038,Product 38,Clothing,380,270,11.51,No,No,N/A,Supplier 2,Description for Product 38 in Clothing category.
+PROD-0039,Product 39,Books,807,280,488.35,Yes,No,275,Supplier 11,Description for Product 39 in Books category.
+PROD-0040,Product 40,Electronics,831,745,366.18,No,No,N/A,Supplier 15,Description for Product 40 in Electronics category.
+PROD-0041,Product 41,Furniture,470,427,385.75,No,No,N/A,Supplier 3,Description for Product 41 in Furniture category.
+PROD-0042,Product 42,Sports,215,145,323.16,No,No,N/A,Supplier 6,Description for Product 42 in Sports category.
+PROD-0043,Product 43,Groceries,732,561,404.87,No,No,N/A,Supplier 4,Description for Product 43 in Groceries category.
+PROD-0044,Product 44,Clothing,801,158,385.57,Yes,No,221,Supplier 6,Description for Product 44 in Clothing category.
+PROD-0045,Product 45,Furniture,412,365,399.54,Yes,Yes,311,Supplier 20,Description for Product 45 in Furniture category.
+PROD-0046,Product 46,Books,479,234,61.77,No,No,N/A,Supplier 4,Description for Product 46 in Books category.
+PROD-0047,Product 47,Books,934,311,144.66,Yes,Yes,62,Supplier 14,Description for Product 47 in Books category.
+PROD-0048,Product 48,Automotive,117,29,334.74,Yes,No,124,Supplier 18,Description for Product 48 in Automotive category.
+PROD-0049,Product 49,Books,735,93,143.24,No,No,N/A,Supplier 19,Description for Product 49 in Books category.
+PROD-0050,Product 50,Groceries,360,68,441.64,Yes,Yes,157,Supplier 13,Description for Product 50 in Groceries category.
+PROD-0051,Product 51,Beauty,713,551,121.22,No,No,N/A,Supplier 14,Description for Product 51 in Beauty category.
+PROD-0052,Product 52,Electronics,159,86,314.37,Yes,No,314,Supplier 4,Description for Product 52 in Electronics category.
+PROD-0053,Product 53,Beauty,266,188,450.92,No,No,N/A,Supplier 13,Description for Product 53 in Beauty category.
+PROD-0054,Product 54,Home Appliances,112,93,464.62,No,No,N/A,Supplier 11,Description for Product 54 in Home Appliances category.
+PROD-0055,Product 55,Beauty,743,100,359.32,No,No,N/A,Supplier 18,Description for Product 55 in Beauty category.
+PROD-0056,Product 56,Books,137,108,83.42,No,No,N/A,Supplier 4,Description for Product 56 in Books category.
+PROD-0057,Product 57,Sports,626,603,442.63,No,No,N/A,Supplier 6,Description for Product 57 in Sports category.
+PROD-0058,Product 58,Automotive,197,117,275.42,Yes,No,86,Supplier 5,Description for Product 58 in Automotive category.
+PROD-0059,Product 59,Furniture,743,200,371.21,No,No,N/A,Supplier 7,Description for Product 59 in Furniture category.
+PROD-0060,Product 60,Beauty,484,275,122.82,Yes,No,74,Supplier 4,Description for Product 60 in Beauty category.
+PROD-0061,Product 61,Books,695,497,145.55,Yes,Yes,48,Supplier 17,Description for Product 61 in Books category.
+PROD-0062,Product 62,Home Appliances,618,595,212.45,Yes,No,188,Supplier 17,Description for Product 62 in Home Appliances category.
+PROD-0063,Product 63,Clothing,877,235,208.62,No,No,N/A,Supplier 17,Description for Product 63 in Clothing category.
+PROD-0064,Product 64,Beauty,664,513,123.25,No,No,N/A,Supplier 20,Description for Product 64 in Beauty category.
+PROD-0065,Product 65,Furniture,951,225,206.93,Yes,No,27,Supplier 4,Description for Product 65 in Furniture category.
+PROD-0066,Product 66,Beauty,460,204,117.49,Yes,No,158,Supplier 15,Description for Product 66 in Beauty category.
+PROD-0067,Product 67,Books,423,303,16.31,No,No,N/A,Supplier 18,Description for Product 67 in Books category.
+PROD-0068,Product 68,Furniture,973,116,343.14,Yes,No,144,Supplier 12,Description for Product 68 in Furniture category.
+PROD-0069,Product 69,Books,196,14,218.75,Yes,No,182,Supplier 3,Description for Product 69 in Books category.
+PROD-0070,Product 70,Home Appliances,726,427,461.77,Yes,No,180,Supplier 10,Description for Product 70 in Home Appliances category.
+PROD-0071,Product 71,Automotive,368,19,163.76,Yes,Yes,204,Supplier 19,Description for Product 71 in Automotive category.
+PROD-0072,Product 72,Books,677,393,488.03,No,No,N/A,Supplier 18,Description for Product 72 in Books category.
+PROD-0073,Product 73,Furniture,759,716,400.99,No,No,N/A,Supplier 14,Description for Product 73 in Furniture category.
+PROD-0074,Product 74,Clothing,232,0,444.83,No,No,N/A,Supplier 8,Description for Product 74 in Clothing category.
+PROD-0075,Product 75,Electronics,987,954,475.77,No,No,N/A,Supplier 2,Description for Product 75 in Electronics category.
+PROD-0076,Product 76,Automotive,601,119,440.62,Yes,Yes,102,Supplier 19,Description for Product 76 in Automotive category.
+PROD-0077,Product 77,Groceries,135,7,206.55,Yes,No,317,Supplier 17,Description for Product 77 in Groceries category.
+PROD-0078,Product 78,Home Appliances,690,260,405.86,No,No,N/A,Supplier 14,Description for Product 78 in Home Appliances category.
+PROD-0079,Product 79,Toys,605,101,277.7,No,No,N/A,Supplier 9,Description for Product 79 in Toys category.
+PROD-0080,Product 80,Toys,801,192,316.32,Yes,No,15,Supplier 20,Description for Product 80 in Toys category.
+PROD-0081,Product 81,Home Appliances,390,52,458.64,No,No,N/A,Supplier 6,Description for Product 81 in Home Appliances category.
+PROD-0082,Product 82,Books,427,90,498.08,No,No,N/A,Supplier 8,Description for Product 82 in Books category.
+PROD-0083,Product 83,Automotive,220,0,201.93,Yes,No,216,Supplier 4,Description for Product 83 in Automotive category.
+PROD-0084,Product 84,Clothing,600,151,406.1,No,No,N/A,Supplier 6,Description for Product 84 in Clothing category.
+PROD-0085,Product 85,Automotive,993,843,97.28,No,No,N/A,Supplier 13,Description for Product 85 in Automotive category.
+PROD-0086,Product 86,Home Appliances,862,686,69.86,No,No,N/A,Supplier 11,Description for Product 86 in Home Appliances category.
+PROD-0087,Product 87,Electronics,353,125,293.41,No,No,N/A,Supplier 7,Description for Product 87 in Electronics category.
+PROD-0088,Product 88,Groceries,407,0,462.54,Yes,No,38,Supplier 7,Description for Product 88 in Groceries category.
+PROD-0089,Product 89,Clothing,489,375,270.84,No,No,N/A,Supplier 15,Description for Product 89 in Clothing category.
+PROD-0090,Product 90,Automotive,952,352,137.36,No,No,N/A,Supplier 16,Description for Product 90 in Automotive category.
+PROD-0091,Product 91,Electronics,820,441,136.95,No,No,N/A,Supplier 12,Description for Product 91 in Electronics category.
+PROD-0092,Product 92,Groceries,993,200,397.47,No,No,N/A,Supplier 20,Description for Product 92 in Groceries category.
+PROD-0093,Product 93,Electronics,587,403,16.21,Yes,No,298,Supplier 9,Description for Product 93 in Electronics category.
+PROD-0094,Product 94,Home Appliances,532,51,63.92,No,No,N/A,Supplier 20,Description for Product 94 in Home Appliances category.
+PROD-0095,Product 95,Furniture,738,574,487.66,No,No,N/A,Supplier 3,Description for Product 95 in Furniture category.
+PROD-0096,Product 96,Beauty,627,123,308.09,Yes,No,338,Supplier 4,Description for Product 96 in Beauty category.
+PROD-0097,Product 97,Furniture,895,554,487.6,Yes,No,289,Supplier 13,Description for Product 97 in Furniture category.
+PROD-0098,Product 98,Beauty,388,313,151.2,No,No,N/A,Supplier 9,Description for Product 98 in Beauty category.
+PROD-0099,Product 99,Beauty,324,222,279.3,No,No,N/A,Supplier 17,Description for Product 99 in Beauty category.
+PROD-0100,Product 100,Home Appliances,300,184,219.46,No,No,N/A,Supplier 20,Description for Product 100 in Home Appliances category.
+PROD-0101,Product 101,Books,779,535,471.84,No,No,N/A,Supplier 15,Description for Product 101 in Books category.
+PROD-0102,Product 102,Furniture,489,385,223.38,No,No,N/A,Supplier 5,Description for Product 102 in Furniture category.
+PROD-0103,Product 103,Sports,429,156,242.14,Yes,No,242,Supplier 13,Description for Product 103 in Sports category.
+PROD-0104,Product 104,Electronics,201,198,317.66,No,No,N/A,Supplier 8,Description for Product 104 in Electronics category.
+PROD-0105,Product 105,Clothing,955,829,102.53,Yes,No,182,Supplier 4,Description for Product 105 in Clothing category.
+PROD-0106,Product 106,Books,163,72,100.3,Yes,No,101,Supplier 17,Description for Product 106 in Books category.
+PROD-0107,Product 107,Groceries,144,17,221.47,No,No,N/A,Supplier 9,Description for Product 107 in Groceries category.
+PROD-0108,Product 108,Groceries,793,523,463.31,Yes,No,231,Supplier 11,Description for Product 108 in Groceries category.
+PROD-0109,Product 109,Toys,754,462,399.77,No,No,N/A,Supplier 12,Description for Product 109 in Toys category.
+PROD-0110,Product 110,Automotive,651,25,92.65,No,No,N/A,Supplier 18,Description for Product 110 in Automotive category.
+PROD-0111,Product 111,Books,726,303,332.01,Yes,No,159,Supplier 20,Description for Product 111 in Books category.
+PROD-0112,Product 112,Toys,287,20,11.64,Yes,No,152,Supplier 10,Description for Product 112 in Toys category.
+PROD-0113,Product 113,Automotive,199,130,31.43,Yes,No,119,Supplier 17,Description for Product 113 in Automotive category.
+PROD-0114,Product 114,Automotive,172,162,352.38,No,No,N/A,Supplier 6,Description for Product 114 in Automotive category.
+PROD-0115,Product 115,Clothing,814,171,292.81,Yes,Yes,357,Supplier 12,Description for Product 115 in Clothing category.
+PROD-0116,Product 116,Beauty,343,8,297.54,Yes,Yes,250,Supplier 1,Description for Product 116 in Beauty category.
+PROD-0117,Product 117,Clothing,781,768,67.83,No,No,N/A,Supplier 3,Description for Product 117 in Clothing category.
+PROD-0118,Product 118,Beauty,993,813,135.49,Yes,No,97,Supplier 2,Description for Product 118 in Beauty category.
+PROD-0119,Product 119,Beauty,383,345,314.87,No,No,N/A,Supplier 17,Description for Product 119 in Beauty category.
+PROD-0120,Product 120,Beauty,810,666,160.29,No,No,N/A,Supplier 1,Description for Product 120 in Beauty category.
+PROD-0121,Product 121,Beauty,613,78,36.14,No,No,N/A,Supplier 15,Description for Product 121 in Beauty category.
+PROD-0122,Product 122,Clothing,838,634,265.51,No,No,N/A,Supplier 20,Description for Product 122 in Clothing category.
+PROD-0123,Product 123,Furniture,643,142,133.32,No,No,N/A,Supplier 17,Description for Product 123 in Furniture category.
+PROD-0124,Product 124,Clothing,483,171,177.12,No,No,N/A,Supplier 15,Description for Product 124 in Clothing category.
+PROD-0125,Product 125,Books,677,394,283.59,No,No,N/A,Supplier 10,Description for Product 125 in Books category.
+PROD-0126,Product 126,Clothing,280,117,120.94,No,No,N/A,Supplier 13,Description for Product 126 in Clothing category.
+PROD-0127,Product 127,Automotive,136,78,405.11,No,No,N/A,Supplier 13,Description for Product 127 in Automotive category.
+PROD-0128,Product 128,Electronics,739,538,194.32,Yes,Yes,158,Supplier 5,Description for Product 128 in Electronics category.
+PROD-0129,Product 129,Books,332,163,305.08,No,No,N/A,Supplier 1,Description for Product 129 in Books category.
+PROD-0130,Product 130,Clothing,874,499,434.79,Yes,No,198,Supplier 1,Description for Product 130 in Clothing category.
+PROD-0131,Product 131,Home Appliances,554,299,122.13,No,No,N/A,Supplier 6,Description for Product 131 in Home Appliances category.
+PROD-0132,Product 132,Toys,403,329,123.24,No,No,N/A,Supplier 5,Description for Product 132 in Toys category.
+PROD-0133,Product 133,Clothing,612,219,116.73,Yes,No,308,Supplier 1,Description for Product 133 in Clothing category.
+PROD-0134,Product 134,Books,538,132,41.95,No,No,N/A,Supplier 7,Description for Product 134 in Books category.
+PROD-0135,Product 135,Furniture,916,506,197.3,No,No,N/A,Supplier 8,Description for Product 135 in Furniture category.
+PROD-0136,Product 136,Clothing,527,370,178.75,No,No,N/A,Supplier 1,Description for Product 136 in Clothing category.
+PROD-0137,Product 137,Furniture,225,126,269.6,No,No,N/A,Supplier 19,Description for Product 137 in Furniture category.
+PROD-0138,Product 138,Electronics,340,66,322.97,No,No,N/A,Supplier 20,Description for Product 138 in Electronics category.
+PROD-0139,Product 139,Furniture,959,272,304.07,No,No,N/A,Supplier 1,Description for Product 139 in Furniture category.
+PROD-0140,Product 140,Electronics,706,628,427.7,Yes,No,333,Supplier 14,Description for Product 140 in Electronics category.
+PROD-0141,Product 141,Automotive,642,272,43.13,No,No,N/A,Supplier 20,Description for Product 141 in Automotive category.
+PROD-0142,Product 142,Toys,927,29,308.18,Yes,No,127,Supplier 11,Description for Product 142 in Toys category.
+PROD-0143,Product 143,Furniture,397,308,268.34,Yes,Yes,254,Supplier 3,Description for Product 143 in Furniture category.
+PROD-0144,Product 144,Furniture,972,400,379.05,Yes,No,62,Supplier 10,Description for Product 144 in Furniture category.
+PROD-0145,Product 145,Home Appliances,483,256,366.09,No,No,N/A,Supplier 11,Description for Product 145 in Home Appliances category.
+PROD-0146,Product 146,Books,182,90,212.42,Yes,No,364,Supplier 4,Description for Product 146 in Books category.
+PROD-0147,Product 147,Toys,256,150,125.97,Yes,No,136,Supplier 7,Description for Product 147 in Toys category.
+PROD-0148,Product 148,Toys,333,182,430.49,Yes,No,24,Supplier 2,Description for Product 148 in Toys category.
+PROD-0149,Product 149,Books,524,432,386.58,Yes,Yes,101,Supplier 1,Description for Product 149 in Books category.
+PROD-0150,Product 150,Automotive,956,68,76.73,No,No,N/A,Supplier 9,Description for Product 150 in Automotive category.

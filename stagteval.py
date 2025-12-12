@@ -48,7 +48,7 @@ async def main() -> None:
         AIProjectClient(endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"], credential=credential) as client,
     ):
         deployment = "gpt-5-chat-2"
-        chat_client = AzureAIAgentClient(async_credential=credential, 
+        chat_client = AzureAIAgentClient(credential=credential, 
                             project_client=client,
                             model_deployment_name=deployment
                             )
