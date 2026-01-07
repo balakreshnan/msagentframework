@@ -13,3 +13,4 @@ azure-identity
 aiofiles
 agent-framework[viz] --pre
 agent-framework-azure-ai-search --pre
+azure-monitor-opentelemetry
