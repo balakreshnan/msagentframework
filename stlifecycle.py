@@ -19,7 +19,6 @@ from azure.ai.projects.aio import AIProjectClient
 from azure.identity.aio import AzureCliCredential, DefaultAzureCredential
 from opentelemetry.trace import SpanKind
 from opentelemetry.trace.span import format_trace_id
-# from agent_framework.observability import get_tracer, setup_observability
 from agent_framework import observability
 from pydantic import Field
 from azure.ai.agents.models import FileInfo, VectorStore
