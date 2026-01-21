@@ -31,12 +31,12 @@ from azure.ai.projects.models._models import PromptAgentDefinition
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
 from azure.ai.projects.models import (
-    #AgentVersionDetails,
     EvaluationTaxonomy,
     AzureAIAgentTarget,
     AgentTaxonomyInput,
     RiskCategory,
-    AgentVersionObject,
+    # AgentVersionObject,
+    AgentVersionDetails,
 )
 import json
 import time
@@ -166,7 +166,7 @@ def redteam_main() -> None:
         
 
 
-def _get_tool_descriptions(agent: AgentVersionObject):
+def _get_tool_descriptions(agent: AgentVersionDetails):
     tools = agent.definition.get("tools", [])
     tool_descriptions = []
     for tool in tools:
