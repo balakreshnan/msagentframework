@@ -207,47 +207,7 @@ def run_agent(query: str):
     debug_logs = []
     response_text = ""
     
-    # Define tool functions that wrap our local functions
-    # Tool names must match MCP server tool names: get_devices, get_device_logs
-    def tool_get_devices():
-        """Get all Samsung SmartThings devices with their components and capabilities."""
-        debug_logs.append({
-            "type": "tool_call",
-            "tool": "get_devices",
-            "timestamp": datetime.now().isoformat()
-        })
-        result = asyncio.run(getdevices())
-        debug_logs.append({
-            "type": "tool_result",
-            "tool": "get_devices",
-            "result_count": len(result),
-            "timestamp": datetime.now().isoformat()
-        })
-        return json.dumps(result)
-    
-    def tool_get_device_logs(device_id: str):
-        """Get detailed status, events, and logs for a specific Samsung SmartThings device."""
-        debug_logs.append({
-            "type": "tool_call",
-            "tool": "get_device_logs",
-            "device_id": device_id,
-            "timestamp": datetime.now().isoformat()
-        })
-        result = asyncio.run(get_device_logs(device_id))
-        debug_logs.append({
-            "type": "tool_result",
-            "tool": "get_device_logs",
-            "success": result.get("success", False),
-            "timestamp": datetime.now().isoformat()
-        })
-        return json.dumps(result)
-    
-    # Create function tool definitions - using MCP server tool names
-    tools = {
-        "get_devices": tool_get_devices,
-        "get_device_logs": tool_get_device_logs,
-    }
-    
+  
     project_client = AIProjectClient(
         endpoint=myEndpoint,
         credential=DefaultAzureCredential(),
@@ -273,22 +233,10 @@ def run_agent(query: str):
         
         openai_client = project_client.get_openai_client()
         
-        # Add system context about available tools
-        tool_context = """
-        You have access to the following Samsung SmartThings MCP tools:
-        1. get_devices - Get all Samsung SmartThings devices with their components and capabilities. No parameters required.
-        2. get_device_logs - Get detailed status, events, and logs for a specific device. Requires parameter: device_id (string)
-
-        When the user asks about devices, you should call the get_devices tool.
-        When the user asks about a specific device's status or logs, call get_device_logs with the device_id.
-        """
-        
-        # Combine tool context with user query
-        enhanced_query = f"{tool_context}\n\nUser question: {query}"
-        
-        # Create response
+      
+        # Create response (tools are configured on the agent in Azure AI Foundry, not passed here)
         response = openai_client.responses.create(
-            input=[{"role": "user", "content": enhanced_query}],
+            input=[{"role": "user", "content": query}],
             extra_body={"agent": {"name": agent.name, "type": "agent_reference"}}
         )
         
