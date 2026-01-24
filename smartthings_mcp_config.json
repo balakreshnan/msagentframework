@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "samsung-smartthings": {
+      "command": "python",
+      "args": ["samsung_smartthings_mcp.py"],
+      "cwd": "c:\\Code\\agentframework\\msagentframework",
+      "env": {
+        "SAMSUNG_PAT": "${env:SAMSUNG_PAT}"
+      }
+    }
+  }
+}
