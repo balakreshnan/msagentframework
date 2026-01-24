@@ -90,12 +90,12 @@ def get_local_tools():
     """Get available tools from local functions"""
     return [
         {
-            "name": "get_smartthings_devices",
+            "name": "getdevices",
             "description": "Get all Samsung SmartThings devices with their components and capabilities",
             "parameters": {}
         },
         {
-            "name": "get_smartthings_device_logs",
+            "name": "get_device_logs",
             "description": "Get detailed status, events, and logs for a specific Samsung SmartThings device",
             "parameters": {
                 "device_id": "string (required) - The device ID to get logs for"
