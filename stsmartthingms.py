@@ -11,7 +11,7 @@ import json
 from agent_framework.azure import AzureAIProjectAgentProvider
 from azure.ai.projects.aio import AIProjectClient
 from azure.ai.projects.models import AgentReference, PromptAgentDefinition
-from azure.identity.aio import AzureCliCredential
+from azure.identity.aio import AzureCliCredential, DefaultAzureCredential
 from pydantic import Field
 
 from dotenv import load_dotenv
@@ -140,7 +140,7 @@ async def main(query: str)-> None:
     print("=== provider.create_agent() Example ===")
 
     async with (
-        AzureCliCredential() as credential,
+        DefaultAzureCredential() as credential,
         AzureAIProjectAgentProvider(credential=credential) as provider,
     ):
         # Create a new agent with custom configuration
