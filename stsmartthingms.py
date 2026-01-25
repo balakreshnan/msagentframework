@@ -387,6 +387,7 @@ async def main(query: str, log_callback=None) -> str:
             # Use agent.run() to get the response
             result = await agent.run(query)
             print(f"Agent: {result}\n")
+            add_log(f"Agent output: {result}\n")
             
             # Log the raw result for debugging
             add_log(f"📊 Raw result type: {type(result).__name__}", "info", output=repr(result)[:500])
