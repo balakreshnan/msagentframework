@@ -21,7 +21,7 @@ load_dotenv()
 TOKEN = os.getenv("SAMSUNG_PAT")
 myEndpoint = os.getenv("AZURE_AI_PROJECT")
 
-async def async_get_devices():
+async def get_devices():
     """Get all SmartThings devices"""
     async with aiohttp.ClientSession() as session:
         api = pysmartthings.SmartThings(session=session, _token=TOKEN)
@@ -46,16 +46,36 @@ async def async_get_devices():
             device_list.append(device_info)
         
         return device_list
-
-def get_devices():
-    """Synchronous wrapper — not recommended but works in simple scripts"""
-    return asyncio.run(async_get_devices())
     
-def async_get_device_logs(device_id: str):
+def _convert_to_serializable(obj):
+    """Convert pysmartthings objects to JSON-serializable types"""
+    if obj is None:
+        return None
+    if isinstance(obj, (str, int, float, bool)):
+        return obj
+    if isinstance(obj, dict):
+        return {str(k): _convert_to_serializable(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_convert_to_serializable(item) for item in obj]
+    if hasattr(obj, 'to_dict'):
+        try:
+            return _convert_to_serializable(obj.to_dict())
+        except TypeError:
+            # If to_dict() doesn't work, try without arguments
+            try:
+                return _convert_to_serializable(obj.to_dict())
+            except:
+                pass
+    if hasattr(obj, '__dict__'):
+        return _convert_to_serializable(vars(obj))
+    # Fallback: convert to string
+    return str(obj)
+
+async def get_device_logs(device_id: str):
     """Get detailed logs and status for a specific device"""
-    with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession() as session:
         api = pysmartthings.SmartThings(session=session, _token=TOKEN)
-        device = api.get_device(device_id)
+        device = await api.get_device(device_id)
         
         if not device:
             return {
@@ -63,54 +83,89 @@ def async_get_device_logs(device_id: str):
                 "error": f"Device {device_id} not found"
             }
         
-        device.status.refresh()
+        # Get device status separately
+        device_status = await api.get_device_status(device_id)
+        # Convert to serializable format
+        device_status_serializable = _convert_to_serializable(device_status)
         
         device_info = {
             "device_id": device.device_id,
             "label": device.label,
             "name": device.name,
-            "type": device.type,
+            "type": str(device.type) if device.type else None,
             "location_id": device.location_id,
             "room_id": device.room_id,
             "components": {},
-            "status": {}
+            "status": device_status_serializable
         }
         
         for comp_id, comp in device.components.items():
-            capabilities = sorted([c for c in comp.capabilities])
-            device_info["components"][comp_id] = {
+            capabilities = sorted([str(c) for c in comp.capabilities])
+            device_info["components"][str(comp_id)] = {
                 "capabilities": capabilities,
                 "attributes": {}
             }
             
-            if hasattr(device.status, comp_id):
-                comp_status = getattr(device.status, comp_id)
-                
+            # Get status for this component if available
+            if comp_id in device_status:
+                comp_status = device_status[comp_id]
                 for capability in capabilities:
-                    if hasattr(comp_status, capability):
-                        attr_value = getattr(comp_status, capability)
-                        device_info["components"][comp_id]["attributes"][capability] = {
-                            "value": str(attr_value) if attr_value is not None else None
-                        }
+                    if capability in comp_status:
+                        device_info["components"][str(comp_id)]["attributes"][str(capability)] = _convert_to_serializable(comp_status[capability])
         
-        if hasattr(device, 'health'):
-            device_info["health"] = {
-                "state": device.health.state if hasattr(device.health, 'state') else None,
-                "last_updated": device.health.last_updated_date if hasattr(device.health, 'last_updated_date') else None
-            }
+        # Get device health
+        try:
+            device_health = await api.get_device_health(device_id)
+            if device_health:
+                device_info["health"] = {
+                    "state": str(device_health.state) if hasattr(device_health, 'state') else str(device_health),
+                }
+        except Exception:
+            pass
         
         result = {
             "success": True,
             "device": device_info,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.datetime.now().isoformat()
         }
         
         return result
 
-def get_device_logs(device_id: str):
-    """Synchronous wrapper — not recommended but works in simple scripts"""
-    return asyncio.run(async_get_device_logs(device_id))
+async def main(query: str)-> None:
+    """
+    This method creates a new agent version on the Azure AI service and returns
+    a ChatAgent. Use this when you want to create a fresh agent with
+    specific configuration.
+    """
+    print("=== provider.create_agent() Example ===")
+
+    async with (
+        AzureCliCredential() as credential,
+        AzureAIProjectAgentProvider(credential=credential) as provider,
+    ):
+        # Create a new agent with custom configuration
+        agent = await provider.create_agent(
+            name="SmartthingsAgent",
+            instructions="You are a helpful Samsung Smart things AI Agent. Always be concise. Also show device_id, name as output",
+            description="An agent that provides information about home IoT devices.",
+            tools=[ get_devices, get_device_logs]  # Assuming these tools are registered in the provider],
+        )
+
+        print(f"Created agent: {agent.name}")
+        print(f"Agent ID: {agent.id}")
+
+        #query = "View all my devices?"
+        print(f"User: {query}")
+        result = await agent.run(query)
+        print(f"Agent: {result}\n")
+
+    
 
 if __name__ == "__main__":
-    rs = get_devices()
-    print(rs)
+    #rs = get_devices()
+    #print(rs)
+    #rs = asyncio.run(get_device_logs("a318f372-e660-1349-5ae1-427cd02ffd5e"))
+    #print(rs)
+    # query = "View all my devices?"
+    query = "Give me the status of device with ID a318f372-e660-1349-5ae1-427cd02ffd5e?"
+    asyncio.run(main(query))
