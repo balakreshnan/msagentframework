@@ -223,8 +223,8 @@ if "agent_logs" not in st.session_state:
 if "processing" not in st.session_state:
     st.session_state.processing = False
 
-async def get_devices():
-    """Get all SmartThings devices"""
+async def get_devices() -> str:
+    """Get all SmartThings devices. Returns a JSON string with device information including device_id, label, name, type, and capabilities."""
     async with aiohttp.ClientSession() as session:
         api = pysmartthings.SmartThings(session=session, _token=TOKEN)
         devices = await api.get_devices()
@@ -235,19 +235,20 @@ async def get_devices():
                 "device_id": d.device_id,
                 "label": d.label,
                 "name": d.name,
-                "type": d.type,
+                "type": str(d.type) if d.type else None,
                 "components": {}
             }
             
             for comp_id, comp in d.components.items():
-                caps = sorted([c for c in comp.capabilities])
+                caps = sorted([str(c) for c in comp.capabilities])
                 device_info["components"][comp_id] = {
                     "capabilities": caps
                 }
             
             device_list.append(device_info)
         
-        return device_list
+        # Return as JSON string for proper tool output
+        return json.dumps(device_list, indent=2, default=str)
     
 def _convert_to_serializable(obj):
     """Convert pysmartthings objects to JSON-serializable types"""
@@ -273,17 +274,17 @@ def _convert_to_serializable(obj):
     # Fallback: convert to string
     return str(obj)
 
-async def get_device_logs(device_id: str):
-    """Get detailed logs and status for a specific device"""
+async def get_device_logs(device_id: str) -> str:
+    """Get detailed logs and status for a specific device. Returns a JSON string with device status, health, and component information."""
     async with aiohttp.ClientSession() as session:
         api = pysmartthings.SmartThings(session=session, _token=TOKEN)
         device = await api.get_device(device_id)
         
         if not device:
-            return {
+            return json.dumps({
                 "success": False,
                 "error": f"Device {device_id} not found"
-            }
+            })
         
         # Get device status separately
         device_status = await api.get_device_status(device_id)
@@ -331,7 +332,8 @@ async def get_device_logs(device_id: str):
             "timestamp": datetime.datetime.now().isoformat()
         }
         
-        return result
+        # Return as JSON string for proper tool output
+        return json.dumps(result, indent=2, default=str)
 
 async def main(query: str, log_callback=None) -> str:
     """
@@ -354,9 +356,10 @@ async def main(query: str, log_callback=None) -> str:
         # First test if get_devices works directly
         add_log("🧪 Testing get_devices tool directly...", "info")
         try:
-            test_devices = await get_devices()
+            test_devices_json = await get_devices()
+            test_devices = json.loads(test_devices_json)
             add_log(f"✅ Direct tool test: Found {len(test_devices)} devices", "success", 
-                    output=json.dumps(test_devices, indent=2, default=str))
+                    output=test_devices_json)
         except Exception as test_err:
             add_log(f"❌ Direct tool test failed: {str(test_err)}", "error")
         
@@ -386,21 +389,25 @@ async def main(query: str, log_callback=None) -> str:
             
             # Use agent.run() to get the response
             result = await agent.run(query)
-            print(f"Agent: {result}\n")
-            add_log(f"Agent output: {result}\n")
             
             # Log the raw result for debugging
             add_log(f"📊 Raw result type: {type(result).__name__}", "info", output=repr(result)[:500])
             
-            # Convert result to string properly
-            if hasattr(result, 'content'):
-                full_response = str(result.content)
-            elif hasattr(result, 'text'):
+            # The agent.run() returns a ChatAgentResult object with a .text property
+            # Based on working examples (foundryiq.py, stenggagent.py), use .text
+            if hasattr(result, 'text') and result.text:
                 full_response = str(result.text)
-            elif hasattr(result, 'value'):
+            elif hasattr(result, 'content') and result.content:
+                full_response = str(result.content)
+            elif hasattr(result, 'value') and result.value:
                 full_response = str(result.value)
             else:
+                # Fallback: convert the entire result to string
                 full_response = str(result)
+            
+            # Log usage details if available
+            if hasattr(result, 'usage_details') and result.usage_details:
+                add_log(f"📈 Usage Details:", "info", output=str(result.usage_details))
             
             add_log("✅ Agent Final Response:", "success", output=full_response)
             

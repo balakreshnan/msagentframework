@@ -166,6 +166,6 @@ if __name__ == "__main__":
     #print(rs)
     #rs = asyncio.run(get_device_logs("a318f372-e660-1349-5ae1-427cd02ffd5e"))
     #print(rs)
-    # query = "View all my devices?"
-    query = "Give me the status of device with ID a318f372-e660-1349-5ae1-427cd02ffd5e?"
+    query = "View all my devices?"
+    # query = "Give me the status of device with ID a318f372-e660-1349-5ae1-427cd02ffd5e?"
     asyncio.run(main(query))
