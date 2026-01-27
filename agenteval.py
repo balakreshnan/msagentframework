@@ -2,6 +2,11 @@ from dotenv import load_dotenv
 import os
 import json
 import time
+import asyncio
+import logging
+from random import randint
+from typing import Annotated
+import re
 from pprint import pprint
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
@@ -10,10 +15,15 @@ from openai.types.evals.create_eval_jsonl_run_data_source_param import (
     SourceFileContent,
     SourceFileContentContent,
 )
+from azure.monitor.opentelemetry import configure_azure_monitor
+from opentelemetry.trace import SpanKind
+from opentelemetry.trace.span import format_trace_id
+from agent_framework.observability import create_resource, enable_instrumentation, get_tracer
+from pydantic import Field
 
 
 load_dotenv()
-
+logger = logging.getLogger(__name__)
 
 endpoint = os.environ[
     "AZURE_AI_PROJECT"
