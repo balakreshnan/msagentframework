@@ -202,7 +202,7 @@ graph TB
         AF[agent-framework]
         AFAZ[agent-framework-azure-ai]
         AFUI[agent-framework-devui]
-        AFVIZ[agent-framework viz]
+        AFVIZ[agent-framework-viz]
         AFSRCH[agent-framework-azure-ai-search]
     end
     
