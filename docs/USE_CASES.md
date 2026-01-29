@@ -30,7 +30,7 @@ Customers need personalized product recommendations based on multiple factors (p
 ```mermaid
 graph TB
     subgraph "Retail Advisory Agent Workflow"
-        QUERY[Customer: "I need a jacket for Seattle weather under $200"]
+        QUERY[Customer: I need a jacket for Seattle weather under $200]
         
         QUERY --> AGENT[Retail Advisory Agent]
         
@@ -284,7 +284,7 @@ graph LR
 ```mermaid
 graph TB
     subgraph "SmartThings Agent Architecture"
-        VOICE[Voice: "Good night mode"] --> NLU[Natural Language Understanding]
+        VOICE[Voice: Good night mode] --> NLU[Natural Language Understanding]
         NLU --> INTENT[Intent: Prepare for Sleep]
         
         INTENT --> AGENT[SmartThings Orchestration Agent]
@@ -302,7 +302,7 @@ graph TB
         E --> |Power off TV| EXEC
         
         EXEC --> CONFIRM[Status Confirmation]
-        CONFIRM --> USER[User: "Good night mode activated"]
+        CONFIRM --> USER[User: Good night mode activated]
     end
     
     style AGENT fill:#4CAF50
@@ -373,7 +373,7 @@ graph LR
 ```mermaid
 graph TB
     subgraph "AI Financial Advisory Agent"
-        QUERY[Client: "Should I invest in tech stocks?"] --> ADVISOR[Financial Advisor Agent]
+        QUERY[Client: Should I invest in tech stocks?] --> ADVISOR[Financial Advisor Agent]
         
         ADVISOR --> RESEARCH{Multi-Agent Research}
         
