@@ -35,7 +35,7 @@ dataset_version = os.environ.get("DATASET_VERSION", "1")
 
 # Construct the paths to the data folder and data file used in this sample
 script_dir = os.path.dirname(os.path.abspath(__file__))
-data_folder = os.environ.get("DATA_FOLDER", os.path.join(script_dir, "data_folder"))
+data_folder = os.environ.get("DATA_FOLDER", os.path.join(script_dir, "evaldata"))
 data_file = os.path.join(data_folder, "datarfp.jsonl")
 
 # --- Client setup and workflow ---
@@ -99,7 +99,7 @@ with DefaultAzureCredential() as credential:
 
         print("Creating Eval Group")
         eval_object = client.evals.create(
-            name="label model test with dataset ID",
+            name="EvalBatchAgentEvalGroup",
             data_source_config=data_source_config,
             testing_criteria=testing_criteria,
         )
@@ -113,7 +113,7 @@ with DefaultAzureCredential() as credential:
         print("Creating Eval Run with Dataset ID")
         eval_run_object = client.evals.runs.create(
             eval_id=eval_object.id,
-            name="rfgbatchagentevalrun",
+            name="EvalBatchAgentEvalRun",
             metadata={"team": "eval-exp", "scenario": "dataset-id-v1"},
             data_source=CreateEvalJSONLRunDataSourceParam(
                 type="jsonl",
