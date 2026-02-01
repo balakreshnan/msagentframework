@@ -36,19 +36,30 @@ dataset_version = os.environ.get("DATASET_VERSION", "1")
 # Construct the paths to the data folder and data file used in this sample
 script_dir = os.path.dirname(os.path.abspath(__file__))
 data_folder = os.environ.get("DATA_FOLDER", os.path.join(script_dir, "evaldata"))
-data_file = os.path.join(data_folder, "datarfp.jsonl")
+# data_file = os.path.join(data_folder, "datarfp.jsonl")
+data_file = "datarfp.jsonl"  # Use local file for this example
 
 # --- Client setup and workflow ---
 
 with DefaultAzureCredential() as credential:
     with AIProjectClient(endpoint=endpoint, credential=credential) as project_client:
-        print("Upload a single file and create a new Dataset to reference the file.")
-        dataset: DatasetVersion = project_client.datasets.upload_file(
-            name=dataset_name
-            or f"eval-data-{datetime.utcnow().strftime('%Y-%m-%d_%H%M%S_UTC')}",
-            version=dataset_version,
-            file_path=data_file,
-        )
+        # Try to get existing dataset first, create only if it doesn't exist
+        try:
+            print(f"Checking if dataset '{dataset_name}' version '{dataset_version}' already exists...")
+            dataset: DatasetVersion = project_client.datasets.get(
+                name=dataset_name,
+                version=dataset_version,
+            )
+            print(f"Dataset already exists, using existing dataset.")
+        except Exception as e:
+            # Dataset doesn't exist, create it
+            print("Dataset not found, uploading a new file and creating a new Dataset.")
+            dataset: DatasetVersion = project_client.datasets.upload_file(
+                name=dataset_name
+                or f"eval-data-{datetime.utcnow().strftime('%Y-%m-%d_%H%M%S_UTC')}",
+                version=dataset_version,
+                file_path=data_file,
+            )
         pprint(dataset)
 
         print("Creating an OpenAI client from the AI Project client")
