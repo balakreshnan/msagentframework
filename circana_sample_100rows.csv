@@ -1,0 +1,1001 @@
+Week,Store_ID,Category,Brand,UPC,Product_Name,Base_Price,Actual_Price,Any_Promo,Units_Sold,Dollar_Sales,ACV_Distribution,Market_Share_Pct
+2025-01-06,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,391,504.39,57,41.0
+2025-01-06,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.01,1,676,682.76,85,30.7
+2025-01-06,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,484,1931.16,93,52.8
+2025-01-06,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.26,1,383,1631.58,71,25.3
+2025-01-06,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.24,1,352,1140.48,65,34.3
+2025-01-06,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.05,1,745,2272.25,52,59.4
+2025-01-06,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,353,314.17,53,53.0
+2025-01-06,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,293,729.57,51,43.9
+2025-01-06,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,295,646.05,63,33.7
+2025-01-06,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.5,1,690,3105.0,53,32.4
+2025-01-06,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,310,399.9,59,51.3
+2025-01-06,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,375,483.75,63,26.9
+2025-01-06,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.25,1,539,1751.75,96,58.1
+2025-01-06,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,366,1643.34,94,24.9
+2025-01-06,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,132,500.28,58,47.0
+2025-01-06,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.62,1,334,875.08,57,54.2
+2025-01-06,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,421,374.69,90,52.0
+2025-01-06,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,342,851.58,97,33.0
+2025-01-06,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,428,937.32,89,29.6
+2025-01-06,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,276,1377.24,63,49.7
+2025-01-06,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,319,411.51,76,38.3
+2025-01-06,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,137,176.73,81,42.3
+2025-01-06,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.4,1,439,1492.6,88,41.4
+2025-01-06,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,158,709.42,56,30.1
+2025-01-06,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.55,1,211,749.05,55,43.3
+2025-01-06,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.91,1,639,1859.49,77,39.3
+2025-01-06,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,431,383.59,62,50.1
+2025-01-06,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.12,1,375,795.0,82,29.8
+2025-01-06,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.06,1,671,1382.26,73,53.1
+2025-01-06,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,135,673.65,88,37.4
+2025-01-06,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.04,1,261,271.44,51,45.1
+2025-01-06,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.04,1,546,567.84,51,46.2
+2025-01-06,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,266,1061.34,53,22.8
+2025-01-06,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,396,1778.04,54,42.1
+2025-01-06,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,556,2107.24,65,49.2
+2025-01-06,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.75,1,819,2252.25,85,25.7
+2025-01-06,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,231,205.59,56,26.1
+2025-01-06,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,228,567.72,89,24.8
+2025-01-06,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.69,1,406,686.14,91,35.3
+2025-01-06,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,530,2644.7,98,28.5
+2025-01-06,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.2,1,250,300.0,58,36.2
+2025-01-06,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,355,457.95,73,34.2
+2025-01-06,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,179,714.21,57,47.5
+2025-01-06,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,283,1270.67,74,43.2
+2025-01-06,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,2.96,1,695,2057.2,84,51.1
+2025-01-06,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.11,1,619,1925.09,97,54.9
+2025-01-06,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,254,226.06,82,39.0
+2025-01-06,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,426,1060.74,79,54.1
+2025-01-06,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,382,836.58,83,32.3
+2025-01-06,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,464,2315.36,54,28.1
+2025-01-13,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,83,107.07,98,21.5
+2025-01-13,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,303,390.87,55,33.0
+2025-01-13,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.73,1,761,2838.53,84,64.2
+2025-01-13,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.64,1,385,1401.4,67,47.3
+2025-01-13,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,184,697.36,95,23.4
+2025-01-13,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,416,1451.84,76,30.3
+2025-01-13,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.82,1,850,697.0,97,47.1
+2025-01-13,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.08,1,743,1545.44,62,28.3
+2025-01-13,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.92,1,201,385.92,95,56.8
+2025-01-13,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,229,1142.71,51,35.3
+2025-01-13,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,147,189.63,71,40.7
+2025-01-13,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,0.98,1,626,613.48,92,30.1
+2025-01-13,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,138,550.62,93,41.8
+2025-01-13,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,3.41,1,726,2475.66,84,50.5
+2025-01-13,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,437,1656.23,91,31.3
+2025-01-13,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,406,1416.94,75,20.9
+2025-01-13,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,367,326.63,61,34.3
+2025-01-13,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.95,1,557,1086.15,97,32.3
+2025-01-13,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,572,1252.68,88,43.0
+2025-01-13,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,433,2160.67,61,39.8
+2025-01-13,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.0,1,520,520.0,54,28.8
+2025-01-13,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.22,1,391,477.02,75,44.7
+2025-01-13,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,382,1524.18,86,33.9
+2025-01-13,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,489,2195.61,80,20.5
+2025-01-13,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,222,841.38,54,43.9
+2025-01-13,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,459,1601.91,98,50.4
+2025-01-13,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,452,402.28,84,42.5
+2025-01-13,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,313,779.37,61,33.5
+2025-01-13,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,378,827.82,78,22.4
+2025-01-13,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.76,1,585,2199.6,66,51.2
+2025-01-13,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,176,227.04,90,37.4
+2025-01-13,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,223,287.67,78,21.4
+2025-01-13,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,354,1412.46,86,46.3
+2025-01-13,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,301,1351.49,85,33.0
+2025-01-13,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,287,1087.73,81,50.0
+2025-01-13,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,122,425.78,84,23.6
+2025-01-13,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,160,142.4,74,31.2
+2025-01-13,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,226,562.74,90,49.7
+2025-01-13,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,451,987.69,68,37.3
+2025-01-13,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.83,1,737,2822.71,70,55.1
+2025-01-13,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,131,168.99,91,54.1
+2025-01-13,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,215,277.35,72,39.1
+2025-01-13,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,289,1153.11,59,49.3
+2025-01-13,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,274,1230.26,62,27.8
+2025-01-13,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,413,1565.27,54,38.0
+2025-01-13,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.02,1,703,2123.06,66,62.9
+2025-01-13,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,217,193.13,80,36.9
+2025-01-13,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,257,639.93,75,31.6
+2025-01-13,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,218,477.42,77,40.0
+2025-01-13,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,469,2340.31,88,46.1
+2025-01-20,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,277,357.33,98,22.9
+2025-01-20,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,256,330.24,93,54.2
+2025-01-20,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,464,1851.36,70,54.8
+2025-01-20,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.86,1,158,609.88,96,50.2
+2025-01-20,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,105,397.95,52,51.5
+2025-01-20,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.81,1,425,1194.25,87,43.2
+2025-01-20,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,92,81.88,85,36.2
+2025-01-20,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,251,624.99,86,54.1
+2025-01-20,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,222,486.18,69,41.1
+2025-01-20,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.88,1,242,938.96,67,41.7
+2025-01-20,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,127,163.83,94,25.8
+2025-01-20,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,531,684.99,81,54.5
+2025-01-20,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,362,1444.38,71,49.0
+2025-01-20,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,160,718.4,50,20.5
+2025-01-20,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.37,1,568,1914.16,87,61.5
+2025-01-20,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,179,624.71,59,33.2
+2025-01-20,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.7,1,189,132.3,62,33.3
+2025-01-20,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,316,786.84,80,24.0
+2025-01-20,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,258,565.02,52,38.2
+2025-01-20,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,181,903.19,79,50.7
+2025-01-20,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,209,269.61,72,46.4
+2025-01-20,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,185,238.65,88,24.8
+2025-01-20,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.27,1,332,1085.64,64,42.5
+2025-01-20,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,414,1858.86,82,47.4
+2025-01-20,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,349,1322.71,66,53.2
+2025-01-20,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.26,1,760,2477.6,69,43.4
+2025-01-20,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,142,126.38,92,40.3
+2025-01-20,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.14,1,340,727.6,80,41.0
+2025-01-20,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,425,930.75,74,51.4
+2025-01-20,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,228,1137.72,68,48.8
+2025-01-20,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.06,1,161,170.66,50,46.4
+2025-01-20,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,137,176.73,63,31.6
+2025-01-20,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.07,1,245,752.15,96,45.5
+2025-01-20,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,3.71,1,635,2355.85,50,28.4
+2025-01-20,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,246,932.34,71,28.3
+2025-01-20,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,174,607.26,94,22.2
+2025-01-20,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.69,1,188,129.72,95,55.0
+2025-01-20,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.3,1,637,1465.1,64,29.2
+2025-01-20,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,102,223.38,66,27.4
+2025-01-20,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.86,1,365,1408.9,74,52.2
+2025-01-20,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,206,265.74,85,38.8
+2025-01-20,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,375,483.75,93,24.5
+2025-01-20,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.28,1,635,2082.8,94,38.2
+2025-01-20,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,221,992.29,55,28.6
+2025-01-20,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,2.98,1,748,2229.04,73,60.9
+2025-01-20,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.98,1,239,712.22,73,29.5
+2025-01-20,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,372,331.08,64,48.6
+2025-01-20,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.95,1,301,586.95,64,46.4
+2025-01-20,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,301,659.19,55,53.9
+2025-01-20,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,311,1551.89,98,38.5
+2025-01-27,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,220,283.8,86,37.7
+2025-01-27,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,437,563.73,82,32.9
+2025-01-27,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,297,1185.03,93,27.1
+2025-01-27,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,165,740.85,86,20.1
+2025-01-27,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.2,1,211,675.2,79,29.3
+2025-01-27,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,322,1123.78,60,52.8
+2025-01-27,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.68,1,688,467.84,78,30.6
+2025-01-27,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,413,1028.37,84,25.7
+2025-01-27,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,503,1101.57,53,31.1
+2025-01-27,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,387,1931.13,89,33.2
+2025-01-27,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,496,639.84,64,40.2
+2025-01-27,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,474,611.46,88,24.1
+2025-01-27,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,535,2134.65,91,24.9
+2025-01-27,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,255,1144.95,79,51.3
+2025-01-27,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,150,568.5,86,47.3
+2025-01-27,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.76,1,744,2053.44,59,38.7
+2025-01-27,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,245,218.05,94,24.5
+2025-01-27,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,260,647.4,78,28.0
+2025-01-27,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,184,402.96,85,39.0
+2025-01-27,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.09,1,208,850.72,89,48.3
+2025-01-27,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,367,473.43,92,25.4
+2025-01-27,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,322,415.38,96,45.4
+2025-01-27,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,531,2118.69,54,52.3
+2025-01-27,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,227,1019.23,80,41.2
+2025-01-27,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,107,405.53,90,52.4
+2025-01-27,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,358,1249.42,75,49.4
+2025-01-27,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.83,1,618,512.94,89,49.3
+2025-01-27,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,381,948.69,75,31.7
+2025-01-27,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,142,310.98,87,32.1
+2025-01-27,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.48,1,192,860.16,93,61.5
+2025-01-27,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.12,1,431,482.72,73,37.5
+2025-01-27,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,221,285.09,70,38.0
+2025-01-27,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,395,1576.05,71,23.0
+2025-01-27,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,136,610.64,81,22.3
+2025-01-27,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,535,2027.65,81,36.4
+2025-01-27,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,436,1521.64,68,22.3
+2025-01-27,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,277,246.53,77,36.8
+2025-01-27,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,351,873.99,57,50.2
+2025-01-27,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,351,768.69,68,42.5
+2025-01-27,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,221,1102.79,81,45.1
+2025-01-27,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,428,552.12,52,28.1
+2025-01-27,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,359,463.11,96,39.9
+2025-01-27,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,170,678.3,83,48.2
+2025-01-27,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,442,1984.58,92,53.7
+2025-01-27,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,247,936.13,80,31.3
+2025-01-27,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.06,1,367,1123.02,68,29.9
+2025-01-27,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,371,330.19,51,51.9
+2025-01-27,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,99,246.51,51,32.7
+2025-01-27,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.01,1,604,1214.04,79,39.5
+2025-01-27,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,535,2669.65,71,47.3
+2025-02-03,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.11,1,292,324.12,81,42.0
+2025-02-03,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.04,1,240,249.6,74,35.3
+2025-02-03,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.66,1,140,512.4,78,31.9
+2025-02-03,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.38,1,396,1338.48,91,48.1
+2025-02-03,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.26,1,402,1310.52,61,33.3
+2025-02-03,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.71,1,597,1617.87,76,48.9
+2025-02-03,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,355,315.95,94,49.3
+2025-02-03,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,291,724.59,51,25.8
+2025-02-03,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,339,742.41,75,22.4
+2025-02-03,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,103,513.97,98,45.3
+2025-02-03,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,405,522.45,96,53.4
+2025-02-03,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.09,1,453,493.77,69,31.5
+2025-02-03,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,435,1735.65,94,25.4
+2025-02-03,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,142,637.58,66,34.4
+2025-02-03,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,197,746.63,88,22.7
+2025-02-03,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.62,1,333,872.46,68,37.6
+2025-02-03,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,345,307.05,59,44.2
+2025-02-03,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,112,278.88,73,46.5
+2025-02-03,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,191,418.29,65,49.7
+2025-02-03,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.23,1,417,1763.91,90,62.8
+2025-02-03,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.15,1,572,657.8,75,47.7
+2025-02-03,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,312,402.48,56,30.4
+2025-02-03,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,487,1943.13,67,46.1
+2025-02-03,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,3.78,1,263,994.14,80,39.6
+2025-02-03,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,332,1258.28,86,38.6
+2025-02-03,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,476,1661.24,98,38.8
+2025-02-03,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,520,462.8,65,34.9
+2025-02-03,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,403,1003.47,83,20.7
+2025-02-03,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,228,499.32,81,48.0
+2025-02-03,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,141,703.59,78,21.3
+2025-02-03,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,426,549.54,96,33.9
+2025-02-03,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.05,1,769,807.45,79,25.1
+2025-02-03,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,434,1731.66,53,45.0
+2025-02-03,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,339,1522.11,64,35.0
+2025-02-03,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,376,1425.04,86,47.5
+2025-02-03,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.91,1,787,2290.17,60,61.1
+2025-02-03,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,356,316.84,57,53.0
+2025-02-03,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,534,1329.66,95,28.1
+2025-02-03,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.74,1,643,1118.82,55,57.0
+2025-02-03,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,362,1806.38,84,40.9
+2025-02-03,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,458,590.82,67,44.4
+2025-02-03,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.18,1,523,617.14,96,26.4
+2025-02-03,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,381,1520.19,90,33.7
+2025-02-03,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.8,1,556,2112.8,61,26.4
+2025-02-03,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.55,1,659,2339.45,73,35.1
+2025-02-03,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.1,1,439,1360.9,55,63.5
+2025-02-03,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.83,1,237,196.71,94,44.2
+2025-02-03,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,293,729.57,89,43.7
+2025-02-03,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,367,803.73,73,47.9
+2025-02-03,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,390,1946.1,97,44.8
+2025-02-10,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,520,670.8,85,41.7
+2025-02-10,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,122,157.38,94,50.5
+2025-02-10,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.65,1,889,3244.85,79,61.3
+2025-02-10,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.87,1,282,1091.34,88,32.7
+2025-02-10,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.09,1,559,1727.31,80,40.1
+2025-02-10,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.19,1,621,1980.99,56,46.7
+2025-02-10,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,399,355.11,64,52.6
+2025-02-10,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.33,1,799,1861.67,53,37.0
+2025-02-10,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,487,1066.53,71,41.7
+2025-02-10,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.61,1,498,2295.78,61,55.0
+2025-02-10,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.16,1,140,162.4,82,37.9
+2025-02-10,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,125,161.25,83,29.6
+2025-02-10,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,194,774.06,88,38.4
+2025-02-10,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,154,691.46,51,47.0
+2025-02-10,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,2.94,1,555,1631.7,93,26.3
+2025-02-10,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,389,1357.61,69,33.9
+2025-02-10,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.84,1,528,443.52,87,34.2
+2025-02-10,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.88,1,660,1240.8,67,59.6
+2025-02-10,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,147,321.93,74,50.4
+2025-02-10,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,174,868.26,56,41.9
+2025-02-10,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,0.98,1,788,772.24,69,56.9
+2025-02-10,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,316,407.64,93,28.7
+2025-02-10,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,443,1767.57,51,47.9
+2025-02-10,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,3.78,1,269,1016.82,79,40.7
+2025-02-10,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,211,799.69,60,44.3
+2025-02-10,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,233,813.17,60,36.8
+2025-02-10,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.71,1,783,555.93,64,45.0
+2025-02-10,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,231,575.19,89,20.3
+2025-02-10,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.87,1,715,1337.05,79,26.3
+2025-02-10,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.14,1,558,2310.12,75,52.6
+2025-02-10,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,177,228.33,98,53.3
+2025-02-10,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.2,1,202,242.4,88,49.5
+2025-02-10,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.74,1,741,2771.34,69,38.6
+2025-02-10,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,112,502.88,65,39.2
+2025-02-10,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,509,1929.11,90,25.7
+2025-02-10,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,99,345.51,62,36.8
+2025-02-10,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,292,259.88,85,46.0
+2025-02-10,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,433,1078.17,93,39.4
+2025-02-10,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,232,508.08,90,37.3
+2025-02-10,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.14,1,297,1229.58,64,35.3
+2025-02-10,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,531,684.99,73,34.9
+2025-02-10,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.06,1,190,201.4,98,45.6
+2025-02-10,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,380,1516.2,85,50.6
+2025-02-10,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,383,1719.67,61,33.4
+2025-02-10,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,131,496.49,84,47.2
+2025-02-10,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,195,680.55,63,54.0
+2025-02-10,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.82,1,201,164.82,96,48.7
+2025-02-10,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,189,470.61,55,42.8
+2025-02-10,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.82,1,445,809.9,50,55.9
+2025-02-10,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.71,1,574,2703.54,59,27.9
+2025-02-17,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.1,1,623,685.3,90,42.2
+2025-02-17,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.13,1,144,162.72,69,40.2
+2025-02-17,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,291,1161.09,86,47.4
+2025-02-17,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,425,1908.25,64,39.5
+2025-02-17,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,560,2122.4,58,38.6
+2025-02-17,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,405,1413.45,84,35.8
+2025-02-17,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,356,316.84,63,44.1
+2025-02-17,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,404,1005.96,92,20.6
+2025-02-17,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.07,1,216,447.12,96,45.9
+2025-02-17,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.27,1,324,1383.48,94,30.7
+2025-02-17,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,512,660.48,70,23.3
+2025-02-17,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,403,519.87,96,26.2
+2025-02-17,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,488,1947.12,92,43.9
+2025-02-17,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,276,1239.24,96,40.0
+2025-02-17,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.55,1,749,2658.95,50,33.6
+2025-02-17,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,162,565.38,90,23.7
+2025-02-17,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,238,211.82,58,50.3
+2025-02-17,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,409,1018.41,62,30.1
+2025-02-17,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.93,1,299,577.07,87,42.5
+2025-02-17,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,555,2769.45,68,50.4
+2025-02-17,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,433,558.57,70,31.4
+2025-02-17,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,305,393.45,68,33.6
+2025-02-17,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,411,1639.89,84,28.0
+2025-02-17,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,3.91,1,353,1380.23,51,43.5
+2025-02-17,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,449,1701.71,51,36.8
+2025-02-17,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.86,1,152,434.72,97,48.2
+2025-02-17,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,354,315.06,72,48.5
+2025-02-17,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,482,1200.18,70,26.9
+2025-02-17,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.93,1,421,812.53,85,62.1
+2025-02-17,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.68,1,502,2349.36,53,35.3
+2025-02-17,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.05,1,547,574.35,57,37.5
+2025-02-17,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,235,303.15,62,34.5
+2025-02-17,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.14,1,823,2584.22,88,46.0
+2025-02-17,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,459,2060.91,91,52.1
+2025-02-17,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,530,2008.7,50,33.1
+2025-02-17,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,172,600.28,71,48.7
+2025-02-17,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,549,488.61,64,41.4
+2025-02-17,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,260,647.4,73,32.4
+2025-02-17,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.98,1,260,514.8,85,41.9
+2025-02-17,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,271,1352.29,59,35.8
+2025-02-17,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,244,314.76,93,50.2
+2025-02-17,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,0.99,1,662,655.38,77,33.2
+2025-02-17,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,186,742.14,74,54.6
+2025-02-17,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.99,1,659,2629.41,88,54.0
+2025-02-17,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.1,1,539,1670.9,75,38.5
+2025-02-17,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,173,603.77,89,42.6
+2025-02-17,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,159,141.51,55,32.4
+2025-02-17,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.13,1,391,832.83,93,34.3
+2025-02-17,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,341,746.79,52,38.7
+2025-02-17,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.07,1,558,2271.06,93,51.5
+2025-02-24,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,443,571.47,57,40.3
+2025-02-24,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.22,1,680,829.6,65,41.4
+2025-02-24,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,169,674.31,66,30.5
+2025-02-24,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,119,534.31,94,24.2
+2025-02-24,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,259,981.61,89,46.9
+2025-02-24,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.09,1,307,948.63,67,56.5
+2025-02-24,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,372,331.08,83,22.2
+2025-02-24,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.98,1,507,1003.86,70,38.9
+2025-02-24,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.87,1,647,1209.89,72,62.7
+2025-02-24,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,421,2100.79,92,40.1
+2025-02-24,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,303,390.87,96,33.9
+2025-02-24,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,417,537.93,91,50.4
+2025-02-24,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,384,1532.16,63,22.8
+2025-02-24,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,142,637.58,84,32.1
+2025-02-24,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,416,1576.64,51,24.6
+2025-02-24,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,274,956.26,50,41.2
+2025-02-24,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,444,395.16,84,34.0
+2025-02-24,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.05,1,778,1594.9,53,30.4
+2025-02-24,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,131,286.89,81,40.8
+2025-02-24,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,116,578.84,55,20.0
+2025-02-24,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.12,1,344,385.28,54,56.2
+2025-02-24,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,227,292.83,80,44.3
+2025-02-24,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,158,630.42,70,24.2
+2025-02-24,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,3.46,1,308,1065.68,82,45.4
+2025-02-24,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,332,1258.28,78,41.8
+2025-02-24,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,359,1252.91,86,51.0
+2025-02-24,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,107,95.23,71,49.0
+2025-02-24,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,219,545.31,51,24.7
+2025-02-24,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,297,650.43,59,43.8
+2025-02-24,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.36,1,144,627.84,94,64.0
+2025-02-24,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,222,286.38,66,23.8
+2025-02-24,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,289,372.81,75,24.5
+2025-02-24,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,231,921.69,89,48.4
+2025-02-24,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,157,704.93,62,24.7
+2025-02-24,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.34,1,409,1366.06,97,35.2
+2025-02-24,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,372,1298.28,89,36.2
+2025-02-24,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,371,330.19,71,42.3
+2025-02-24,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,445,1108.05,68,23.7
+2025-02-24,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,199,435.81,62,21.3
+2025-02-24,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,401,2000.99,73,23.7
+2025-02-24,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.1,1,498,547.8,95,64.7
+2025-02-24,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,330,425.7,77,32.4
+2025-02-24,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,383,1528.17,81,22.4
+2025-02-24,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,174,781.26,77,51.5
+2025-02-24,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,481,1822.99,51,43.4
+2025-02-24,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.8,1,751,2102.8,90,63.4
+2025-02-24,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,420,373.8,70,24.4
+2025-02-24,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,371,923.79,81,46.2
+2025-02-24,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,413,904.47,59,31.8
+2025-02-24,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,236,1177.64,89,35.1
+2025-03-03,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,250,322.5,79,52.5
+2025-03-03,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,219,282.51,70,30.0
+2025-03-03,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,251,1001.49,61,52.2
+2025-03-03,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.05,1,472,1911.6,95,54.1
+2025-03-03,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,275,1042.25,71,46.4
+2025-03-03,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.99,1,509,1521.91,78,52.4
+2025-03-03,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.84,1,280,235.2,71,46.7
+2025-03-03,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,295,734.55,68,25.3
+2025-03-03,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.9,1,671,1274.9,96,31.4
+2025-03-03,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,153,763.47,54,50.9
+2025-03-03,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.02,1,750,765.0,92,37.4
+2025-03-03,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,419,540.51,76,44.1
+2025-03-03,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,502,2002.98,71,49.7
+2025-03-03,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,121,543.29,63,46.2
+2025-03-03,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,110,416.9,80,30.7
+2025-03-03,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,169,589.81,96,35.7
+2025-03-03,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,109,97.01,75,33.7
+2025-03-03,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,366,911.34,87,25.8
+2025-03-03,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.81,1,616,1114.96,53,45.4
+2025-03-03,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,338,1686.62,53,21.8
+2025-03-03,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,288,371.52,80,20.8
+2025-03-03,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.13,1,408,461.04,94,54.8
+2025-03-03,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,240,957.6,68,35.4
+2025-03-03,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,3.66,1,403,1474.98,98,48.9
+2025-03-03,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,483,1830.57,94,26.1
+2025-03-03,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,275,959.75,76,44.0
+2025-03-03,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,212,188.68,58,53.3
+2025-03-03,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.15,1,354,761.1,62,53.0
+2025-03-03,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,197,431.43,66,52.5
+2025-03-03,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,130,648.7,54,49.5
+2025-03-03,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.17,1,325,380.25,85,30.3
+2025-03-03,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.16,1,405,469.8,85,55.6
+2025-03-03,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.48,1,440,1531.2,69,51.3
+2025-03-03,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,378,1697.22,71,29.2
+2025-03-03,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.53,1,416,1468.48,65,55.4
+2025-03-03,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,275,959.75,58,37.1
+2025-03-03,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.68,1,572,388.96,70,46.3
+2025-03-03,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,88,219.12,64,20.8
+2025-03-03,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,210,459.9,97,52.8
+2025-03-03,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.16,1,811,3373.76,86,64.3
+2025-03-03,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.14,1,444,506.16,98,43.6
+2025-03-03,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,573,739.17,90,20.8
+2025-03-03,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,433,1727.67,56,43.9
+2025-03-03,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,212,951.88,83,34.1
+2025-03-03,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,188,712.52,83,22.9
+2025-03-03,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,159,554.91,54,53.1
+2025-03-03,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,138,122.82,65,34.4
+2025-03-03,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,169,420.81,96,37.9
+2025-03-03,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,282,617.58,98,27.0
+2025-03-03,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.91,1,850,3323.5,71,25.7
+2025-03-10,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.14,1,394,449.16,76,62.9
+2025-03-10,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,424,546.96,51,22.3
+2025-03-10,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,145,578.55,84,23.7
+2025-03-10,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,180,808.2,92,47.1
+2025-03-10,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,370,1402.3,73,32.5
+2025-03-10,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,170,593.3,58,33.9
+2025-03-10,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,204,181.56,69,39.5
+2025-03-10,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.17,1,863,1872.71,92,64.3
+2025-03-10,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.73,1,198,342.54,97,31.1
+2025-03-10,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,387,1931.13,81,24.1
+2025-03-10,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,562,724.98,94,54.4
+2025-03-10,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,341,439.89,77,50.9
+2025-03-10,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,294,1173.06,54,39.6
+2025-03-10,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,429,1926.21,75,22.8
+2025-03-10,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,269,1019.51,58,48.7
+2025-03-10,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,342,1193.58,60,51.5
+2025-03-10,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,281,250.09,71,49.0
+2025-03-10,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.95,1,508,990.6,75,29.0
+2025-03-10,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.7,1,245,416.5,67,55.0
+2025-03-10,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,283,1412.17,66,49.5
+2025-03-10,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,333,429.57,82,24.4
+2025-03-10,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,152,196.08,77,43.9
+2025-03-10,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.52,1,181,637.12,72,28.1
+2025-03-10,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.15,1,593,2460.95,70,26.3
+2025-03-10,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.34,1,447,1492.98,66,55.6
+2025-03-10,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,500,1745.0,82,50.6
+2025-03-10,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.7,1,709,496.3,87,34.1
+2025-03-10,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,275,684.75,79,48.1
+2025-03-10,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,382,836.58,73,21.0
+2025-03-10,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,284,1417.16,68,54.0
+2025-03-10,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,419,540.51,69,54.4
+2025-03-10,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,158,203.82,68,50.5
+2025-03-10,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.55,1,550,1952.5,66,34.7
+2025-03-10,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,3.79,1,339,1284.81,84,34.1
+2025-03-10,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,114,432.06,53,50.7
+2025-03-10,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,232,809.68,90,54.6
+2025-03-10,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,103,91.67,98,30.0
+2025-03-10,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,438,1090.62,70,38.3
+2025-03-10,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.01,1,366,735.66,58,61.4
+2025-03-10,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,372,1856.28,57,38.1
+2025-03-10,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,501,646.29,95,47.1
+2025-03-10,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,108,139.32,71,41.2
+2025-03-10,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,418,1667.82,53,43.7
+2025-03-10,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.58,1,278,995.24,71,35.5
+2025-03-10,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.2,1,737,2358.4,72,41.3
+2025-03-10,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,291,1015.59,61,41.1
+2025-03-10,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,473,420.97,78,36.6
+2025-03-10,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,251,624.99,94,36.6
+2025-03-10,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,231,505.89,95,21.7
+2025-03-10,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,437,2180.63,88,48.1
+2025-03-17,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,399,514.71,90,33.9
+2025-03-17,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.13,1,717,810.21,88,48.0
+2025-03-17,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.53,1,385,1359.05,95,31.6
+2025-03-17,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,113,507.37,57,43.5
+2025-03-17,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.35,1,695,2328.25,77,57.8
+2025-03-17,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.06,1,768,2350.08,96,27.4
+2025-03-17,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,394,350.66,53,33.4
+2025-03-17,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,151,375.99,96,34.7
+2025-03-17,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,311,681.09,64,46.2
+2025-03-17,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,411,2050.89,51,51.1
+2025-03-17,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,524,675.96,58,41.4
+2025-03-17,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,193,248.97,51,38.5
+2025-03-17,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,384,1532.16,66,44.3
+2025-03-17,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,332,1490.68,94,34.0
+2025-03-17,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,164,621.56,80,36.3
+2025-03-17,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,447,1560.03,92,35.0
+2025-03-17,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,482,428.98,87,47.6
+2025-03-17,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,432,1075.68,52,50.0
+2025-03-17,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,136,297.84,60,40.4
+2025-03-17,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,334,1666.66,82,38.4
+2025-03-17,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,247,318.63,53,21.6
+2025-03-17,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,125,161.25,78,38.1
+2025-03-17,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,233,929.67,98,43.7
+2025-03-17,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,243,1091.07,61,39.6
+2025-03-17,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,2.97,1,604,1793.88,73,45.2
+2025-03-17,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,301,1050.49,95,21.1
+2025-03-17,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,319,283.91,55,46.5
+2025-03-17,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,109,271.41,86,53.5
+2025-03-17,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.03,1,565,1146.95,58,64.4
+2025-03-17,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.7,1,395,1856.5,71,46.7
+2025-03-17,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.11,1,362,401.82,72,42.6
+2025-03-17,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.03,1,209,215.27,70,38.7
+2025-03-17,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.76,1,745,2801.2,50,48.2
+2025-03-17,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,3.77,1,378,1425.06,85,41.1
+2025-03-17,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,322,1220.38,71,39.9
+2025-03-17,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,288,1005.12,57,21.4
+2025-03-17,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,305,271.45,76,51.8
+2025-03-17,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,267,664.83,70,46.1
+2025-03-17,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,116,254.04,69,36.3
+2025-03-17,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.71,1,740,3485.4,97,28.7
+2025-03-17,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,174,224.46,85,30.0
+2025-03-17,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.16,1,830,962.8,66,59.6
+2025-03-17,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,176,702.24,96,46.8
+2025-03-17,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,459,2060.91,58,22.1
+2025-03-17,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.33,1,599,1994.67,68,37.5
+2025-03-17,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.64,1,539,1422.96,65,55.5
+2025-03-17,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,340,302.6,59,24.7
+2025-03-17,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.05,1,437,895.85,84,33.4
+2025-03-17,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,480,1051.2,57,54.8
+2025-03-17,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.74,1,290,1084.6,74,50.3
+2025-03-24,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,0.97,1,416,403.52,58,55.6
+2025-03-24,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,246,317.34,72,37.1
+2025-03-24,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.32,1,674,2237.68,57,29.4
+2025-03-24,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,293,1315.57,94,53.4
+2025-03-24,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,123,466.17,66,37.5
+2025-03-24,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,240,837.6,51,22.6
+2025-03-24,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,185,164.65,83,29.8
+2025-03-24,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,210,522.9,76,20.8
+2025-03-24,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,350,766.5,90,27.7
+2025-03-24,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.96,1,633,2506.68,71,32.5
+2025-03-24,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,128,165.12,59,48.8
+2025-03-24,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,265,341.85,63,36.2
+2025-03-24,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.23,1,708,2286.84,53,30.7
+2025-03-24,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,110,493.9,63,50.9
+2025-03-24,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,185,701.15,61,34.1
+2025-03-24,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.75,1,586,1611.5,81,48.7
+2025-03-24,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,212,188.68,90,31.9
+2025-03-24,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,388,966.12,60,48.9
+2025-03-24,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.89,1,386,729.54,85,61.3
+2025-03-24,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,211,1052.89,97,52.8
+2025-03-24,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,232,299.28,78,33.6
+2025-03-24,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,234,301.86,96,25.8
+2025-03-24,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,97,387.03,73,46.6
+2025-03-24,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,349,1567.01,70,36.6
+2025-03-24,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,321,1216.59,86,37.4
+2025-03-24,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,138,481.62,97,27.3
+2025-03-24,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,268,238.52,56,46.9
+2025-03-24,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,479,1192.71,51,27.4
+2025-03-24,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,471,1031.49,82,47.9
+2025-03-24,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,308,1536.92,73,52.6
+2025-03-24,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.16,1,719,834.04,70,52.3
+2025-03-24,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,189,243.81,92,32.9
+2025-03-24,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.08,1,385,1185.8,96,58.4
+2025-03-24,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,3.71,1,688,2552.48,66,30.0
+2025-03-24,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,467,1769.93,66,51.7
+2025-03-24,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.12,1,427,1332.24,75,52.1
+2025-03-24,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.81,1,389,315.09,77,64.0
+2025-03-24,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.88,1,436,819.68,90,29.8
+2025-03-24,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.65,1,447,737.55,56,38.9
+2025-03-24,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,118,588.82,85,39.2
+2025-03-24,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,328,423.12,60,49.0
+2025-03-24,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,138,178.02,53,51.5
+2025-03-24,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,230,917.7,77,36.6
+2025-03-24,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.97,1,194,770.18,58,34.6
+2025-03-24,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,509,1929.11,77,47.2
+2025-03-24,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.12,1,408,1272.96,75,58.9
+2025-03-24,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.72,1,452,325.44,53,40.5
+2025-03-24,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,393,978.57,87,30.2
+2025-03-24,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,120,262.8,95,22.2
+2025-03-24,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.75,1,580,2175.0,82,63.3
+2025-03-31,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,107,138.03,70,53.7
+2025-03-31,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,180,232.2,67,39.1
+2025-03-31,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.36,1,141,473.76,78,44.3
+2025-03-31,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,235,1055.15,97,54.8
+2025-03-31,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,403,1527.37,55,23.8
+2025-03-31,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,420,1465.8,75,38.3
+2025-03-31,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.75,1,619,464.25,87,49.9
+2025-03-31,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,406,1010.94,78,51.8
+2025-03-31,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,197,431.43,65,54.2
+2025-03-31,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,274,1367.26,79,45.1
+2025-03-31,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.13,1,245,276.85,69,47.6
+2025-03-31,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,192,247.68,86,20.3
+2025-03-31,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,227,905.73,92,21.6
+2025-03-31,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,522,2343.78,57,48.3
+2025-03-31,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.03,1,711,2154.33,62,25.0
+2025-03-31,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,415,1448.35,83,54.8
+2025-03-31,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.8,1,573,458.4,69,55.2
+2025-03-31,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,207,515.43,75,32.5
+2025-03-31,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,205,448.95,76,34.5
+2025-03-31,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,312,1556.88,94,54.1
+2025-03-31,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.18,1,182,214.76,50,32.0
+2025-03-31,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,299,385.71,53,40.4
+2025-03-31,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,249,993.51,75,49.4
+2025-03-31,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,3.75,1,775,2906.25,54,41.8
+2025-03-31,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,532,2016.28,94,40.7
+2025-03-31,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.85,1,262,746.7,95,27.8
+2025-03-31,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.83,1,746,619.18,73,58.1
+2025-03-31,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.23,1,185,412.55,53,31.1
+2025-03-31,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,255,558.45,72,52.6
+2025-03-31,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,309,1541.91,55,21.9
+2025-03-31,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,431,555.99,70,30.6
+2025-03-31,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,0.97,1,563,546.11,61,34.0
+2025-03-31,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,326,1300.74,62,34.8
+2025-03-31,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,3.66,1,178,651.48,63,30.0
+2025-03-31,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.6,1,624,2246.4,71,40.7
+2025-03-31,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,323,1127.27,80,46.4
+2025-03-31,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.72,1,583,419.76,60,50.1
+2025-03-31,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,387,963.63,96,45.0
+2025-03-31,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,223,488.37,74,26.0
+2025-03-31,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,545,2719.55,89,26.3
+2025-03-31,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.17,1,833,974.61,66,26.2
+2025-03-31,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.0,1,252,252.0,52,29.8
+2025-03-31,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,478,1907.22,50,30.9
+2025-03-31,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,221,992.29,53,33.5
+2025-03-31,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.48,1,306,1064.88,63,58.7
+2025-03-31,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.01,1,758,2281.58,82,63.7
+2025-03-31,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.76,1,606,460.56,89,32.2
+2025-03-31,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,235,585.15,92,50.3
+2025-03-31,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.78,1,370,658.6,71,51.9
+2025-03-31,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,98,489.02,52,49.8
+2025-04-07,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,223,287.67,65,25.7
+2025-04-07,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,0.97,1,224,217.28,76,41.5
+2025-04-07,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,113,450.87,63,41.2
+2025-04-07,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.69,1,231,852.39,68,52.1
+2025-04-07,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.0,1,501,1503.0,62,56.4
+2025-04-07,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,276,963.24,68,47.5
+2025-04-07,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,119,105.91,59,52.0
+2025-04-07,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.09,1,419,875.71,55,46.9
+2025-04-07,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,293,641.67,75,40.4
+2025-04-07,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.26,1,246,1047.96,59,45.7
+2025-04-07,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,92,118.68,59,44.1
+2025-04-07,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.12,1,422,472.64,87,27.7
+2025-04-07,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,256,1021.44,69,23.2
+2025-04-07,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,328,1472.72,52,33.1
+2025-04-07,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,186,704.94,97,40.4
+2025-04-07,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,164,572.36,78,26.1
+2025-04-07,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.75,1,768,576.0,71,62.6
+2025-04-07,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.25,1,786,1768.5,74,27.0
+2025-04-07,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,413,904.47,98,39.0
+2025-04-07,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,227,1132.73,94,41.6
+2025-04-07,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,429,553.41,66,37.4
+2025-04-07,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,231,297.99,70,52.0
+2025-04-07,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,416,1659.84,58,35.3
+2025-04-07,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,467,2096.83,90,28.5
+2025-04-07,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,283,1072.57,72,21.8
+2025-04-07,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,152,530.48,95,29.5
+2025-04-07,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.68,1,248,168.64,82,51.9
+2025-04-07,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.34,1,437,1022.58,68,44.7
+2025-04-07,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.99,1,813,1617.87,50,35.1
+2025-04-07,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,300,1497.0,91,35.0
+2025-04-07,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.17,1,572,669.24,77,61.6
+2025-04-07,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,487,628.23,70,34.4
+2025-04-07,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,240,957.6,89,35.5
+2025-04-07,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,151,677.99,67,48.9
+2025-04-07,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.18,1,400,1272.0,71,45.1
+2025-04-07,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.96,1,598,1770.08,50,55.6
+2025-04-07,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,328,291.92,87,25.6
+2025-04-07,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.9,1,566,1075.4,56,53.8
+2025-04-07,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,153,335.07,54,20.3
+2025-04-07,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,384,1916.16,72,28.9
+2025-04-07,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,539,695.31,74,49.0
+2025-04-07,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.18,1,726,856.68,91,39.9
+2025-04-07,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.18,1,629,2000.22,58,28.1
+2025-04-07,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,121,543.29,54,43.7
+2025-04-07,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,331,1254.49,58,25.6
+2025-04-07,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,261,910.89,96,37.1
+2025-04-07,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,277,246.53,51,38.6
+2025-04-07,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,166,413.34,82,32.1
+2025-04-07,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,208,455.52,85,24.1
+2025-04-07,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.05,1,350,1417.5,68,38.4
+2025-04-14,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,262,337.98,58,34.6
+2025-04-14,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,126,162.54,89,44.6
+2025-04-14,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.39,1,440,1491.6,83,25.9
+2025-04-14,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,153,686.97,78,35.4
+2025-04-14,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,102,386.58,54,46.8
+2025-04-14,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,414,1444.86,50,20.6
+2025-04-14,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,132,117.48,52,39.6
+2025-04-14,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,343,854.07,74,45.6
+2025-04-14,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,466,1020.54,71,49.5
+2025-04-14,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,242,1207.58,63,37.9
+2025-04-14,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,365,470.85,95,33.6
+2025-04-14,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,425,548.25,81,21.5
+2025-04-14,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,343,1368.57,85,49.7
+2025-04-14,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,122,547.78,51,38.0
+2025-04-14,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,142,538.18,91,31.2
+2025-04-14,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.86,1,699,1999.14,53,43.6
+2025-04-14,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,207,184.23,81,20.3
+2025-04-14,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.2,1,224,492.8,80,57.2
+2025-04-14,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,250,547.5,85,46.8
+2025-04-14,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,459,2290.41,88,43.7
+2025-04-14,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,485,625.65,93,46.0
+2025-04-14,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.02,1,488,497.76,66,35.3
+2025-04-14,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,399,1592.01,85,49.8
+2025-04-14,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,138,619.62,91,34.5
+2025-04-14,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,101,382.79,89,41.0
+2025-04-14,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,373,1301.77,93,46.1
+2025-04-14,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,341,303.49,61,35.5
+2025-04-14,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,466,1160.34,87,38.7
+2025-04-14,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,285,624.15,79,29.4
+2025-04-14,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.44,1,625,2775.0,56,35.6
+2025-04-14,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,340,438.6,72,54.4
+2025-04-14,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,501,646.29,82,35.1
+2025-04-14,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.2,1,261,835.2,81,34.7
+2025-04-14,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,250,1122.5,97,31.3
+2025-04-14,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,287,1087.73,78,35.3
+2025-04-14,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,392,1368.08,82,40.2
+2025-04-14,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.68,1,696,473.28,80,57.1
+2025-04-14,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,457,1137.93,80,21.4
+2025-04-14,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,554,1213.26,60,32.6
+2025-04-14,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,372,1856.28,71,20.5
+2025-04-14,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,230,296.7,85,21.4
+2025-04-14,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,267,344.43,52,41.9
+2025-04-14,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,226,901.74,53,54.7
+2025-04-14,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,289,1297.61,92,40.3
+2025-04-14,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,517,1959.43,95,33.0
+2025-04-14,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,256,893.44,70,54.3
+2025-04-14,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,208,185.12,87,40.8
+2025-04-14,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.09,1,435,909.15,67,29.4
+2025-04-14,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,190,416.1,74,42.7
+2025-04-14,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.9,1,293,1142.7,50,32.2
+2025-04-21,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,322,415.38,66,49.3
+2025-04-21,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,0.97,1,273,264.81,92,43.1
+2025-04-21,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,140,558.6,52,42.4
+2025-04-21,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,96,431.04,86,49.2
+2025-04-21,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,137,519.23,93,32.4
+2025-04-21,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.64,1,563,1486.32,66,49.3
+2025-04-21,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,261,232.29,92,27.4
+2025-04-21,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,362,901.38,76,45.8
+2025-04-21,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.99,1,361,718.39,91,52.6
+2025-04-21,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,406,2025.94,80,47.2
+2025-04-21,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.06,1,776,822.56,98,51.8
+2025-04-21,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,122,157.38,56,27.4
+2025-04-21,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.37,1,860,2898.2,81,31.7
+2025-04-21,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.24,1,311,1318.64,57,42.6
+2025-04-21,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.45,1,351,1210.95,78,34.3
+2025-04-21,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.8,1,222,621.6,62,27.5
+2025-04-21,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.81,1,572,463.32,87,59.6
+2025-04-21,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.91,1,414,790.74,60,47.5
+2025-04-21,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,300,657.0,89,30.6
+2025-04-21,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.75,1,660,2475.0,66,42.7
+2025-04-21,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,447,576.63,83,36.0
+2025-04-21,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,280,361.2,61,47.2
+2025-04-21,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,302,1204.98,88,39.7
+2025-04-21,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,131,588.19,76,38.3
+2025-04-21,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,299,1133.21,93,44.0
+2025-04-21,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,398,1389.02,67,24.3
+2025-04-21,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,316,281.24,89,26.9
+2025-04-21,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,329,819.21,62,40.3
+2025-04-21,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,186,407.34,88,52.6
+2025-04-21,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,244,1217.56,87,49.9
+2025-04-21,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.19,1,321,381.99,83,61.1
+2025-04-21,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,306,394.74,55,33.1
+2025-04-21,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,562,2242.38,61,39.5
+2025-04-21,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,331,1486.19,74,20.9
+2025-04-21,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.24,1,263,852.12,71,55.1
+2025-04-21,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,174,607.26,62,28.1
+2025-04-21,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.77,1,546,420.42,57,61.8
+2025-04-21,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.01,1,679,1364.79,96,61.3
+2025-04-21,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,281,615.39,65,41.5
+2025-04-21,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,461,2300.39,81,33.2
+2025-04-21,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,379,488.91,70,46.7
+2025-04-21,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.13,1,367,414.71,59,55.9
+2025-04-21,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.49,1,642,2240.58,96,31.4
+2025-04-21,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.77,1,544,2050.88,61,54.0
+2025-04-21,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.3,1,319,1052.7,61,40.2
+2025-04-21,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,237,827.13,88,24.4
+2025-04-21,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,365,324.85,89,52.5
+2025-04-21,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,162,403.38,57,47.1
+2025-04-21,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.79,1,603,1079.37,51,51.7
+2025-04-21,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,264,1317.36,55,43.7
+2025-04-28,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.19,1,362,430.78,53,39.0
+2025-04-28,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,311,401.19,81,39.0
+2025-04-28,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.34,1,269,898.46,84,30.7
+2025-04-28,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.13,1,591,2440.83,82,62.4
+2025-04-28,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.12,1,685,2137.2,76,28.7
+2025-04-28,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.03,1,900,2727.0,74,61.5
+2025-04-28,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.67,1,369,247.23,75,50.9
+2025-04-28,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.96,1,452,885.92,76,27.2
+2025-04-28,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.74,1,403,701.22,96,41.1
+2025-04-28,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,484,2415.16,53,31.0
+2025-04-28,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,222,286.38,51,26.5
+2025-04-28,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.08,1,291,314.28,82,29.7
+2025-04-28,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,298,1189.02,64,35.2
+2025-04-28,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,3.47,1,735,2550.45,92,38.8
+2025-04-28,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,222,841.38,77,50.6
+2025-04-28,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,337,1176.13,59,31.4
+2025-04-28,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.81,1,284,230.04,94,28.0
+2025-04-28,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,347,864.03,54,22.4
+2025-04-28,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,373,816.87,79,50.2
+2025-04-28,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.61,1,499,2300.39,77,64.3
+2025-04-28,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.22,1,425,518.5,80,27.1
+2025-04-28,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,335,432.15,96,40.1
+2025-04-28,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.54,1,783,2771.82,87,60.8
+2025-04-28,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,324,1454.76,66,39.5
+2025-04-28,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.48,1,329,1144.92,84,33.8
+2025-04-28,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,273,952.77,76,47.4
+2025-04-28,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.7,1,215,150.5,71,28.1
+2025-04-28,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,146,363.54,75,34.3
+2025-04-28,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.93,1,365,704.45,63,58.8
+2025-04-28,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.98,1,832,3311.36,92,26.8
+2025-04-28,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,213,274.77,97,21.6
+2025-04-28,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.08,1,614,663.12,50,42.8
+2025-04-28,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,419,1671.81,86,22.5
+2025-04-28,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,432,1939.68,65,49.0
+2025-04-28,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.16,1,617,1949.72,51,47.3
+2025-04-28,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.97,1,390,1158.3,88,33.8
+2025-04-28,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,540,480.6,91,31.1
+2025-04-28,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.91,1,532,1016.12,54,56.2
+2025-04-28,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,222,486.18,94,43.0
+2025-04-28,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.68,1,315,1474.2,72,45.0
+2025-04-28,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,367,473.43,81,29.6
+2025-04-28,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,97,125.13,52,49.0
+2025-04-28,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,231,921.69,53,28.2
+2025-04-28,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.14,1,735,3042.9,69,40.3
+2025-04-28,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,389,1474.31,58,41.1
+2025-04-28,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,315,1099.35,90,26.9
+2025-04-28,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.83,1,248,205.84,72,41.7
+2025-04-28,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.95,1,729,1421.55,59,60.9
+2025-04-28,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.81,1,850,1538.5,74,51.5
+2025-04-28,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,269,1342.31,60,20.8
+2025-05-05,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,325,419.25,66,28.1
+2025-05-05,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,456,588.24,67,21.8
+2025-05-05,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.45,1,214,738.3,75,62.9
+2025-05-05,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,275,1234.75,61,32.7
+2025-05-05,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,351,1330.29,76,44.8
+2025-05-05,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.25,1,749,2434.25,89,28.7
+2025-05-05,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,159,141.51,66,27.9
+2025-05-05,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,460,1145.4,85,35.8
+2025-05-05,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.02,1,459,927.18,59,51.5
+2025-05-05,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,468,2335.32,52,37.0
+2025-05-05,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,431,555.99,70,48.2
+2025-05-05,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,429,553.41,55,32.1
+2025-05-05,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,346,1380.54,54,49.0
+2025-05-05,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,403,1809.47,62,28.6
+2025-05-05,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,525,1989.75,96,30.4
+2025-05-05,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.9,1,310,899.0,64,58.0
+2025-05-05,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,410,364.9,54,25.5
+2025-05-05,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,285,709.65,53,29.5
+2025-05-05,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.08,1,427,888.16,53,64.1
+2025-05-05,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,533,2659.67,70,50.3
+2025-05-05,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.09,1,852,928.68,59,42.1
+2025-05-05,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.11,1,534,592.74,88,62.4
+2025-05-05,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,194,774.06,70,47.3
+2025-05-05,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,4.1,1,306,1254.6,60,64.7
+2025-05-05,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.0,1,366,1098.0,91,59.6
+2025-05-05,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.71,1,529,1433.59,60,58.9
+2025-05-05,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.79,1,881,695.99,98,52.3
+2025-05-05,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,159,395.91,77,46.9
+2025-05-05,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.95,1,763,1487.85,90,51.1
+2025-05-05,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.39,1,560,2458.4,69,53.1
+2025-05-05,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.22,1,534,651.48,51,41.5
+2025-05-05,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,0.97,1,188,182.36,83,58.7
+2025-05-05,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,160,638.4,85,26.1
+2025-05-05,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,3.96,1,271,1073.16,64,60.6
+2025-05-05,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,181,685.99,70,22.4
+2025-05-05,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.04,1,890,2705.6,61,31.0
+2025-05-05,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,249,221.61,63,47.5
+2025-05-05,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,379,943.71,94,43.8
+2025-05-05,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,344,753.36,94,29.5
+2025-05-05,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.4,1,276,1214.4,88,25.6
+2025-05-05,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,753,971.37,72,39.5
+2025-05-05,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.0,1,347,347.0,96,45.0
+2025-05-05,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.71,1,771,2860.41,63,29.7
+2025-05-05,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.01,1,608,2438.08,95,25.5
+2025-05-05,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,586,2220.94,84,51.5
+2025-05-05,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,184,642.16,94,54.6
+2025-05-05,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.74,1,337,249.38,72,28.2
+2025-05-05,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,194,483.06,78,23.1
+2025-05-05,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.03,1,563,1142.89,96,37.7
+2025-05-05,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,470,2345.3,78,44.3
+2025-05-12,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,317,408.93,76,24.2
+2025-05-12,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,536,691.44,53,34.9
+2025-05-12,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,302,1204.98,62,20.9
+2025-05-12,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.77,1,846,3189.42,68,34.0
+2025-05-12,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,375,1421.25,75,30.4
+2025-05-12,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.16,1,561,1772.76,61,44.0
+2025-05-12,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.68,1,254,172.72,87,45.9
+2025-05-12,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.07,1,904,1871.28,91,31.2
+2025-05-12,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,573,1254.87,96,32.8
+2025-05-12,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,498,2485.02,61,44.6
+2025-05-12,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,227,292.83,95,45.6
+2025-05-12,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,529,682.41,53,33.9
+2025-05-12,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,429,1711.71,77,52.7
+2025-05-12,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,3.48,1,209,727.32,75,57.6
+2025-05-12,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,453,1716.87,63,22.1
+2025-05-12,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,259,903.91,78,50.5
+2025-05-12,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,305,271.45,91,41.5
+2025-05-12,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,475,1182.75,87,35.9
+2025-05-12,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,145,317.55,67,26.9
+2025-05-12,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.0,1,648,2592.0,76,38.5
+2025-05-12,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.07,1,234,250.38,92,52.9
+2025-05-12,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,0.98,1,661,647.78,84,29.7
+2025-05-12,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.23,1,456,1472.88,76,48.7
+2025-05-12,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,3.52,1,188,661.76,80,48.8
+2025-05-12,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.55,1,221,784.55,79,28.2
+2025-05-12,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,241,841.09,85,47.4
+2025-05-12,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.83,1,529,439.07,75,63.8
+2025-05-12,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.23,1,696,1552.08,68,45.7
+2025-05-12,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,476,1042.44,91,36.8
+2025-05-12,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,227,1132.73,88,54.4
+2025-05-12,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.18,1,555,654.9,64,49.4
+2025-05-12,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.0,1,806,806.0,92,43.4
+2025-05-12,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,278,1109.22,80,48.7
+2025-05-12,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,279,1252.71,83,48.0
+2025-05-12,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,318,1205.22,91,47.5
+2025-05-12,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,138,481.62,80,38.9
+2025-05-12,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,257,228.73,98,40.0
+2025-05-12,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,1.9,1,728,1383.2,81,58.5
+2025-05-12,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,515,1127.85,78,20.4
+2025-05-12,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.48,1,195,873.6,55,40.4
+2025-05-12,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,578,745.62,57,29.5
+2025-05-12,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.09,1,476,518.84,94,47.1
+2025-05-12,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,338,1348.62,63,53.6
+2025-05-12,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.46,1,363,1255.98,71,46.7
+2025-05-12,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,93,352.47,65,49.5
+2025-05-12,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.67,1,211,563.37,75,55.3
+2025-05-12,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,392,348.88,55,44.0
+2025-05-12,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,178,443.22,92,39.4
+2025-05-12,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.64,1,419,687.16,76,55.6
+2025-05-12,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,297,1482.03,95,54.6
+2025-05-19,S1_BigMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.22,1,238,290.36,97,29.6
+2025-05-19,S1_BigMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,322,415.38,67,47.9
+2025-05-19,S1_BigMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,396,1580.04,61,22.5
+2025-05-19,S1_BigMart,Snacks,Pringles,44455566677,Pringles Original,4.49,3.68,1,549,2020.32,88,34.6
+2025-05-19,S1_BigMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,516,1955.64,73,34.0
+2025-05-19,S1_BigMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.49,0,495,1727.55,68,31.7
+2025-05-19,S1_BigMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,488,434.32,82,49.1
+2025-05-19,S1_BigMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,399,993.51,86,44.2
+2025-05-19,S1_BigMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,1.82,1,398,724.36,72,47.7
+2025-05-19,S1_BigMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.37,1,371,1621.27,93,54.2
+2025-05-19,S2_ValueGrocer,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.29,0,575,741.75,74,34.3
+2025-05-19,S2_ValueGrocer,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,297,383.13,92,44.5
+2025-05-19,S2_ValueGrocer,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,182,726.18,72,28.5
+2025-05-19,S2_ValueGrocer,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,206,924.94,94,27.9
+2025-05-19,S2_ValueGrocer,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.47,1,425,1474.75,97,47.6
+2025-05-19,S2_ValueGrocer,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.1,1,321,995.1,70,54.4
+2025-05-19,S2_ValueGrocer,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,171,152.19,69,29.1
+2025-05-19,S2_ValueGrocer,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,166,413.34,74,31.2
+2025-05-19,S2_ValueGrocer,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,511,1119.09,87,23.2
+2025-05-19,S2_ValueGrocer,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.85,1,498,1917.3,84,27.4
+2025-05-19,S3_FreshWay,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.15,1,943,1084.45,94,35.1
+2025-05-19,S3_FreshWay,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.29,0,265,341.85,92,40.6
+2025-05-19,S3_FreshWay,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.49,1,518,1807.82,58,47.9
+2025-05-19,S3_FreshWay,Snacks,Pringles,44455566677,Pringles Original,4.49,3.61,1,598,2158.78,67,37.3
+2025-05-19,S3_FreshWay,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,241,913.39,55,41.5
+2025-05-19,S3_FreshWay,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.68,1,175,469.0,67,36.3
+2025-05-19,S3_FreshWay,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,445,396.05,53,42.7
+2025-05-19,S3_FreshWay,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,281,699.69,66,20.7
+2025-05-19,S3_FreshWay,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.03,1,766,1554.98,64,51.5
+2025-05-19,S3_FreshWay,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.99,0,90,449.1,94,45.2
+2025-05-19,S4_SuperSave,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.19,1,538,640.22,58,30.5
+2025-05-19,S4_SuperSave,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.2,1,944,1132.8,62,52.0
+2025-05-19,S4_SuperSave,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.6,1,654,2354.4,72,49.8
+2025-05-19,S4_SuperSave,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,516,2316.84,63,33.1
+2025-05-19,S4_SuperSave,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.79,0,346,1311.34,69,33.8
+2025-05-19,S4_SuperSave,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,3.09,1,174,537.66,77,33.3
+2025-05-19,S4_SuperSave,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,244,217.16,60,42.6
+2025-05-19,S4_SuperSave,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.49,0,391,973.59,68,38.3
+2025-05-19,S4_SuperSave,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,730,1598.7,53,47.8
+2025-05-19,S4_SuperSave,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,4.51,1,515,2322.65,87,50.7
+2025-05-19,S5_QuickMart,Beverages,Coke,12345678901,12oz Coke Can,1.29,1.17,1,502,587.34,89,57.5
+2025-05-19,S5_QuickMart,Beverages,Pepsi,98765432109,12oz Pepsi Can,1.29,1.12,1,435,487.2,94,59.3
+2025-05-19,S5_QuickMart,Snacks,Lays,11122233344,Family Size Lays Chips,3.99,3.99,0,120,478.8,55,44.2
+2025-05-19,S5_QuickMart,Snacks,Pringles,44455566677,Pringles Original,4.49,4.49,0,357,1602.93,66,43.4
+2025-05-19,S5_QuickMart,Snacks,Doritos,88899900011,Nacho Cheese Doritos,3.79,3.03,1,711,2154.33,52,32.1
+2025-05-19,S5_QuickMart,Dairy,PrivateLabel,55566677788,Whole Milk Gallon,3.49,2.93,1,409,1198.37,88,55.1
+2025-05-19,S5_QuickMart,Dairy,Yoplait,22233344455,Yogurt 6oz,0.89,0.89,0,343,305.27,71,50.0
+2025-05-19,S5_QuickMart,Beverages,RedBull,99988877766,8.4oz Red Bull,2.49,2.22,1,502,1114.44,53,50.0
+2025-05-19,S5_QuickMart,Beverages,Monster,77766655544,Monster Energy 16oz,2.19,2.19,0,358,784.02,76,53.6
+2025-05-19,S5_QuickMart,Snacks,Oreo,33344455566,Oreo Family Pack,4.99,3.83,1,258,988.14,60,52.1
