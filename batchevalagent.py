@@ -97,17 +97,26 @@ with DefaultAzureCredential() as credential:
                 "type": "azure_ai_evaluator",
                 "name": "f1",
                 "evaluator_name": "builtin.f1_score",
+                "data_mapping": {
+                    "response": "{{item.response}}",
+                    "ground_truth": "{{item.ground_truth}}",
+                },
             },
             {
                 "type": "azure_ai_evaluator",
                 "name": "coherence",
                 "evaluator_name": "builtin.coherence",
+                "data_mapping": {
+                    "query": "{{item.query}}",
+                    "response": "{{item.response}}",
+                },
                 "initialization_parameters": {
                     "deployment_name": f"{model_deployment_name}"
                 },
             },
         ]
 
+        # Always create a new eval group to ensure testing criteria are up to date
         print("Creating Eval Group")
         eval_object = client.evals.create(
             name="EvalBatchAgentEvalGroup",
