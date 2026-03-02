@@ -286,7 +286,7 @@ def studentiq(query: str) -> dict:
     with project_client:
         workflow = {
             "name": "StudentIQ",
-            "version": "1",
+            "version": "2",
         }
 
         openai_client = project_client.get_openai_client()

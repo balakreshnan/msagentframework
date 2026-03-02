@@ -265,7 +265,7 @@ def processiq(query: str):
     with project_client:
         workflow = {
             "name": "ArchitectureIQ",
-            "version": "1",
+            "version": "2",
         }
 
         openai_client = project_client.get_openai_client()
