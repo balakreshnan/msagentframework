@@ -74,7 +74,7 @@ def existingagent():
         # Reference the agent to get a response
         response = openai_client.responses.create(
             input=[{"role": "user", "content": "Summarize the RFP for virginia Railway Express project?"}],
-            extra_body={"agent": {"name": agent.name, "type": "agent_reference"}},
+            extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
         )
 
         print("Initial Response Status:", response.status)
