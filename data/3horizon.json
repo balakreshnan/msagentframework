@@ -1,0 +1,128 @@
+{
+  "assessment_name": "Enterprise AI Three Horizons Discovery",
+  "version": "1.0",
+  "phases": [
+    {
+      "phase_id": "phase_1",
+      "title": "Core Identity & Strategic Context",
+      "description": "Understand who the organization is and what drives it.",
+      "questions": [
+        {
+          "id": "q1_1",
+          "text": "What is your organization's primary industry, approximate size (revenue and/or employees), and core business model in 1–2 sentences?",
+          "why": "This helps align AI opportunities to your actual business and scale.",
+          "required": true,
+          "type": "open_text"
+        },
+        {
+          "id": "q1_2",
+          "text": "What are your top 3–5 strategic priorities or goals for the next 3–5 years? (e.g., revenue growth, cost leadership, customer retention, sustainability, geographic expansion)",
+          "why": "AI use cases will be prioritized based on how well they support these goals.",
+          "required": true,
+          "type": "open_text_multi"
+        },
+        {
+          "id": "q1_3",
+          "text": "Who are your 2–3 main competitors, and what do you see as your current key differentiators (what makes you win or lose deals)?",
+          "why": "Helps identify where AI can create or defend competitive advantage.",
+          "required": false,
+          "type": "open_text"
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_2",
+      "title": "Current Performance & Pain Points",
+      "description": "Identify friction in today's operations (strong input for Horizon 1).",
+      "questions": [
+        {
+          "id": "q2_1",
+          "text": "What are the biggest operational or process challenges right now (high costs, quality issues, delays, compliance risks, talent shortages, etc.)?",
+          "why": "These are prime candidates for quick AI-driven improvements.",
+          "required": true,
+          "type": "open_text"
+        },
+        {
+          "id": "q2_2",
+          "text": "Which functions or processes have the highest manual/repetitive effort, error rates, or employee frustration? Please name 2–4 examples.",
+          "why": "High-volume, rules-based work is usually easiest to augment with AI.",
+          "required": true,
+          "type": "open_text"
+        },
+        {
+          "id": "q2_3",
+          "text": "Which 2–3 key performance metrics are most under pressure or hardest to move (e.g., customer churn, gross margin, order cycle time, forecast accuracy)?",
+          "why": "We can look for AI levers that directly influence these KPIs.",
+          "required": false,
+          "type": "open_text"
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_3",
+      "title": "AI / Data / Capability Baseline",
+      "description": "Assess feasibility and acceleration potential.",
+      "questions": [
+        {
+          "id": "q3_1",
+          "text": "How would you describe your current AI maturity? (Choose or describe: No usage → Experimenting with pilots → Active in 1–2 functions → Scaling enterprise-wide → AI is core to strategy)",
+          "why": "This determines realistic speed and scope of recommendations.",
+          "required": true,
+          "type": "open_text"
+        },
+        {
+          "id": "q3_2",
+          "text": "Do you have a centralized data platform, data warehouse/lake, or strong data governance practices? How would you rate data readiness for AI (low / medium / high)?",
+          "why": "Data quality & accessibility is often the #1 blocker.",
+          "required": true,
+          "type": "open_text"
+        },
+        {
+          "id": "q3_3",
+          "text": "What AI-related talent, teams or external partners do you currently have or work with? (data scientists, ML engineers, consultants, cloud/AI providers, etc.)",
+          "why": "Helps gauge build vs. buy decisions.",
+          "required": false,
+          "type": "open_text"
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_4",
+      "title": "Ambition, Risk Appetite & Long-term View",
+      "description": "Shape Horizons 2 and 3 — understand boldness and boundaries.",
+      "questions": [
+        {
+          "id": "q4_1",
+          "text": "How aggressive is your appetite for AI-driven transformation? (Mostly quick efficiency wins / Also want new AI-enhanced products/services / Aiming to disrupt the industry or invent new business models)",
+          "why": "This guides how much emphasis we put on H2 and H3 vs. H1.",
+          "required": true,
+          "type": "open_text"
+        },
+        {
+          "id": "q4_2",
+          "text": "What are your biggest concerns or non-negotiables regarding AI adoption? (ethics/responsible AI, regulation, job impact, data security/privacy, explainability, vendor lock-in, etc.)",
+          "why": "We will filter and flag ideas accordingly.",
+          "required": true,
+          "type": "open_text"
+        },
+        {
+          "id": "q4_3",
+          "text": "Looking 7–10+ years ahead: what would 'winning' look like in your industry if AI continues to advance rapidly? Any big threats or once-in-a-generation opportunities you see?",
+          "why": "This unlocks truly transformative Horizon 3 thinking.",
+          "required": false,
+          "type": "open_text"
+        }
+      ]
+    }
+  ],
+  "optional_deep_dive_triggers": [
+    {
+      "condition": "customer experience OR churn mentioned in priorities",
+      "question": "Can you describe a recent customer pain point or frustrating journey step (for customers or employees)?"
+    },
+    {
+      "condition": "cost OR margin OR efficiency in priorities",
+      "question": "Which cost categories or processes are growing fastest or are hardest to control right now?"
+    }
+  ]
+}

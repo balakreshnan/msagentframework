@@ -4,7 +4,6 @@ import streamlit as st
 from pathlib import Path
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
-from azure.ai.projects.models import ResponseStreamEventType
 import os
 from dotenv import load_dotenv
 from datetime import datetime
@@ -273,19 +272,19 @@ def processiq(query: str):
 
         stream = openai_client.responses.create(
             conversation=conversation.id,
-            extra_body={"agent": {"name": workflow["name"], "type": "agent_reference"}},
+            extra_body={"agent_reference": {"name": workflow["name"], "type": "agent_reference"}},
             input=query,
             stream=True,
             metadata={"x-ms-debug-mode-enabled": "1"},
         )
 
         for event in stream:
-            if event.type == ResponseStreamEventType.RESPONSE_OUTPUT_TEXT_DONE:
+            if event.type == "response.output_text.done":
                 result["final_text"] += event.text + "\n"
                 current_agent["text"] += event.text + "\n"
                 result["events_raw"].append(f"TEXT_DONE: {event.text[:80]}...")
 
-            elif event.type == ResponseStreamEventType.RESPONSE_OUTPUT_ITEM_ADDED and event.item.type == "workflow_action":
+            elif event.type == "response.output_item.added" and event.item.type == "workflow_action":
                 # Save previous agent block
                 if current_agent["text"].strip():
                     current_agent["status"] = "done"
@@ -294,16 +293,16 @@ def processiq(query: str):
                 current_agent = {"name": agent_name, "text": "", "status": "running"}
                 result["events_raw"].append(f"AGENT_START: {agent_name}")
 
-            elif event.type == ResponseStreamEventType.RESPONSE_OUTPUT_ITEM_DONE and event.item.type == "workflow_action":
+            elif event.type == "response.output_item.done" and event.item.type == "workflow_action":
                 status = event.item.status if hasattr(event.item, "status") else "done"
                 current_agent["status"] = status
                 result["events_raw"].append(f"AGENT_DONE: {current_agent['name']} → {status}")
 
-            elif event.type == ResponseStreamEventType.RESPONSE_OUTPUT_TEXT_DELTA:
+            elif event.type == "response.output_text.delta":
                 current_agent["text"] += event.delta
                 result["events_raw"].append(f"DELTA: {event.delta[:40]}")
 
-            elif event.type == ResponseStreamEventType.RESPONSE_COMPLETED:
+            elif event.type == "response.completed":
                 # Capture token usage if available
                 if hasattr(event, "response") and hasattr(event.response, "usage"):
                     usage = event.response.usage

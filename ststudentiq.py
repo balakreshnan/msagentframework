@@ -4,7 +4,6 @@ import streamlit as st
 from pathlib import Path
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
-from azure.ai.projects.models import ResponseStreamEventType
 import os
 from dotenv import load_dotenv
 from datetime import datetime
@@ -294,7 +293,7 @@ def studentiq(query: str) -> dict:
 
         stream = openai_client.responses.create(
             conversation=conversation.id,
-            extra_body={"agent": {"name": workflow["name"], "type": "agent_reference"}},
+            extra_body={"agent_reference": {"name": workflow["name"], "type": "agent_reference"}},
             input=query,
             stream=True,
             metadata={"x-ms-debug-mode-enabled": "1"},
@@ -308,7 +307,7 @@ def studentiq(query: str) -> dict:
             evt_type = str(getattr(event, 'type', ''))
 
             # ── TEXT_DONE ──
-            if event.type == ResponseStreamEventType.RESPONSE_OUTPUT_TEXT_DONE:
+            if event.type == "response.output_text.done":
                 txt = _extract_text(event) or ""
                 result["final_text"] += txt + "\n"
                 current_agent["text"] += txt + "\n"
@@ -316,7 +315,7 @@ def studentiq(query: str) -> dict:
                 result["events_raw"].append(f"TEXT_DONE: {txt[:120]}")
 
             # ── Workflow action ADDED (agent boundary) ──
-            elif event.type == ResponseStreamEventType.RESPONSE_OUTPUT_ITEM_ADDED and hasattr(event, 'item') and getattr(event.item, 'type', '') == "workflow_action":
+            elif event.type == "response.output_item.added" and hasattr(event, 'item') and getattr(event.item, 'type', '') == "workflow_action":
                 if current_agent["text"].strip():
                     current_agent["status"] = "done"
                     result["agent_outputs"].append(dict(current_agent))
@@ -325,20 +324,20 @@ def studentiq(query: str) -> dict:
                 result["events_raw"].append(f"AGENT_START: {agent_name}")
 
             # ── Workflow action DONE ──
-            elif event.type == ResponseStreamEventType.RESPONSE_OUTPUT_ITEM_DONE and hasattr(event, 'item') and getattr(event.item, 'type', '') == "workflow_action":
+            elif event.type == "response.output_item.done" and hasattr(event, 'item') and getattr(event.item, 'type', '') == "workflow_action":
                 status = getattr(event.item, 'status', 'done')
                 current_agent["status"] = status
                 result["events_raw"].append(f"AGENT_DONE: {current_agent['name']} → {status}")
 
             # ── TEXT_DELTA (streaming chunks) ──
-            elif event.type == ResponseStreamEventType.RESPONSE_OUTPUT_TEXT_DELTA:
+            elif event.type == "response.output_text.delta":
                 txt = _extract_text(event) or ""
                 current_agent["text"] += txt
                 all_text_chunks.append(txt)
                 result["events_raw"].append(f"DELTA: {txt[:80]}")
 
             # ── COMPLETED ──
-            elif event.type == ResponseStreamEventType.RESPONSE_COMPLETED:
+            elif event.type == "response.completed":
                 if hasattr(event, "response") and hasattr(event.response, "usage"):
                     usage = event.response.usage
                     result["token_usage"] = {

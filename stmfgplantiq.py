@@ -4,7 +4,6 @@ import streamlit as st
 from pathlib import Path
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
-from azure.ai.projects.models import ResponseStreamEventType
 from agent_framework.observability import create_resource, enable_instrumentation, get_tracer
 from azure.monitor.opentelemetry import configure_azure_monitor
 from opentelemetry.trace import SpanKind
@@ -329,7 +328,7 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
             
             stream = openai_client.responses.create(
                 conversation=conversation.id,
-                extra_body={"agent": {"name": workflow["name"], "type": "agent_reference"}},
+                extra_body={"agent_reference": {"name": workflow["name"], "type": "agent_reference"}},
                 input=input_content,
                 stream=True,
                 metadata={"x-ms-debug-mode-enabled": "1"},
@@ -340,7 +339,7 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
             current_agent_output = ""
             
             for event in stream:
-                if event.type == ResponseStreamEventType.RESPONSE_OUTPUT_TEXT_DONE:
+                if event.type == "response.output_text.done":
                     results["final_response"] += event.text + "\n"
                     # Save to current agent if we have one
                     if current_agent_id:
@@ -349,7 +348,7 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
                             "output": event.text,
                             "timestamp": datetime.now().strftime("%H:%M:%S")
                         })
-                elif event.type == ResponseStreamEventType.RESPONSE_OUTPUT_ITEM_ADDED and event.item.type == "workflow_action":
+                elif event.type == "response.output_item.added" and event.item.type == "workflow_action":
                     # New agent starting - save previous agent output if exists
                     if current_agent_id and current_agent_output:
                         results["individual_agent_outputs"].append({
@@ -366,7 +365,7 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
                         "timestamp": datetime.now().strftime("%H:%M:%S")
                     })
                     results["debug_logs"].append(step_info)
-                elif event.type == ResponseStreamEventType.RESPONSE_OUTPUT_ITEM_DONE and event.item.type == "workflow_action":
+                elif event.type == "response.output_item.done" and event.item.type == "workflow_action":
                     # Agent completed - save its output
                     if current_agent_output:
                         results["individual_agent_outputs"].append({
@@ -384,7 +383,7 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
                         "timestamp": datetime.now().strftime("%H:%M:%S")
                     })
                     results["debug_logs"].append(step_info)
-                elif event.type == ResponseStreamEventType.RESPONSE_OUTPUT_TEXT_DELTA:
+                elif event.type == "response.output_text.delta":
                     current_text += event.delta
                     current_agent_output += event.delta
                 else:
