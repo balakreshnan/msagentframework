@@ -102,7 +102,8 @@ def redteam_main() -> None:
             description="Taxonomy for red teaming evaluation", taxonomy_input=agent_taxonomy_input
         )
 
-        taxonomy = project_client.evaluation_taxonomies.create(name=agent_name, body=eval_taxonomy_input)
+        taxonomy = project_client.beta.evaluation_taxonomies.create(name=agent_name, body=eval_taxonomy_input)
+        # taxonomy = project_client.evaluation_rules._client
         taxonomy_path = os.path.join(data_folder, f"taxonomy_{agent_name}.json")
         # Create the data folder if it doesn't exist
         os.makedirs(data_folder, exist_ok=True)
