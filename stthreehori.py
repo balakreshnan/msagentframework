@@ -1,4 +1,6 @@
 import logging
+import json
+import io
 import streamlit as st
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
@@ -6,6 +8,9 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 import time
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import numpy as np
 
 # Load environment variables
 load_dotenv()
@@ -335,6 +340,136 @@ def horizonagent(query: str) -> dict:
 
 
 # ============================================================================
+# ASSESSMENT HELPERS
+# ============================================================================
+def load_assessment_data():
+    """Load the 3horizon.json assessment file."""
+    json_path = os.path.join(os.path.dirname(__file__), "data", "3horizon.json")
+    with open(json_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def build_assessment_summary(assessment_data, slider_values):
+    """Build a structured summary of slider values organized by phase."""
+    summary_lines = []
+    for phase in assessment_data.get("phases", []):
+        summary_lines.append(f"\n## {phase['title']}")
+        summary_lines.append(f"_{phase['description']}_")
+        for q in phase.get("questions", []):
+            qid = q["id"]
+            val = slider_values.get(qid, 5)
+            summary_lines.append(f"- **{q['text']}** → Score: {val}/10")
+    return "\n".join(summary_lines)
+
+
+def run_assessment_analysis(summary_text: str) -> str:
+    """Send assessment results to LLM for quadrant analysis and recommendations."""
+    project_client = AIProjectClient(
+        endpoint=myEndpoint,
+        credential=DefaultAzureCredential(),
+    )
+
+    prompt = f"""You are a senior strategy consultant specializing in the McKinsey Three Horizons framework.
+
+A client has completed a self-assessment. Each area was scored 1-10 (1 = very low maturity, 10 = best-in-class).
+
+Here are the results:
+{summary_text}
+
+Based on these scores, provide your analysis in the following EXACT JSON structure (no markdown fencing, just raw JSON):
+{{
+  "quadrant_items": [
+    {{
+      "label": "<short label, max 6 words>",
+      "impact": <float 1-10, business impact potential>,
+      "readiness": <float 1-10, current organizational readiness>,
+      "horizon": "<H1|H2|H3>",
+      "size": <float 1-5, relative priority weight>
+    }}
+  ],
+  "recommendations": [
+    {{
+      "horizon": "<H1|H2|H3>",
+      "title": "<recommendation title>",
+      "description": "<2-3 sentence recommendation>",
+      "priority": "<High|Medium|Low>",
+      "timeframe": "<0-6 months|6-18 months|18-36 months>"
+    }}
+  ],
+  "overall_summary": "<A 3-4 sentence executive summary of the organization's AI readiness and strategic positioning>"
+}}
+
+Generate 8-12 quadrant items spread across all three horizons, and 6-9 recommendations (2-3 per horizon).
+Ensure impact and readiness values create a meaningful spread across the quadrant.
+"""
+
+    with project_client:
+        openai_client = project_client.get_openai_client()
+        response = openai_client.responses.create(
+            model=os.getenv("AZURE_OPENAI_DEPLOYMENT"),
+            input=prompt,
+        )
+        return response.output_text
+
+
+def parse_llm_json(raw_text: str) -> dict:
+    """Parse JSON from LLM response, handling markdown fencing."""
+    text = raw_text.strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1] if "\n" in text else text[3:]
+        if text.endswith("```"):
+            text = text[:-3]
+    return json.loads(text)
+
+
+def render_quadrant_chart(items: list):
+    """Render a matplotlib quadrant scatter chart from quadrant_items."""
+    fig, ax = plt.subplots(figsize=(9, 7))
+
+    horizon_colors = {"H1": "#006A6A", "H2": "#4B607C", "H3": "#BA1A1A"}
+    horizon_labels = {"H1": "Horizon 1 – Optimize", "H2": "Horizon 2 – Grow", "H3": "Horizon 3 – Transform"}
+
+    # Draw quadrant lines and background
+    ax.axhline(y=5.5, color="#BEC9C8", linestyle="--", linewidth=1)
+    ax.axvline(x=5.5, color="#BEC9C8", linestyle="--", linewidth=1)
+
+    # Quadrant labels
+    ax.text(2.75, 9.6, "High Impact / Low Readiness\n(Invest & Build)", ha="center", fontsize=8, color="#6F7979", style="italic")
+    ax.text(8, 9.6, "High Impact / High Readiness\n(Accelerate Now)", ha="center", fontsize=8, color="#6F7979", style="italic")
+    ax.text(2.75, 0.4, "Low Impact / Low Readiness\n(Deprioritize)", ha="center", fontsize=8, color="#6F7979", style="italic")
+    ax.text(8, 0.4, "Low Impact / High Readiness\n(Quick Wins)", ha="center", fontsize=8, color="#6F7979", style="italic")
+
+    plotted_horizons = set()
+    for item in items:
+        h = item.get("horizon", "H1")
+        color = horizon_colors.get(h, "#006A6A")
+        size = item.get("size", 2) * 80
+        ax.scatter(
+            item["readiness"], item["impact"],
+            s=size, c=color, alpha=0.75, edgecolors="white", linewidth=1.5, zorder=5,
+        )
+        ax.annotate(
+            item["label"], (item["readiness"], item["impact"]),
+            textcoords="offset points", xytext=(8, 6), fontsize=7.5, color="#161D1D",
+        )
+        plotted_horizons.add(h)
+
+    legend_patches = [mpatches.Patch(color=horizon_colors[h], label=horizon_labels[h]) for h in sorted(plotted_horizons)]
+    ax.legend(handles=legend_patches, loc="lower left", fontsize=8, framealpha=0.9)
+
+    ax.set_xlim(0.5, 10.5)
+    ax.set_ylim(0.5, 10.5)
+    ax.set_xlabel("Organizational Readiness →", fontsize=10, fontweight="bold")
+    ax.set_ylabel("Business Impact Potential →", fontsize=10, fontweight="bold")
+    ax.set_title("Three Horizons Strategic Quadrant", fontsize=13, fontweight="bold", pad=14)
+    ax.set_facecolor("#F5FAFA")
+    fig.patch.set_facecolor("#F5FAFA")
+    ax.grid(True, alpha=0.15)
+    fig.tight_layout()
+    return fig
+
+
+# ============================================================================
 # SESSION STATE
 # ============================================================================
 def initialize_session_state():
@@ -344,6 +479,9 @@ def initialize_session_state():
         "processing": False,
         "conversation_count": 0,
         "cumulative_tokens": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
+        "assessment_sliders": {},
+        "assessment_result": None,
+        "assessment_processing": False,
     }
     for key, value in defaults.items():
         if key not in st.session_state:
@@ -404,8 +542,13 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-    # ---- Two-column layout with wide gap ----
-    left_col, spacer, right_col = st.columns([5, 0.4, 4])
+    # ---- Tabs ----
+    tab_chat, tab_assess = st.tabs(["💬 Strategy Chat", "📋 Self-Assessment"])
+
+    # ======================= TAB 1 – Chat =======================
+    with tab_chat:
+        # ---- Two-column layout with wide gap ----
+        left_col, spacer, right_col = st.columns([5, 0.4, 4])
 
     # ======================= LEFT COLUMN – Chat =======================
     with left_col:
@@ -511,51 +654,213 @@ def main():
                             st.text(log)
 
     # ---- Spacer column is intentionally empty ----
-    with spacer:
-        st.empty()
+        with spacer:
+            st.empty()
 
-    # ======================= CHAT INPUT =======================
-    user_input = st.chat_input(
-        placeholder="Ask about strategic horizons, innovation, or growth planning…",
-        disabled=st.session_state.processing,
-    )
+        # ---- Chat Input (inside tab_chat) ----
+        user_input = st.chat_input(
+            placeholder="Ask about strategic horizons, innovation, or growth planning…",
+            disabled=st.session_state.processing,
+        )
 
-    if user_input:
-        ts = datetime.now().strftime("%H:%M:%S")
-        st.session_state.chat_history.append({"role": "user", "content": user_input, "timestamp": ts})
-        st.session_state.processing = True
-        st.session_state.conversation_count += 1
+        if user_input:
+            ts = datetime.now().strftime("%H:%M:%S")
+            st.session_state.chat_history.append({"role": "user", "content": user_input, "timestamp": ts})
+            st.session_state.processing = True
+            st.session_state.conversation_count += 1
 
-        try:
-            start = time.time()
-            results = horizonagent(user_input)
-            elapsed = time.time() - start
+            try:
+                start = time.time()
+                results = horizonagent(user_input)
+                elapsed = time.time() - start
 
-            # Store results
-            st.session_state.agent_results.append(results)
+                st.session_state.agent_results.append(results)
 
-            # Accumulate tokens
-            for k in ("input_tokens", "output_tokens", "total_tokens"):
-                st.session_state.cumulative_tokens[k] += results["token_usage"].get(k, 0)
+                for k in ("input_tokens", "output_tokens", "total_tokens"):
+                    st.session_state.cumulative_tokens[k] += results["token_usage"].get(k, 0)
 
-            # Build the assistant message
-            summary = results.get("final_response", "").strip() or "Analysis complete."
-            summary += f"\n\n_Completed in {elapsed:.1f}s_"
-            st.session_state.chat_history.append({
-                "role": "assistant",
-                "content": summary,
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-            })
+                summary = results.get("final_response", "").strip() or "Analysis complete."
+                summary += f"\n\n_Completed in {elapsed:.1f}s_"
+                st.session_state.chat_history.append({
+                    "role": "assistant",
+                    "content": summary,
+                    "timestamp": datetime.now().strftime("%H:%M:%S"),
+                })
 
-        except Exception as e:
-            st.session_state.chat_history.append({
-                "role": "assistant",
-                "content": f"❌ Error: {e}",
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-            })
-        finally:
-            st.session_state.processing = False
-            st.rerun()
+            except Exception as e:
+                st.session_state.chat_history.append({
+                    "role": "assistant",
+                    "content": f"❌ Error: {e}",
+                    "timestamp": datetime.now().strftime("%H:%M:%S"),
+                })
+            finally:
+                st.session_state.processing = False
+                st.rerun()
+
+    # ======================= TAB 2 – Self-Assessment =======================
+    with tab_assess:
+        assessment_data = load_assessment_data()
+
+        st.markdown("""
+        <div style="background:var(--md-secondary-container);padding:14px 20px;border-radius:14px;margin-bottom:16px;">
+            <strong style="color:var(--md-secondary);">📋 Three Horizons Self-Assessment</strong><br>
+            <span style="font-size:13px;color:var(--md-on-surface-variant);">
+                Rate your organization on each area using the sliders (1 = very low maturity, 10 = best-in-class).
+                Once complete, click <b>Analyze</b> to generate a strategic quadrant and recommendations.
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        assess_left, assess_spacer, assess_right = st.columns([5, 0.3, 5])
+
+        # -- LEFT: Sliders --
+        with assess_left:
+            phases = assessment_data.get("phases", [])
+            half = (len(phases) + 1) // 2
+            for phase in phases[:half]:
+                with st.expander(f"🔹 {phase['title']}", expanded=True):
+                    st.caption(phase["description"])
+                    for q in phase.get("questions", []):
+                        qid = q["id"]
+                        req_marker = " *" if q.get("required") else ""
+                        st.session_state.assessment_sliders[qid] = st.slider(
+                            f"{q['text']}{req_marker}",
+                            min_value=1, max_value=10,
+                            value=st.session_state.assessment_sliders.get(qid, 5),
+                            help=q.get("why", ""),
+                            key=f"slider_{qid}",
+                        )
+
+        with assess_spacer:
+            st.empty()
+
+        with assess_right:
+            for phase in phases[half:]:
+                with st.expander(f"🔹 {phase['title']}", expanded=True):
+                    st.caption(phase["description"])
+                    for q in phase.get("questions", []):
+                        qid = q["id"]
+                        req_marker = " *" if q.get("required") else ""
+                        st.session_state.assessment_sliders[qid] = st.slider(
+                            f"{q['text']}{req_marker}",
+                            min_value=1, max_value=10,
+                            value=st.session_state.assessment_sliders.get(qid, 5),
+                            help=q.get("why", ""),
+                            key=f"slider_{qid}",
+                        )
+
+        st.markdown('<div class="md-divider"></div>', unsafe_allow_html=True)
+
+        # -- Analyze button --
+        btn_col1, btn_col2, btn_col3 = st.columns([3, 2, 3])
+        with btn_col2:
+            analyze_clicked = st.button(
+                "🚀 Analyze & Generate Quadrant",
+                use_container_width=True,
+                type="primary",
+                disabled=st.session_state.assessment_processing,
+            )
+
+        if analyze_clicked:
+            # Collect current slider values from widget keys
+            for phase in assessment_data.get("phases", []):
+                for q in phase.get("questions", []):
+                    qid = q["id"]
+                    widget_key = f"slider_{qid}"
+                    if widget_key in st.session_state:
+                        st.session_state.assessment_sliders[qid] = st.session_state[widget_key]
+
+            st.session_state.assessment_processing = True
+            summary = build_assessment_summary(assessment_data, st.session_state.assessment_sliders)
+            with st.spinner("🔭 Analyzing your assessment with AI…", show_time=True):
+                try:
+                    raw = run_assessment_analysis(summary)
+                    result = parse_llm_json(raw)
+                    st.session_state.assessment_result = result
+                    st.session_state.assessment_processing = False
+                    st.rerun()
+                except Exception as e:
+                    st.session_state.assessment_processing = False
+                    st.error(f"Analysis failed: {e}")
+                    with st.expander("🔧 Debug: Raw LLM Response", expanded=False):
+                        st.code(raw if 'raw' in dir() else "No response received", language="json")
+
+        # -- Results --
+        if st.session_state.assessment_result:
+            result = st.session_state.assessment_result
+
+            # Executive summary
+            overall = result.get("overall_summary", "")
+            if overall:
+                st.markdown(f"""
+                <div style="background:linear-gradient(135deg, var(--md-primary-container) 0%, #E8F0FF 100%);
+                            padding:16px 22px;border-radius:16px;margin:12px 0 18px;
+                            border:1px solid rgba(0,106,106,.12);">
+                    <strong style="color:var(--md-primary);font-size:14px;">📝 Executive Summary</strong><br>
+                    <span style="font-size:13px;color:var(--md-on-surface);line-height:1.6;">{overall}</span>
+                </div>
+                """, unsafe_allow_html=True)
+
+            # Quadrant chart
+            quadrant_items = result.get("quadrant_items", [])
+            if quadrant_items:
+                st.markdown('<div class="col-header">📊 Strategic Quadrant</div>', unsafe_allow_html=True)
+                fig = render_quadrant_chart(quadrant_items)
+                st.pyplot(fig)
+                plt.close(fig)
+
+            # Recommendations by horizon
+            recommendations = result.get("recommendations", [])
+            if recommendations:
+                st.markdown('<div class="col-header" style="margin-top:16px;">💡 Recommendations</div>', unsafe_allow_html=True)
+
+                rec_cols = st.columns(3)
+                horizon_map = {"H1": 0, "H2": 1, "H3": 2}
+                horizon_titles = {
+                    "H1": "🟢 Horizon 1 – Optimize & Defend",
+                    "H2": "🔵 Horizon 2 – Build & Grow",
+                    "H3": "🔴 Horizon 3 – Explore & Transform",
+                }
+                priority_colors = {"High": "#BA1A1A", "Medium": "#7C5800", "Low": "#006D3B"}
+
+                for h_key, col_idx in horizon_map.items():
+                    h_recs = [r for r in recommendations if r.get("horizon") == h_key]
+                    with rec_cols[col_idx]:
+                        st.markdown(f"**{horizon_titles.get(h_key, h_key)}**")
+                        if not h_recs:
+                            st.caption("No recommendations for this horizon.")
+                        for rec in h_recs:
+                            p_color = priority_colors.get(rec.get("priority", "Medium"), "#7C5800")
+                            st.markdown(f"""
+                            <div style="background:#FFFFFF;border:1px solid var(--md-outline-variant);
+                                        border-radius:12px;padding:12px 16px;margin-bottom:10px;">
+                                <div style="font-size:13px;font-weight:600;color:var(--md-on-surface);">
+                                    {rec.get('title','')}
+                                </div>
+                                <div style="font-size:12px;color:var(--md-on-surface-variant);margin-top:4px;line-height:1.5;">
+                                    {rec.get('description','')}
+                                </div>
+                                <div style="display:flex;gap:8px;margin-top:8px;">
+                                    <span style="font-size:10px;background:{p_color};color:white;
+                                                 padding:2px 8px;border-radius:6px;">
+                                        {rec.get('priority','Medium')} Priority
+                                    </span>
+                                    <span style="font-size:10px;background:var(--md-surface-variant);
+                                                 padding:2px 8px;border-radius:6px;color:var(--md-on-surface-variant);">
+                                        ⏱ {rec.get('timeframe','')}
+                                    </span>
+                                </div>
+                            </div>
+                            """, unsafe_allow_html=True)
+
+            # Reset button
+            st.markdown('<div class="md-divider"></div>', unsafe_allow_html=True)
+            reset_col1, reset_col2, reset_col3 = st.columns([3, 2, 3])
+            with reset_col2:
+                if st.button("🔄 Reset Assessment", use_container_width=True):
+                    st.session_state.assessment_sliders = {}
+                    st.session_state.assessment_result = None
+                    st.rerun()
 
     # ======================= SIDEBAR =======================
     with st.sidebar:
@@ -567,6 +872,11 @@ def main():
             st.session_state.agent_results = []
             st.session_state.cumulative_tokens = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
             st.session_state.conversation_count = 0
+            st.rerun()
+
+        if st.button("🔄 Reset Assessment", use_container_width=True):
+            st.session_state.assessment_sliders = {}
+            st.session_state.assessment_result = None
             st.rerun()
 
         st.markdown("---")
