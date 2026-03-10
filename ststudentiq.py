@@ -1,9 +1,14 @@
 import asyncio
 import logging
+import re
+import base64
+import html as html_module
 import streamlit as st
+import streamlit.components.v1 as components
 from pathlib import Path
-from azure.identity import DefaultAzureCredential
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 from azure.ai.projects import AIProjectClient
+from openai import AzureOpenAI
 import os
 from dotenv import load_dotenv
 from datetime import datetime
@@ -218,6 +223,157 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# TTS – Generate voice audio and create interactive player
+# ─────────────────────────────────────────────────────────────────────────────
+
+def clean_text_for_tts(text: str) -> str:
+    """Strip markdown formatting so TTS reads clean prose."""
+    text = re.sub(r'#{1,6}\s+', '', text)
+    text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)
+    text = re.sub(r'\*(.+?)\*', r'\1', text)
+    text = re.sub(r'`(.+?)`', r'\1', text)
+    text = re.sub(r'\[(.+?)\]\(.+?\)', r'\1', text)
+    text = re.sub(r'[-*]\s+', '', text)
+    text = re.sub(r'\n{2,}', '\n', text)
+    return text.strip()
+
+
+def generate_tts_audio(text: str) -> bytes:
+    """Use gpt-audio-1.5 via direct Azure OpenAI Chat Completions to synthesise speech."""
+    openai_client = AzureOpenAI(
+        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+        azure_ad_token_provider=get_bearer_token_provider(
+            DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
+        ),
+        api_version="2025-01-01-preview",
+    )
+    clean = clean_text_for_tts(text)
+    response = openai_client.chat.completions.create(
+        model="gpt-audio-1.5",
+        modalities=["text", "audio"],
+        audio={"voice": "alloy", "format": "wav"},
+        messages=[
+            {"role": "user", "content": f"Read the following text aloud exactly as written:\n\n{clean}"}
+        ],
+    )
+    audio_data = response.choices[0].message.audio
+    if audio_data and hasattr(audio_data, 'data'):
+        return base64.b64decode(audio_data.data)
+    raise RuntimeError("No audio output returned from gpt-audio-1.5")
+
+
+def create_audio_player_html(audio_b64: str, text: str) -> str:
+    """Return a self-contained HTML/CSS/JS audio player with sentence highlighting."""
+    clean = clean_text_for_tts(text)
+    sentences = re.split(r'(?<=[.!?;:\n])\s+', clean)
+    sentences = [s.strip() for s in sentences if s.strip()]
+    if not sentences:
+        sentences = [clean]
+
+    sentence_spans = ""
+    for i, sent in enumerate(sentences):
+        escaped = html_module.escape(sent)
+        sentence_spans += f'<span class="tts-sent" data-idx="{i}">{escaped} </span>'
+
+    char_lengths = [len(s) for s in sentences]
+
+    return f"""<!DOCTYPE html>
+<html><head><style>
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+body {{ font-family:'Inter',sans-serif; padding:10px; background:transparent; }}
+.tts-container {{
+  background:#FAFAFE; border:1px solid #C5CAE9; border-radius:16px;
+  padding:16px; box-shadow:0 2px 8px rgba(0,0,0,.08);
+}}
+.tts-header {{
+  display:flex; align-items:center; gap:8px; margin-bottom:10px;
+  font-size:.78rem; font-weight:600; text-transform:uppercase;
+  letter-spacing:.1em; color:#3949AB;
+}}
+.tts-controls {{ display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; }}
+.tts-btn {{
+  display:inline-flex; align-items:center; justify-content:center; gap:4px;
+  padding:7px 14px; border:1px solid #C5CAE9; border-radius:20px;
+  background:#E8EAF6; color:#283593; font-size:.8rem; font-weight:500;
+  cursor:pointer; transition:all .2s; user-select:none;
+}}
+.tts-btn:hover {{ background:#C5CAE9; }}
+.tts-btn.active {{ background:#283593; color:#fff; border-color:#283593; }}
+.progress-wrap {{
+  width:100%; height:6px; background:#E8EAF6; border-radius:3px;
+  margin-bottom:6px; cursor:pointer; position:relative;
+}}
+.progress-fill {{
+  height:100%; background:linear-gradient(90deg,#283593,#3949AB);
+  border-radius:3px; width:0%; transition:width .15s linear;
+}}
+.time-lbl {{ font-size:.7rem; color:#49454F; margin-bottom:10px; font-variant-numeric:tabular-nums; }}
+.tts-text {{
+  max-height:180px; overflow-y:auto; padding:12px; background:#fff;
+  border:1px solid #E8EAF6; border-radius:12px; line-height:1.75;
+  font-size:.88rem; color:#1C1B1F;
+}}
+.tts-sent {{ padding:2px 0; transition:background .15s,color .15s; border-radius:4px; }}
+.tts-sent.active {{ background:#FFF176; padding:2px 4px; }}
+.tts-sent.spoken {{ color:#9E9E9E; }}
+</style></head><body>
+<div class="tts-container">
+  <div class="tts-header">&#128266; Voice Playback</div>
+  <audio id="tts-audio" preload="auto">
+    <source src="data:audio/wav;base64,{audio_b64}" type="audio/wav">
+  </audio>
+  <div class="tts-controls">
+    <button class="tts-btn" id="btn-restart" onclick="doRestart()" title="Restart">&#9198; Restart</button>
+    <button class="tts-btn" id="btn-play"    onclick="doPlay()"    title="Play">&#9654; Play</button>
+    <button class="tts-btn" id="btn-pause"   onclick="doPause()"   title="Pause" style="display:none">&#9208; Pause</button>
+    <button class="tts-btn" id="btn-stop"    onclick="doStop()"    title="Stop">&#9209; Stop</button>
+  </div>
+  <div class="progress-wrap" onclick="doSeek(event)">
+    <div class="progress-fill" id="prog"></div>
+  </div>
+  <div class="time-lbl" id="time-lbl">0:00 / 0:00</div>
+  <div class="tts-text" id="tts-text">{sentence_spans}</div>
+</div>
+<script>
+const audio=document.getElementById('tts-audio');
+const btnPlay=document.getElementById('btn-play');
+const btnPause=document.getElementById('btn-pause');
+const prog=document.getElementById('prog');
+const timeLbl=document.getElementById('time-lbl');
+const sents=document.querySelectorAll('.tts-sent');
+const cL={char_lengths};
+const tC=cL.reduce((a,b)=>a+b,0);
+let playing=false;
+function fmt(s){{const m=Math.floor(s/60);const x=Math.floor(s%60);return m+':'+(x<10?'0':'')+x;}}
+function doPlay(){{audio.play();playing=true;btnPlay.style.display='none';btnPause.style.display='inline-flex';btnPause.classList.add('active');}}
+function doPause(){{audio.pause();playing=false;btnPlay.style.display='inline-flex';btnPause.style.display='none';btnPause.classList.remove('active');}}
+function doStop(){{audio.pause();audio.currentTime=0;playing=false;btnPlay.style.display='inline-flex';btnPause.style.display='none';btnPause.classList.remove('active');clr();}}
+function doRestart(){{audio.currentTime=0;clr();if(!playing)doPlay();}}
+function doSeek(e){{const r=e.currentTarget.getBoundingClientRect();audio.currentTime=(e.clientX-r.left)/r.width*audio.duration;}}
+function clr(){{sents.forEach(s=>s.classList.remove('active','spoken'));}}
+function hi(){{
+  if(!audio.duration)return;
+  const p=audio.currentTime/audio.duration;
+  let cum=0,ai=0;
+  for(let i=0;i<cL.length;i++){{cum+=cL[i];if(cum/tC>=p){{ai=i;break;}}}}
+  sents.forEach((s,i)=>{{
+    s.classList.remove('active','spoken');
+    if(i===ai){{s.classList.add('active');s.scrollIntoView({{behavior:'smooth',block:'nearest'}});}}
+    else if(i<ai)s.classList.add('spoken');
+  }});
+}}
+audio.addEventListener('timeupdate',()=>{{
+  if(audio.duration){{prog.style.width=(audio.currentTime/audio.duration*100)+'%';timeLbl.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration);}}
+  hi();
+}});
+audio.addEventListener('ended',()=>{{
+  playing=false;btnPlay.style.display='inline-flex';btnPause.style.display='none';btnPause.classList.remove('active');
+  sents.forEach(s=>{{s.classList.remove('active');s.classList.add('spoken');}});
+}});
+</script></body></html>"""
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Agent interaction – returns structured data for the UI
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -410,6 +566,10 @@ def main():
         st.session_state.debug_events = []
     if "events_raw" not in st.session_state:
         st.session_state.events_raw = []
+    if "tts_audio_b64" not in st.session_state:
+        st.session_state.tts_audio_b64 = None
+    if "tts_text" not in st.session_state:
+        st.session_state.tts_text = None
 
     # ── Two-column layout (wide gap) ──
     col_chat, col_gap, col_info = st.columns([5, 0.3, 3])
@@ -445,6 +605,30 @@ def main():
                             f'<div class="chat-timestamp">{ts}</div>',
                             unsafe_allow_html=True,
                         )
+
+        # ── TTS: Read Aloud button for the latest assistant response ──
+        if st.session_state.messages and st.session_state.messages[-1]["role"] == "assistant":
+            tts_c1, tts_c2 = st.columns([1, 1])
+            with tts_c1:
+                if st.button("🔊 Read Aloud", key="tts_generate"):
+                    with st.spinner("Generating voice…", show_time=True):
+                        audio_bytes = generate_tts_audio(st.session_state.messages[-1]["content"])
+                        st.session_state.tts_audio_b64 = base64.b64encode(audio_bytes).decode()
+                        st.session_state.tts_text = st.session_state.messages[-1]["content"]
+                    st.rerun()
+            with tts_c2:
+                if st.session_state.tts_audio_b64:
+                    if st.button("❌ Close Player", key="tts_close"):
+                        st.session_state.tts_audio_b64 = None
+                        st.session_state.tts_text = None
+                        st.rerun()
+
+        if st.session_state.tts_audio_b64:
+            player_html = create_audio_player_html(
+                st.session_state.tts_audio_b64,
+                st.session_state.tts_text,
+            )
+            components.html(player_html, height=360)
 
     # ════════════════════════════════════════════════════════════════════════
     # RIGHT COLUMN — Token Usage & Agent Outputs
@@ -549,6 +733,10 @@ def main():
         st.session_state.elapsed_seconds = result["elapsed_seconds"]
         st.session_state.debug_events = result.get("debug_events", [])
         st.session_state.events_raw = result.get("events_raw", [])
+
+        # Reset TTS player for new response
+        st.session_state.tts_audio_b64 = None
+        st.session_state.tts_text = None
 
         st.rerun()
 
