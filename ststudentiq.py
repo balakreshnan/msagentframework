@@ -238,7 +238,18 @@ def clean_text_for_tts(text: str) -> str:
     return text.strip()
 
 
-def generate_tts_audio(text: str) -> bytes:
+# Available TTS voices
+TTS_VOICES = {
+    "alloy":   "Alloy – Neutral, balanced",
+    "echo":    "Echo – Deeper, authoritative",
+    "fable":   "Fable – Expressive storytelling",
+    "onyx":    "Onyx – Deep, confident",
+    "nova":    "Nova – Bright, energetic",
+    "shimmer": "Shimmer – Soft, calm",
+}
+
+
+def generate_tts_audio(text: str, voice: str = "alloy") -> bytes:
     """Use gpt-audio-1.5 via direct Azure OpenAI Chat Completions to synthesise speech."""
     openai_client = AzureOpenAI(
         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -251,7 +262,7 @@ def generate_tts_audio(text: str) -> bytes:
     response = openai_client.chat.completions.create(
         model="gpt-audio-1.5",
         modalities=["text", "audio"],
-        audio={"voice": "alloy", "format": "wav"},
+        audio={"voice": voice, "format": "wav"},
         messages=[
             {"role": "user", "content": f"Read the following text aloud exactly as written:\n\n{clean}"}
         ],
@@ -608,11 +619,23 @@ def main():
 
         # ── TTS: Read Aloud button for the latest assistant response ──
         if st.session_state.messages and st.session_state.messages[-1]["role"] == "assistant":
-            tts_c1, tts_c2 = st.columns([1, 1])
+            tts_v, tts_c1, tts_c2 = st.columns([2, 1, 1])
+            with tts_v:
+                selected_voice = st.selectbox(
+                    "Voice",
+                    options=list(TTS_VOICES.keys()),
+                    format_func=lambda v: TTS_VOICES[v],
+                    index=0,
+                    key="tts_voice_select",
+                    label_visibility="collapsed",
+                )
             with tts_c1:
                 if st.button("🔊 Read Aloud", key="tts_generate"):
                     with st.spinner("Generating voice…", show_time=True):
-                        audio_bytes = generate_tts_audio(st.session_state.messages[-1]["content"])
+                        audio_bytes = generate_tts_audio(
+                            st.session_state.messages[-1]["content"],
+                            voice=selected_voice,
+                        )
                         st.session_state.tts_audio_b64 = base64.b64encode(audio_bytes).decode()
                         st.session_state.tts_text = st.session_state.messages[-1]["content"]
                     st.rerun()
