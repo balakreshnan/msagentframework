@@ -456,10 +456,6 @@ def main():
                         </div>
                         """, unsafe_allow_html=True)
 
-        # Processing indicator
-        if st.session_state.processing:
-            st.progress(0.5, text="⏳ WorkIQ is analysing your request…")
-
     # ================================================================
     # RIGHT COLUMN — Agent Output & Debug
     # ================================================================
@@ -566,7 +562,7 @@ def main():
         st.session_state.processing = True
         st.session_state.conversation_count += 1
 
-        with st.spinner("🔄 WorkIQ is analysing your request…"):
+        with st.spinner("🔄 WorkIQ is analysing your request…", show_time=True):
             t_start = time.time()
             try:
                 _add_debug("Calling WorkIQ agent…")
