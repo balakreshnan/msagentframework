@@ -763,7 +763,7 @@ graph LR
 graph TB
     subgraph "MCP Server Architecture"
         START[main] --> CHECK[MCP installed and SAMSUNG_PAT present]
-        CHECK --> SERVER[Server('samsung-smartthings')]
+        CHECK --> SERVER["Server('samsung-smartthings')"]
         SERVER --> LIST[list_tools]
         SERVER --> CALL[call_tool]
         CALL --> DEV[get_devices_tool]
