@@ -70,6 +70,21 @@ Covers:
 
 ---
 
+### 📊 [CICD_AGENT_CONSUMPTION_SINGLE_ENV.md](CICD_AGENT_CONSUMPTION_SINGLE_ENV.md)
+**Detailed documentation and flow diagrams for `agent-consumption-single-env.yml`**
+
+Covers:
+- Complete high-level flow diagram for the CI/CD pipeline
+- Step-by-step breakdown of all 9 workflow steps
+- Mermaid flow diagrams and sequence diagrams for each step
+- Full secrets and environment variable reference
+- State diagram of the complete execution lifecycle
+- Setup guide and best practices
+
+**Audience**: DevOps engineers, platform engineers, developers
+
+---
+
 ### 🎯 [USE_CASES.md](USE_CASES.md)
 **Real-world business use cases and domain applications**
 
@@ -294,7 +309,7 @@ SMARTTHINGS_MCP.md → SMARTTHINGS_MCP_SETUP.md → SMARTTHINGS_MCP_CONFIGURATIO
 
 #### Setting Up CI/CD
 ```
-GITHUB_WORKFLOWS.md → Secret Setup → Azure Configuration → Testing
+GITHUB_WORKFLOWS.md → CICD_AGENT_CONSUMPTION_SINGLE_ENV.md → Secret Setup → Azure Configuration → Testing
 ```
 
 #### Evaluating Agent Quality
@@ -316,6 +331,7 @@ PYTHON_MODULES.md (agenteval.py) → GITHUB_WORKFLOWS.md (Evaluation Step) → M
 - Domain-specific workflows ([USE_CASES.md](USE_CASES.md))
 - SmartThings MCP setup and execution ([SMARTTHINGS_MCP.md](SMARTTHINGS_MCP.md))
 - CI/CD Pipeline ([GITHUB_WORKFLOWS.md](GITHUB_WORKFLOWS.md))
+- Agent Consumption Single-Env Flow ([CICD_AGENT_CONSUMPTION_SINGLE_ENV.md](CICD_AGENT_CONSUMPTION_SINGLE_ENV.md))
 
 ### Module Diagrams
 - Agent implementations ([PYTHON_MODULES.md](PYTHON_MODULES.md))

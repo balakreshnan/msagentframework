@@ -63,7 +63,9 @@ graph TB
         S4[4. Azure Login]
         S5[5. Run Agent Test]
         S6[6. Run Evaluation]
-        S7[7. Run Red Team Tests]
+        S7[7. Run Batch Model Evaluation]
+        S8[8. Run Batch Evaluation]
+        S9[9. Run Red Team Tests]
     end
     
     STEPS --> S1
@@ -73,6 +75,8 @@ graph TB
     S4 --> S5
     S5 --> S6
     S6 --> S7
+    S7 --> S8
+    S8 --> S9
 ```
 
 ### Step-by-Step Breakdown
@@ -318,7 +322,47 @@ graph TB
 
 ---
 
-#### Step 7: Run Red Team Tests
+#### Step 7: Run Batch Model Evaluation
+
+```yaml
+- name: Run Batch Model evaluation
+  env:
+    # Same environment variables as Step 5
+  run: |
+    python batchmodeleval.py \
+      --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+      --project "${{ secrets.AZURE_AI_PROJECT }}" \
+      --agent-name "${{ secrets.AGENT_NAME }}"
+```
+
+**Purpose**:
+- Evaluates the underlying language model across a batch of test inputs
+- Measures model quality and consistency at scale
+- Complements single-run evaluation with broader coverage
+
+---
+
+#### Step 8: Run Batch Evaluation
+
+```yaml
+- name: Run Batch evaluation
+  env:
+    # Same environment variables as Step 5
+  run: |
+    python batchevalagent.py \
+      --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+      --project "${{ secrets.AZURE_AI_PROJECT }}" \
+      --agent-name "${{ secrets.AGENT_NAME }}"
+```
+
+**Purpose**:
+- Evaluates the full agent pipeline across a batch of test cases
+- Covers tool use, grounding, and response quality at scale
+- Produces aggregated scoring for trend analysis
+
+---
+
+#### Step 9: Run Red Team Tests
 
 ```yaml
 - name: Run red team tests (optional)
@@ -438,6 +482,10 @@ graph TB
         S7[AZURE_AI_MODEL_DEPLOYMENT_NAME]
         S8[AZURE_OPENAI_DEPLOYMENT]
         S9[AGENT_NAME]
+        S10[AZURE_AI_SEARCH_INDEX_NAME]
+        S11[AZURE_OPENAI_CHAT_DEPLOYMENT_NAME]
+        S12[AZURE_OPENAI_API_VERSION]
+        S13[AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME]
     end
     
     subgraph "Usage"
@@ -456,6 +504,10 @@ graph TB
     S7 --> U3
     S8 --> U3
     S9 --> U4
+    S10 --> U3
+    S11 --> U3
+    S12 --> U3
+    S13 --> U3
     
     style S1 fill:#FFC107
     style S5 fill:#FFC107
@@ -471,6 +523,10 @@ graph TB
 | `AZURE_OPENAI_ENDPOINT` | OpenAI endpoint | `https://my-openai.openai.azure.com` |
 | `AZURE_AI_MODEL_DEPLOYMENT_NAME` | Model deployment | `gpt-4o` |
 | `AZURE_OPENAI_DEPLOYMENT` | OpenAI deployment ID | `gpt-4o-deployment` |
+| `AZURE_AI_SEARCH_INDEX_NAME` | Azure AI Search index | `my-search-index` |
+| `AZURE_OPENAI_CHAT_DEPLOYMENT_NAME` | Chat model deployment | `gpt-4o-chat` |
+| `AZURE_OPENAI_API_VERSION` | OpenAI API version | `2024-05-01-preview` |
+| `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME` | Responses model deployment | `gpt-4o-responses` |
 | `AGENT_NAME` | Target agent name | `CustomerServiceAgent` |
 
 ---
@@ -487,10 +543,14 @@ stateDiagram-v2
     
     Auth --> AgentTest: Run exagent.py
     AgentTest --> Evaluation: Run agenteval.py
-    Evaluation --> RedTeam: Run redteam.py
+    Evaluation --> BatchModelEval: Run batchmodeleval.py
+    BatchModelEval --> BatchEval: Run batchevalagent.py
+    BatchEval --> RedTeam: Run redteam.py
     
     AgentTest --> Failed: Test Failure
     Evaluation --> Failed: Eval Failure
+    BatchModelEval --> Failed: Batch Model Eval Failure
+    BatchEval --> Failed: Batch Eval Failure
     RedTeam --> Failed: Security Issue
     
     RedTeam --> Success: All Passed
