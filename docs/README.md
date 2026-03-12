@@ -87,6 +87,24 @@ Covers:
 
 ---
 
+### 🏠 SmartThings MCP Documentation
+**SmartThings architecture, setup, and MCP workflows**
+
+Documents:
+- [SMARTTHINGS_MCP.md](SMARTTHINGS_MCP.md)
+- [SMARTTHINGS_MCP_SETUP.md](SMARTTHINGS_MCP_SETUP.md)
+- [SMARTTHINGS_MCP_CONFIGURATION.md](SMARTTHINGS_MCP_CONFIGURATION.md)
+
+Covers:
+- MCP server architecture and runtime flow
+- Azure AI Foundry integration steps
+- Streamlit approval workflow
+- SmartThings tool sequencing and troubleshooting
+
+**Audience**: Developers, solution architects, IoT implementers
+
+---
+
 ## Quick Start Guide
 
 ### For Business Leaders
@@ -254,7 +272,7 @@ START → ARCHITECTURE.md → PYTHON_MODULES.md → Integration Planning
 
 #### Developer
 ```
-START → PYTHON_MODULES.md → Code Examples → GITHUB_WORKFLOWS.md
+START → PYTHON_MODULES.md → SMARTTHINGS_MCP.md (if using IoT/MCP) → GITHUB_WORKFLOWS.md
 ```
 
 #### DevOps Engineer
@@ -267,6 +285,11 @@ START → GITHUB_WORKFLOWS.md → ARCHITECTURE.md → Deployment Setup
 #### Implementing Retail Agent
 ```
 USE_CASES.md (Retail) → PYTHON_MODULES.md (stretailadv.py) → ARCHITECTURE.md (Integration)
+```
+
+#### Implementing SmartThings MCP
+```
+SMARTTHINGS_MCP.md → SMARTTHINGS_MCP_SETUP.md → SMARTTHINGS_MCP_CONFIGURATION.md → PYTHON_MODULES.md
 ```
 
 #### Setting Up CI/CD
@@ -291,11 +314,13 @@ PYTHON_MODULES.md (agenteval.py) → GITHUB_WORKFLOWS.md (Evaluation Step) → M
 ### Process Flows
 - Traditional vs. Agentic AI ([AGENTIC_AI_VALUE.md](AGENTIC_AI_VALUE.md))
 - Domain-specific workflows ([USE_CASES.md](USE_CASES.md))
+- SmartThings MCP setup and execution ([SMARTTHINGS_MCP.md](SMARTTHINGS_MCP.md))
 - CI/CD Pipeline ([GITHUB_WORKFLOWS.md](GITHUB_WORKFLOWS.md))
 
 ### Module Diagrams
 - Agent implementations ([PYTHON_MODULES.md](PYTHON_MODULES.md))
 - Workflow patterns ([PYTHON_MODULES.md](PYTHON_MODULES.md))
+- SmartThings MCP architecture ([SMARTTHINGS_MCP.md](SMARTTHINGS_MCP.md))
 - Evaluation framework ([PYTHON_MODULES.md](PYTHON_MODULES.md))
 
 ## Key Takeaways
@@ -358,6 +383,6 @@ This documentation is maintained alongside the codebase. For updates or correcti
 
 ---
 
-**Last Updated**: January 29, 2026  
+**Last Updated**: March 12, 2026  
 **Framework Version**: Microsoft Agent Framework Oct 2025  
 **Maintained By**: Repository Contributors

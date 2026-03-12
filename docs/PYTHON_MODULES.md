@@ -481,71 +481,77 @@ graph TB
 
 ### stsmartthings.py & stsmartthings_agent.py - SmartThings IoT Agents
 
-**Purpose**: Control and manage Samsung SmartThings IoT devices through natural language.
+**Purpose**: Provide two SmartThings execution paths: a Streamlit + Azure AI Foundry experience (`stsmartthings.py`) and a direct Agent Framework + MCP sample (`stsmartthings_agent.py`).
 
 ```mermaid
 graph TB
-    subgraph "SmartThings Agent Architecture"
-        USER[User Command] --> NLU[Natural Language Understanding]
-        NLU --> INTENT[Intent Recognition]
-        
-        INTENT --> AGENT[SmartThings Agent]
-        
-        AGENT --> API[SmartThings API]
-        API --> DEVICES[Device Control]
-        
-        DEVICES --> D1[Lights]
-        DEVICES --> D2[Thermostat]
-        DEVICES --> D3[Security]
-        DEVICES --> D4[Appliances]
-        
-        D1 --> STATUS[Status Update]
-        D2 --> STATUS
-        D3 --> STATUS
-        D4 --> STATUS
-        
-        STATUS --> USER
+    subgraph "SmartThings Client Patterns"
+        USER[User Query] --> UI1[stsmartthings.py]
+        USER --> UI2[stsmartthings_agent.py]
+
+        UI1 --> FOUND[Existing smartthingsagent in Azure AI Foundry]
+        UI2 --> CHAT[ChatAgent with HostedMCPTool]
+
+        FOUND --> MCP[samsung_smartthings_mcp.py]
+        CHAT --> MCP
+        MCP --> ST[SmartThings API]
+        ST --> DEV[Device Metadata and Status]
     end
-    
-    style AGENT fill:#4CAF50
-    style API fill:#2196F3
+
+    style FOUND fill:#4CAF50
+    style CHAT fill:#2196F3
+    style MCP fill:#9C27B0
 ```
 
-**Capabilities**:
-```mermaid
-graph LR
-    subgraph "Device Operations"
-        O1[Turn On/Off] --> O2[Adjust Settings]
-        O3[Query Status] --> O4[Create Automations]
-        O5[Scene Control] --> O6[Energy Monitoring]
-    end
-```
+**What `stsmartthings.py` does**:
+- Uses `AIProjectClient` with `DefaultAzureCredential`
+- Retrieves the existing `smartthingsagent`
+- Sends prompts through the Responses API
+- Captures `mcp_approval_request` events and auto-approves them
+- Displays response text and debug events in a two-pane Streamlit UI
 
-**Integration Flow**:
+**What `stsmartthings_agent.py` does**:
+- Creates a `HostedMCPTool` pointing to `stdio://samsung_smartthings_mcp.py`
+- Builds a SmartThings-focused chat agent with explicit tool usage instructions
+- Creates a conversation thread
+- Streams the response back to the console for each sample query
+
+**Runtime Workflow**:
 ```mermaid
 sequenceDiagram
     participant User
-    participant Agent
-    participant SmartThings
-    participant Device
-    
-    User->>Agent: "Turn on living room lights"
-    Agent->>Agent: Parse intent
-    Agent->>SmartThings: Authenticate & list devices
-    SmartThings-->>Agent: Device list
-    Agent->>Agent: Identify target device
-    Agent->>SmartThings: Send control command
-    SmartThings->>Device: Execute command
-    Device-->>SmartThings: Confirm status
-    SmartThings-->>Agent: Status update
-    Agent-->>User: "Living room lights are now on"
+    participant UI as stsmartthings.py
+    participant Foundry as Azure AI Foundry Agent
+    participant MCP as SmartThings MCP Server
+
+    User->>UI: Ask SmartThings question
+    UI->>Foundry: responses.create(... agent_reference ...)
+    Foundry-->>UI: Output items
+    UI->>UI: Detect mcp_approval_request
+    UI->>Foundry: Send mcp_approval_response
+    Foundry->>MCP: Execute approved tool
+    MCP-->>Foundry: Return JSON tool result
+    Foundry-->>UI: Completed answer
+```
+
+**Decision Flow**:
+```mermaid
+flowchart TD
+    A[User asks SmartThings question] --> B{Need list of devices?}
+    B -->|Yes| C[get_devices / get_smartthings_devices]
+    B -->|No| D{Need one device details?}
+    C --> E[Select device_id]
+    D -->|Yes| F[get_device_logs / get_smartthings_device_logs]
+    D -->|No| G[Respond with existing context]
+    E --> F
+    F --> H[Summarize attributes, health, and capabilities]
 ```
 
 **Key Features**:
-- **pysmartthings Integration**: Native Samsung API support
-- **Multi-device Orchestration**: Control multiple devices simultaneously
-- **Context-aware Commands**: Understanding room, device type, and state
-- **Streamlit UI**: Interactive web interface
+- **Dual integration pattern**: Hosted MCP and Foundry-managed MCP
+- **Debug visibility**: Detailed response lifecycle logs in the Streamlit app
+- **Tool fallback logic**: Local execution paths mirror the MCP tool contracts
+- **Grounded device answers**: Results are driven from SmartThings API payloads
 
 ---
 
@@ -751,25 +757,59 @@ graph LR
 
 ### samsung_smartthings_mcp.py - SmartThings MCP Server
 
-**Purpose**: MCP (Model Context Protocol) server for SmartThings integration.
+**Purpose**: Exposes SmartThings device discovery and device detail retrieval through a stdio MCP server.
 
 ```mermaid
 graph TB
     subgraph "MCP Server Architecture"
-        MCP[MCP Server] --> PROTO[Protocol Handler]
-        PROTO --> TOOLS[Tool Definitions]
-        
-        TOOLS --> T1[Device List]
-        TOOLS --> T2[Device Control]
-        TOOLS --> T3[Status Query]
-        
-        T1 --> ST[SmartThings API]
-        T2 --> ST
-        T3 --> ST
+        START[main] --> CHECK[MCP installed and SAMSUNG_PAT present]
+        CHECK --> SERVER[Server('samsung-smartthings')]
+        SERVER --> LIST[list_tools]
+        SERVER --> CALL[call_tool]
+        CALL --> DEV[get_devices_tool]
+        CALL --> LOGS[get_device_logs_tool]
+        DEV --> API[pysmartthings.SmartThings]
+        LOGS --> API
+        API --> SESSION[aiohttp.ClientSession]
+        API --> ST[Samsung SmartThings API]
     end
-    
-    style MCP fill:#9C27B0
+
+    style SERVER fill:#9C27B0
+    style API fill:#2196F3
 ```
+
+**Published tools**:
+- `get_devices`: returns all devices, component IDs, and component capability lists
+- `get_device_logs`: returns one device, component attributes, location/room IDs, and optional health details
+
+**Tool Execution Flow**:
+```mermaid
+sequenceDiagram
+    participant Client as MCP Client / Agent
+    participant Server as samsung_smartthings_mcp.py
+    participant API as pysmartthings
+    participant ST as SmartThings API
+
+    Client->>Server: call_tool(name, arguments)
+    Server->>Server: Validate tool name and args
+    Server->>API: get_api()
+    API->>ST: Fetch devices or specific device
+    ST-->>API: Return metadata/status
+    API-->>Server: Python objects
+    Server->>Server: Transform to JSON-safe structure
+    Server-->>Client: TextContent(JSON)
+```
+
+**Server Lifecycle Notes**:
+- `load_dotenv()` loads runtime settings before server startup
+- `get_api()` lazily reuses a global `aiohttp.ClientSession`
+- `call_tool()` dispatches only two supported tools and returns structured errors for unknown names or missing `device_id`
+- `cleanup()` closes the shared HTTP session when the server exits
+
+**Why this matters**:
+- Keeps SmartThings access behind one MCP boundary
+- Gives agent clients a stable tool surface
+- Makes the same SmartThings functionality reusable in local and Foundry-hosted flows
 
 ---
 
