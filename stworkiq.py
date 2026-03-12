@@ -208,6 +208,7 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
         "final_response": "",
         "workflow_steps": [],
         "individual_agent_outputs": [],
+        "mcp_tool_calls": [],
         "debug_logs": [],
         "token_usage": {"input": 0, "output": 0, "total": 0},
     }
@@ -217,7 +218,7 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
         results["trace_id"] = trace_id
 
         with project_client:
-            workflow = {"name": "workiqagent", "version": "9"}
+            workflow = {"name": "workiqagent", "version": "10"}
 
             openai_client = project_client.get_openai_client()
             conversation = openai_client.conversations.create()
@@ -246,6 +247,7 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
             current_text = ""
             current_agent_id = None
             current_agent_output = ""
+            current_mcp_calls = {}
 
             for event in stream:
                 if event.type == "response.output_text.done":
@@ -299,6 +301,56 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
                     results["debug_logs"].append(
                         f"Agent '{event.item.action_id}' completed ({event.item.status})"
                     )
+
+                elif (
+                    event.type == "response.output_item.added"
+                    and hasattr(event, "item")
+                    and getattr(event.item, "type", "") in ("mcp_call", "function_call")
+                ):
+                    tool_name = getattr(event.item, "name", "Unknown Tool")
+                    server_label = getattr(event.item, "server_label", "")
+                    output_index = getattr(event, "output_index", id(event))
+                    current_mcp_calls[output_index] = {
+                        "tool_name": tool_name,
+                        "server_label": server_label,
+                        "arguments": "",
+                    }
+                    label = f"{server_label}/{tool_name}" if server_label else tool_name
+                    results["debug_logs"].append(f"MCP Tool '{label}' called")
+
+                elif event.type in (
+                    "response.mcp_call_arguments.delta",
+                    "response.function_call_arguments.delta",
+                ):
+                    output_index = getattr(event, "output_index", None)
+                    if output_index in current_mcp_calls:
+                        current_mcp_calls[output_index]["arguments"] += getattr(event, "delta", "")
+
+                elif (
+                    event.type == "response.output_item.done"
+                    and hasattr(event, "item")
+                    and getattr(event.item, "type", "") in ("mcp_call", "function_call")
+                ):
+                    tool_name = getattr(event.item, "name", "Unknown Tool")
+                    server_label = getattr(event.item, "server_label", "")
+                    arguments = getattr(event.item, "arguments", "")
+                    output = getattr(event.item, "output", "")
+                    status = getattr(event.item, "status", "completed")
+                    output_index = getattr(event, "output_index", None)
+                    if not arguments and output_index in current_mcp_calls:
+                        arguments = current_mcp_calls[output_index].get("arguments", "")
+                    results["mcp_tool_calls"].append({
+                        "tool_name": tool_name,
+                        "server_label": server_label,
+                        "arguments": arguments,
+                        "output": output,
+                        "status": status,
+                        "timestamp": datetime.now().strftime("%H:%M:%S"),
+                    })
+                    label = f"{server_label}/{tool_name}" if server_label else tool_name
+                    results["debug_logs"].append(f"MCP Tool '{label}' completed ({status})")
+                    if output_index in current_mcp_calls:
+                        del current_mcp_calls[output_index]
 
                 elif event.type == "response.output_text.delta":
                     current_text += event.delta
@@ -517,6 +569,27 @@ def main():
                                 st.markdown(agent_text)
 
                     st.markdown('<div class="md3-divider"></div>', unsafe_allow_html=True)
+
+                    # MCP Tool Calls
+                    if isinstance(content, dict) and content.get("mcp_tool_calls"):
+                        st.markdown("##### 🔧 MCP Tool Calls")
+                        for idx, tc in enumerate(content["mcp_tool_calls"]):
+                            tool_name = tc.get("tool_name", f"Tool {idx+1}")
+                            server_label = tc.get("server_label", "")
+                            status = tc.get("status", "completed")
+                            tc_time = tc.get("timestamp", "")
+                            icon = "✅" if status == "completed" else "🔄"
+                            label = f"{server_label}/{tool_name}" if server_label else tool_name
+                            with st.expander(f"{icon} {label} @ {tc_time}", expanded=False):
+                                if tc.get("arguments"):
+                                    st.markdown("**Input:**")
+                                    st.code(tc["arguments"], language="json")
+                                if tc.get("output"):
+                                    st.markdown("**Output:**")
+                                    st.markdown(tc["output"])
+                                if not tc.get("arguments") and not tc.get("output"):
+                                    st.caption("No input/output captured")
+                        st.markdown('<div class="md3-divider"></div>', unsafe_allow_html=True)
 
                     # Workflow steps
                     if isinstance(content, dict) and content.get("workflow_steps"):
