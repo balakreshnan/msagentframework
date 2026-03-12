@@ -45,7 +45,8 @@ Covers:
 - Core agent modules with mermaid diagrams
 - Multi-agent workflow modules
 - Evaluation and testing frameworks
-- Domain-specific agent implementations
+- Domain-specific agent implementations (ArchitectureIQ, PlantIQ, WorkIQ, StudentIQ, Three Horizons, Skit/Video, Radiology, SmartThings)
+- Alternative model integrations (Kimi K2.5, Sora v2)
 - Utility and support modules
 - Module dependencies
 
@@ -81,6 +82,13 @@ Covers:
 - Financial Services
 - Engineering & Design
 - Customer Service & Support
+- Architecture Analysis & Design Review
+- Strategic Planning (Three Horizons)
+- Workplace Productivity (WorkIQ)
+- Manufacturing Plant Design (PlantIQ)
+- Education & Learning (StudentIQ)
+- Creative Content Generation (AI Skit/Video)
+- AI Agent Lifecycle & Governance
 - Cross-industry patterns and benefits
 
 **Audience**: Business analysts, solution architects, domain experts

@@ -813,6 +813,770 @@ sequenceDiagram
 
 ---
 
+## Streamlit Domain Intelligence Applications
+
+### stArchitectureIQ.py - Architecture IQ Agent
+
+**Purpose**: Interactive Streamlit application for cloud & solution architecture analysis using an Azure AI Foundry multi-agent workflow named `ArchitectureIQ`.
+
+```mermaid
+graph TB
+    subgraph "ArchitectureIQ Architecture"
+        UI[Streamlit Chat UI] --> INPUT[User Query]
+        INPUT --> WORKFLOW[ArchitectureIQ Workflow]
+
+        WORKFLOW --> AGENTS{Multi-Agent Pipeline}
+
+        AGENTS --> ARCH[Architecture Analyst Agent]
+        AGENTS --> SEC[Security Reviewer Agent]
+        AGENTS --> PERF[Performance Advisor Agent]
+
+        ARCH --> SYNTH[Synthesis / Orchestrator]
+        SEC  --> SYNTH
+        PERF --> SYNTH
+
+        SYNTH --> RESP[Streaming Response]
+        RESP --> UI
+        RESP --> TELEMETRY[Azure Monitor / App Insights]
+    end
+
+    style WORKFLOW fill:#1B5E20
+    style SYNTH fill:#2196F3
+```
+
+**Agent Interaction Flow**:
+```mermaid
+sequenceDiagram
+    participant User
+    participant Streamlit as Streamlit UI
+    participant Workflow as ArchitectureIQ Workflow
+    participant Agents as Specialist Agents
+    participant Monitor as Azure Monitor
+
+    User->>Streamlit: Submit architecture question
+    Streamlit->>Workflow: Invoke with agent_reference
+    Workflow->>Agents: Fan-out to specialists
+    Agents-->>Workflow: Individual analysis streams
+    Workflow-->>Streamlit: Aggregated streaming response
+    Streamlit-->>User: Live answer with per-agent expanders
+    Workflow->>Monitor: Emit telemetry traces
+```
+
+**Key Features**:
+- Material Design 3 professional green theme
+- Per-agent streaming with collapsible expanders
+- Azure Monitor / Application Insights telemetry
+- Chat history with timestamps
+
+**Use Cases**: System design review, architecture best-practices Q&A, Azure Well-Architected assessments
+
+---
+
+### stmfgplantiq.py - Manufacturing Plant IQ
+
+**Purpose**: Streamlit UI for manufacturing plant design, layout optimisation, and process analysis via the `MFGPlantIQ` agent workflow.
+
+```mermaid
+graph TB
+    subgraph "PlantIQ Architecture"
+        UI[PlantIQ Streamlit UI]
+        UI --> IMG[Optional Image Upload]
+        UI --> QUERY[Natural Language Query]
+
+        QUERY --> AGENT[MFGPlantIQ Agent Workflow]
+        IMG   --> AGENT
+
+        AGENT --> PROC[Process Analysis Agent]
+        AGENT --> LAYOUT[Plant Layout Agent]
+        AGENT --> SAFETY[Safety & Compliance Agent]
+
+        PROC   --> OUT[Aggregated Plant Report]
+        LAYOUT --> OUT
+        SAFETY --> OUT
+
+        OUT --> TELEM[Azure Monitor Telemetry]
+        OUT --> UI
+    end
+
+    style AGENT fill:#1565C0
+    style OUT fill:#4CAF50
+```
+
+**Key Features**:
+- Supports both text and image queries (factory floor images, CAD screenshots)
+- Industrial Material Design 3 blue theme
+- Multi-agent response panel with individual agent outputs
+- OpenTelemetry tracing to Application Insights
+
+**Use Cases**: Manufacturing plant design, factory layout review, compliance checking, production process optimisation
+
+---
+
+### stworkiq.py - Workplace IQ
+
+**Purpose**: AI-powered workplace productivity assistant using the `workiqagent` workflow in Azure AI Foundry. Supports both text and image inputs for workplace analysis tasks.
+
+```mermaid
+graph TB
+    subgraph "WorkIQ Architecture"
+        UI[WorkIQ Streamlit Chat]
+        UI --> TEXT[Text Query]
+        UI --> IMAGE[Image Upload]
+
+        TEXT  --> AGENT[workiqagent Workflow]
+        IMAGE --> AGENT
+
+        AGENT --> RESEARCH[Research Agent]
+        AGENT --> ANALYSIS[Analysis Agent]
+        AGENT --> WRITER[Report Writer Agent]
+
+        RESEARCH --> FINAL[Workplace Insights]
+        ANALYSIS --> FINAL
+        WRITER  --> FINAL
+
+        FINAL --> TELEM[Azure Monitor]
+        FINAL --> UI
+    end
+
+    style AGENT fill:#0D47A1
+    style FINAL fill:#4CAF50
+```
+
+**Key Features**:
+- Dark blue Material Design 3 theme
+- Multi-modal input (text + image)
+- Per-agent streaming output with debug panel
+- Telemetry via Azure Monitor
+
+**Use Cases**: HR policy Q&A, workplace safety analysis, process documentation, productivity coaching
+
+---
+
+### ststudentiq.py - Student IQ
+
+**Purpose**: AI-powered education assistant with text-to-speech (TTS) audio output for interactive student learning via the `StudentIQ` agent workflow.
+
+```mermaid
+graph TB
+    subgraph "StudentIQ Architecture"
+        UI[StudentIQ Streamlit UI]
+        UI --> QUERY[Student Question]
+
+        QUERY --> AGENT[StudentIQ Agent Workflow]
+
+        AGENT --> TUTOR[Tutor Agent]
+        AGENT --> EXPLAIN[Explainer Agent]
+        AGENT --> QUIZ[Quiz Generator Agent]
+
+        TUTOR   --> RESP[Learning Response]
+        EXPLAIN --> RESP
+        QUIZ    --> RESP
+
+        RESP --> CLEAN[Text Cleaner]
+        CLEAN --> TTS[Azure OpenAI TTS]
+        TTS --> AUDIO[In-browser Audio Player]
+        RESP --> UI
+    end
+
+    style AGENT fill:#4A148C
+    style TTS fill:#FF6F00
+```
+
+**TTS Pipeline**:
+```mermaid
+sequenceDiagram
+    participant Agent as StudentIQ Agent
+    participant Clean as clean_text_for_tts()
+    participant TTS as generate_tts_audio()
+    participant UI as Streamlit Audio Widget
+
+    Agent-->>Clean: Raw markdown text
+    Clean-->>TTS: Cleaned plain text
+    TTS-->>UI: Base64-encoded MP3
+    UI-->>Student: In-page audio player
+```
+
+**Key Features**:
+- Voice selection (alloy, echo, fable, onyx, nova, shimmer)
+- Markdown-to-speech cleaning pipeline
+- Per-agent collapsible expanders
+- Indigo/Deep-Purple Material Design 3 theme
+
+**Use Cases**: K-12 tutoring, university course assistance, self-paced learning, accessibility for learners with reading difficulties
+
+---
+
+### stthreehori.py - Three Horizons Strategy Framework
+
+**Purpose**: Interactive strategic planning tool implementing McKinsey's Three Horizons framework with AI-powered quadrant analysis, slider-based self-assessment, and matplotlib visualisations.
+
+```mermaid
+graph TB
+    subgraph "Three Horizons Agent System"
+        UI[Streamlit UI]
+
+        UI --> CHAT[Chat Mode]
+        UI --> ASSESS[Assessment Mode]
+
+        CHAT --> AGENT[horizonagent LLM]
+        ASSESS --> SLIDERS[Horizon Sliders]
+
+        SLIDERS --> SUMMARY[Assessment Summary Builder]
+        SUMMARY --> LLM[GPT-4o Analysis]
+
+        LLM --> JSON[JSON Quadrant Data]
+        JSON --> CHART[Matplotlib Quadrant Chart]
+        JSON --> TABLE[Recommendation Table]
+
+        AGENT --> RESP[Strategy Insights]
+        CHART --> UI
+        TABLE --> UI
+        RESP  --> UI
+    end
+
+    style AGENT fill:#006A6A
+    style LLM fill:#4B607C
+    style CHART fill:#FF9800
+```
+
+**Assessment Flow**:
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI as Streamlit Sliders
+    participant Builder as build_assessment_summary()
+    participant LLM as run_assessment_analysis()
+    participant Parser as parse_llm_json()
+    participant Chart as render_quadrant_chart()
+
+    User->>UI: Adjust horizon sliders
+    UI->>Builder: Slider values dict
+    Builder->>LLM: Structured text summary
+    LLM-->>Parser: JSON-fenced response
+    Parser-->>Chart: quadrant_items list
+    Chart-->>User: Scatter plot + recommendations
+```
+
+**Key Features**:
+- 3-horizon JSON assessment file (`3horizon.json`)
+- Matplotlib quadrant scatter chart (Impact vs Feasibility)
+- McKinsey Three Horizons AI consultant persona
+- Dual mode: conversational chat and structured assessment
+
+**Use Cases**: Corporate strategy sessions, product roadmap planning, innovation portfolio management, digital transformation planning
+
+---
+
+### stlifecycle.py - Agent Lifecycle Management
+
+**Purpose**: Comprehensive Streamlit UI demonstrating the complete Azure AI Agent lifecycle: creation, evaluation, and red-team safety testing in one application.
+
+```mermaid
+graph TB
+    subgraph "Agent Lifecycle Manager"
+        UI[Lifecycle UI]
+
+        UI --> TAB1[🤖 Agent Tab]
+        UI --> TAB2[📊 Evaluation Tab]
+        UI --> TAB3[🔴 Red Team Tab]
+
+        TAB1 --> AGENT[existingagent / exagent.py]
+        TAB2 --> EVAL[agenteval / agenteval.py]
+        TAB3 --> RT[redteam_main / redteam.py]
+
+        AGENT --> TOOLS[Weather + Stock Tools]
+        EVAL  --> SCORES[Evaluation Scores]
+        RT    --> SAFETY[Safety Report]
+
+        TOOLS  --> TELEM[Azure Monitor]
+        SCORES --> TELEM
+        SAFETY --> TELEM
+    end
+
+    style TAB1 fill:#6750A4
+    style TAB2 fill:#2196F3
+    style TAB3 fill:#D32F2F
+```
+
+**Integration Map**:
+```mermaid
+graph LR
+    stlifecycle.py --> exagent.py
+    stlifecycle.py --> agenteval.py
+    stlifecycle.py --> redteam.py
+    exagent.py --> AIProjectClient
+    agenteval.py --> OpenAI_Evals_API
+    redteam.py --> Azure_AI_Red_Team
+```
+
+**Key Features**:
+- Single dashboard for agent ops (create → evaluate → red-team)
+- Captured stdout/stderr display per operation
+- Material Design 3 purple/blue theme
+- AzureAISearch tool integration for RAG
+
+**Use Cases**: MLOps agent workflows, agent quality assurance, AI governance pipelines
+
+---
+
+### stskit.py - AI Skit / Scene Maker
+
+**Purpose**: End-to-end Streamlit application for creating AI-generated video skits: text prompt → multi-agent story expansion → Azure Sora video generation → in-page video playback.
+
+```mermaid
+graph TB
+    subgraph "AI Skit Maker Pipeline"
+        UI[Skit Maker UI]
+        UI --> PROMPT[User Text Prompt]
+
+        PROMPT --> EXPAND[Multi-Agent Story Expansion]
+
+        EXPAND --> IDEATION[Ideation Agent]
+        EXPAND --> WRITER[Skit Writer Agent]
+        EXPAND --> CRITIC[Critic / Refiner Agent]
+
+        IDEATION --> SCRIPT[Final Script]
+        WRITER   --> SCRIPT
+        CRITIC   --> SCRIPT
+
+        SCRIPT --> SORA[createvideo / sora2.py]
+        SORA --> AZURE_SORA[Azure OpenAI Sora v2]
+        AZURE_SORA --> VIDEO[.mp4 Video File]
+        VIDEO --> PLAYER[In-page Video Player]
+    end
+
+    style EXPAND fill:#FF6F00
+    style AZURE_SORA fill:#2196F3
+    style PLAYER fill:#4CAF50
+```
+
+**Key Features**:
+- Integrates `createvideo()` from `sora2.py`
+- Agent-based story/script writing before video generation
+- Poll-based job status tracking
+- MD3 amber/orange creative theme
+
+**Use Cases**: Marketing video creation, educational content production, creative storytelling, product demo automation
+
+---
+
+### stimg.py - Cloud Infrastructure Image Analysis
+
+**Purpose**: Streamlit UI enabling a Principal Cloud Architect AI agent to analyse uploaded Azure infrastructure diagrams (screenshots, architecture images) and provide Terraform/Well-Architected recommendations.
+
+```mermaid
+graph TB
+    subgraph "Infrastructure Image Analyser"
+        UI[Image Upload UI]
+        UI --> IMG[User Uploads Architecture PNG/JPG]
+
+        IMG --> B64[Base64 Encode]
+        B64 --> AGENT[Cloud Architect Agent]
+
+        AGENT --> WAF[Well-Architected Analysis]
+        AGENT --> TERRAFORM[Terraform IaC Suggestions]
+        AGENT --> SECURITY[CIS Benchmark Check]
+
+        WAF      --> RESP[Architecture Report]
+        TERRAFORM--> RESP
+        SECURITY --> RESP
+
+        RESP --> TELEM[Azure Monitor]
+        RESP --> UI
+    end
+
+    style AGENT fill:#6750A4
+    style RESP fill:#4CAF50
+```
+
+**Agent Instructions Summary**: "You are a Principal Cloud Architect … Azure Well-Architected Framework, CIS Azure Foundations Benchmark, and HashiCorp-recommended Terraform best practices."
+
+**Key Features**:
+- PIL/Pillow image preprocessing
+- MD3 purple Material Design theme
+- Telemetry via Application Insights
+
+**Use Cases**: Architecture diagram review, Terraform code generation from diagrams, infrastructure compliance checks
+
+---
+
+### stenggdraw.py - Engineering Drawing Analysis
+
+**Purpose**: Script that submits a factory engineering drawing (JPEG) to Azure OpenAI's vision model and returns a natural language analysis of the diagram contents.
+
+```mermaid
+graph LR
+    subgraph "Engineering Drawing Analysis"
+        IMAGE[JPEG Drawing File] --> B64[Base64 Encode]
+        B64 --> CLIENT[AzureOpenAIChatClient]
+        CLIENT --> VISION[GPT-4o Vision Model]
+        VISION --> ANALYSIS[Text Analysis Output]
+    end
+```
+
+**Key Features**:
+- `AzureCliCredential` authentication
+- `DataContent` for inline image submission
+- Straightforward vision pipeline — no Streamlit overhead
+
+**Use Cases**: Factory floor plan analysis, CAD drawing interpretation, equipment layout review, maintenance plan extraction from drawings
+
+---
+
+### stradiology.py - AI Radiology Image Analysis
+
+**Purpose**: Streamlit application enabling radiologists to upload medical images (X-rays, CT scans) and receive AI-generated report narratives using Azure OpenAI's vision capabilities.
+
+```mermaid
+graph TB
+    subgraph "Radiology AI Workflow"
+        UI[Radiology Streamlit UI]
+        UI --> UPLOAD[Upload Medical Image]
+
+        UPLOAD --> B64[Base64 Encode]
+        B64 --> AGENT[AzureOpenAIChatClient Vision]
+
+        AGENT --> FINDINGS[AI Findings Analysis]
+        AGENT --> REPORT[Draft Radiology Report]
+
+        FINDINGS --> REVIEW[Radiologist Review]
+        REPORT   --> REVIEW
+        REVIEW   --> FINAL[Final Report]
+    end
+
+    style AGENT fill:#1565C0
+    style FINAL fill:#4CAF50
+```
+
+**Key Features**:
+- PIL/Pillow-based image preprocessing
+- Direct AzureOpenAI vision API (no agent framework overhead)
+- Dual async entrypoints (`main` + `run_app`)
+
+**Use Cases**: Radiology report drafting, chest X-ray pneumonia detection, CT scan preliminary analysis
+
+---
+
+## Alternative Model & Platform Integrations
+
+### kimi25.py - Kimi K2.5 Multi-Agent
+
+**Purpose**: Demonstrates a researcher + analyst dual-agent pipeline using the Kimi K2.5 model deployed on Azure AI Foundry.
+
+```mermaid
+graph TB
+    subgraph "Kimi K2.5 Dual-Agent"
+        INPUT[Research Query] --> CRED[DefaultAzureCredential]
+        CRED --> CLIENT[AzureAIAgentClient Kimi-K2.5]
+
+        CLIENT --> RESEARCHER[Researcher Agent]
+        CLIENT --> ANALYST[Analyst Agent]
+
+        RESEARCHER --> |Research output| ANALYST
+        ANALYST --> FINAL[Final Analysis]
+
+        FINAL --> OTEL[OpenTelemetry Traces]
+        FINAL --> MONITOR[Azure Monitor]
+    end
+
+    style RESEARCHER fill:#FF6F00
+    style ANALYST fill:#2196F3
+```
+
+**Key Features**:
+- Kimi-K2.5 as the backing model deployment
+- Full OpenTelemetry instrumentation with Azure Monitor
+- Sequential researcher → analyst workflow
+- Span-level tracing via `get_tracer()`
+
+**Use Cases**: Research synthesis, competitive analysis, academic literature review
+
+---
+
+### stkimi.py - Kimi via HuggingFace Router
+
+**Purpose**: Minimal script demonstrating Kimi-K2.5 multimodal image+text inference via the HuggingFace Inference Router API.
+
+```mermaid
+graph LR
+    QUERY[Image URL + Text Prompt] --> CLIENT[OpenAI client HuggingFace router]
+    CLIENT --> KIMI[moonshotai/Kimi-K2.5:novita]
+    KIMI --> RESPONSE[Vision Description]
+```
+
+**Key Features**:
+- OpenAI-compatible client pointed at `router.huggingface.co/v1`
+- `HF_TOKEN` environment variable for authentication
+- Multimodal: image_url + text in a single message
+
+**Use Cases**: Image captioning, rapid Kimi model prototyping, HuggingFace model comparisons
+
+---
+
+### sora2.py - Azure Sora Video Generation
+
+**Purpose**: Function library for generating videos using Azure OpenAI Sora (v2) via the Azure Cognitive Services REST API. Used as a backend by `stskit.py`.
+
+```mermaid
+graph TB
+    subgraph "Sora Video Generation"
+        PROMPT[Text Prompt] --> CREATE[POST /openai/v1/videos]
+        CREATE --> JOB[Video Generation Job]
+
+        JOB --> POLL[Poll Job Status]
+        POLL --> |pending| POLL
+        POLL --> |succeeded| URL[Video URL]
+        URL --> DOWNLOAD[Download .mp4]
+        DOWNLOAD --> FILE[Local Video File]
+    end
+
+    style JOB fill:#FF6F00
+    style FILE fill:#4CAF50
+```
+
+**API Flow**:
+```mermaid
+sequenceDiagram
+    participant App
+    participant Sora as Azure Sora API
+    participant Storage as Azure Storage
+
+    App->>Sora: POST /openai/v1/videos {prompt, n, size, duration}
+    Sora-->>App: {id: "job-xxx", status: "pending"}
+    loop Poll until succeeded
+        App->>Sora: GET /openai/v1/videos/{job_id}
+        Sora-->>App: {status: "running"|"succeeded"}
+    end
+    Sora-->>App: {video_url: "https://..."}
+    App->>Storage: GET video_url
+    Storage-->>App: MP4 binary data
+    App->>App: Save to local .mp4 file
+```
+
+**Key Features**:
+- Bearer token authentication
+- Configurable: `n`, size, duration, fps
+- Retry/polling loop with timeout
+- Returns file path for downstream consumption
+
+**Use Cases**: Marketing video generation, product demo creation, animated story production
+
+---
+
+### azureopenaichat.py - Azure OpenAI Direct Chat
+
+**Purpose**: Example demonstrating direct use of `AzureOpenAIChatClient` with function-calling (tool use) without the full agent framework.
+
+```mermaid
+graph LR
+    CRED[AzureCliCredential] --> CLIENT[AzureOpenAIChatClient]
+    CLIENT --> CHAT[chat.run with tools]
+    CHAT --> TOOL[get_weather function]
+    TOOL --> RESP[Chat Response]
+```
+
+**Key Features**:
+- Direct client usage (no `ChatAgent` wrapper)
+- `api_key` + `endpoint` + `deployment_name` configuration
+- Function annotation via `Annotated` + Pydantic `Field`
+
+**Use Cases**: Simple chat with function calling, SDK exploration, model comparison tests
+
+---
+
+## Evaluation, Testing & Data Generation
+
+### batchevalagent.py - Batch Agent Evaluation
+
+**Purpose**: Runs batch evaluation of agent responses against an RFP dataset using Azure AI Projects OpenAI Evals API with AI-assisted evaluators.
+
+```mermaid
+graph TB
+    subgraph "Batch Agent Evaluation"
+        DATA[datarfp.jsonl Dataset] --> UPLOAD[Upload to AI Projects]
+        UPLOAD --> DATASET[DatasetVersion]
+
+        DATASET --> EVAL[Create Eval with JSONL Source]
+        EVAL --> RUN[Create Eval Run]
+        RUN --> POLL[Poll until complete]
+        POLL --> REPORT[Evaluation Report]
+    end
+
+    style EVAL fill:#FF9800
+    style REPORT fill:#4CAF50
+```
+
+**Evaluators Used**:
+- `CoherenceEvaluator`
+- `FluencyEvaluator`
+- `GroundednessEvaluator`
+- `RelevanceEvaluator`
+
+**Key Features**:
+- Dataset upload and reuse across multiple eval runs
+- AI-assisted evaluators backed by `gpt-4o-mini`
+- Environment-variable driven configuration
+
+**Use Cases**: CI/CD quality gates, dataset-driven regression testing, model comparison
+
+---
+
+### batchmodeleval.py - Batch Model Evaluation
+
+**Purpose**: Similar to `batchevalagent.py` but focused on comparing model responses (not agent workflows) using the OpenAI Evals API.
+
+```mermaid
+graph TB
+    subgraph "Model Evaluation Pipeline"
+        DATA[JSONL Test Data] --> DATASET[Upload/Reuse Dataset]
+        DATASET --> EVAL[Create Eval Config]
+        EVAL --> RUN[Run Evaluation]
+        RUN --> RESULTS[Quality Scores]
+    end
+```
+
+**Key Features**:
+- Reuses existing datasets if already uploaded
+- `SourceFileID` for dataset referencing
+- Model-level evaluation (not agent-level)
+
+**Use Cases**: A/B model testing, quality benchmarking before model upgrades
+
+---
+
+### redteam_classic.py - Classic Red Team Testing
+
+**Purpose**: Adversarial safety testing using Azure AI Evaluation's `RedTeam` class with the Agent Framework — tests agent resilience against jailbreaks, harmful content, and adversarial prompts.
+
+```mermaid
+graph TB
+    subgraph "Classic Red Team Flow"
+        AGENT[Target ChatAgent] --> CALLBACK[agent_callback function]
+        CALLBACK --> REDTEAM[Azure AI RedTeam]
+
+        REDTEAM --> ATTACKS{Attack Strategies}
+        ATTACKS --> JAILBREAK[Jailbreak Strategy]
+        ATTACKS --> BASE64[Base64 Encoding]
+        ATTACKS --> ROLE[Role Play]
+        ATTACKS --> DIRECT[Direct Attack]
+
+        JAILBREAK --> EVAL[Safety Evaluation]
+        BASE64    --> EVAL
+        ROLE      --> EVAL
+        DIRECT    --> EVAL
+
+        EVAL --> REPORT[Red Team Report]
+    end
+
+    style REDTEAM fill:#D32F2F
+    style REPORT fill:#FF9800
+```
+
+**Key Features**:
+- `RiskCategory` targeting: Violence, Sexual Content, Hate/Unfairness, Self-Harm
+- Async `agent_callback` bridging RedTeam to Agent Framework
+- Generates full HTML/JSON report
+- `AzureCliCredential` for authentication
+
+**Use Cases**: Pre-production safety validation, regulatory compliance testing, responsible AI assessments
+
+---
+
+### retdatagen.py - Retail Data Generator
+
+**Purpose**: Generates a synthetic retail point-of-sale dataset (1,000 rows across 5 stores × 20 weeks × 10 products) with realistic promotion, seasonal, and price effects.
+
+```mermaid
+graph LR
+    PARAMS[Config: stores, products, weeks] --> GEN[Synthetic Data Generator]
+    GEN --> ROWS[1000 rows CSV/DataFrame]
+    ROWS --> FILE[circana_sample_100rows.csv]
+```
+
+**Generated Fields**: `Week`, `Store_ID`, `Category`, `Brand`, `UPC`, `Product_Name`, `Base_Price`, `Actual_Price`, `Units_Sold`, `Dollar_Sales`, `Promo_Flag`, `ACV_Weighted_Distribution`, `Market_Share`
+
+**Use Cases**: Retail analytics demos, agent evaluation datasets, promotion lift modelling tests
+
+---
+
+### dschiprca.py - Chip Manufacturing RCA Data Generator
+
+**Purpose**: Generates a synthetic semiconductor manufacturing dataset (100 samples) with realistic process parameter deviations and labelled root causes for RCA model training and evaluation.
+
+```mermaid
+graph LR
+    CONFIG[Root Causes + Defect Types] --> GEN[Parametric Generator]
+    GEN --> DATASET[100 Chip Samples CSV]
+    DATASET --> RCA[RCA Agent Training / Demo]
+```
+
+**Generated Fields**: `Sample_ID`, `Lot_ID`, `Temperature`, `Pressure`, `Deposition_Time`, `Etch_Rate`, `Particle_Count`, `Line_Width_Variation`, `Defect_Type`, `Root_Cause`, `Is_Defective`
+
+**Root Causes Simulated**: Contamination, Equipment Malfunction, Operator Error, Material Issue, Parameter Deviation
+
+**Use Cases**: RCA model training data, agent evaluation benchmarks, semiconductor process simulation demos
+
+---
+
+## SmartThings Extensions
+
+### samdevices.py - Simple SmartThings Device Lister
+
+**Purpose**: Minimal async script that authenticates with the Samsung SmartThings API using a Personal Access Token and prints all devices with their component capabilities.
+
+```mermaid
+graph LR
+    TOKEN[SAMSUNG_PAT env var] --> API[pysmartthings.SmartThings]
+    API --> DEVICES[List Devices]
+    DEVICES --> CAPS[Component Capabilities]
+    CAPS --> STDOUT[Console Output]
+```
+
+**Key Features**:
+- `aiohttp.ClientSession` + `pysmartthings`
+- No agent framework — pure API listing
+- Useful for discovering device IDs for other SmartThings agents
+
+**Use Cases**: SmartThings integration setup, device capability discovery, debugging PAT tokens
+
+---
+
+### stsamdevices.py - SmartThings Devices Streamlit UI
+
+**Purpose**: Full Streamlit application combining SmartThings device management with an AI agent that can query and control devices via natural language.
+
+```mermaid
+graph TB
+    subgraph "SmartThings Streamlit Agent"
+        UI[Streamlit Device Management UI]
+        UI --> QUERY[Natural Language Query]
+
+        QUERY --> AGENT[AzureAIAgentClient]
+
+        AGENT --> TOOL1[get_smartthings_devices]
+        AGENT --> TOOL2[get_smartthings_device_logs]
+
+        TOOL1 --> API[pysmartthings API]
+        TOOL2 --> API
+        API   --> ST[Samsung SmartThings Cloud]
+
+        ST --> RESP[Device Status / Logs]
+        RESP --> UI
+    end
+
+    style AGENT fill:#9C27B0
+    style API fill:#2196F3
+```
+
+**Key Features**:
+- `getdevices()` and `get_device_logs()` as agent-callable tools
+- AzureAIAgentClient with inline tool registration
+- AI-powered natural language device queries
+
+**Use Cases**: Smart home dashboard, IoT device management, natural language device troubleshooting
+
+---
+
 ## Module Dependencies
 
 ```mermaid

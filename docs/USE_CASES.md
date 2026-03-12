@@ -15,6 +15,13 @@ This document details specific business use cases where agentic AI transforms op
 5. [Financial Services](#financial-services)
 6. [Engineering & Design](#engineering--design)
 7. [Customer Service & Support](#customer-service--support)
+8. [Architecture Analysis & Design Review](#architecture-analysis--design-review)
+9. [Strategic Planning](#strategic-planning)
+10. [Workplace Productivity](#workplace-productivity)
+11. [Manufacturing Intelligence](#manufacturing-intelligence)
+12. [Education & Learning](#education--learning)
+13. [Creative Content Generation](#creative-content-generation)
+14. [AI Agent Lifecycle & Governance](#ai-agent-lifecycle--governance)
 
 ---
 
@@ -618,6 +625,369 @@ graph TB
 - 🎯 Higher quality final recommendations
 - ⚡ 5x faster innovation cycle
 - 🌍 Diverse perspectives without bias
+
+---
+
+## Architecture Analysis & Design Review
+
+### Use Case: AI-Powered Architecture IQ
+
+**Business Challenge**:
+Solution architects must review complex Azure architectures against the Well-Architected Framework, security benchmarks, and Terraform best practices — a multi-hour manual effort for every design iteration.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "ArchitectureIQ Multi-Agent Review"
+        QUERY[Architect submits design question / diagram] --> WORKFLOW[ArchitectureIQ Workflow]
+
+        WORKFLOW --> ARCH[Architecture Analyst Agent]
+        WORKFLOW --> SEC[Security Reviewer Agent]
+        WORKFLOW --> PERF[Performance Advisor Agent]
+
+        ARCH --> |Well-Architected findings| ORCH[Orchestrator]
+        SEC  --> |CIS benchmark gaps| ORCH
+        PERF --> |Scaling recommendations| ORCH
+
+        ORCH --> REPORT[Consolidated Architecture Report]
+        REPORT --> ARCHITECT[Architect receives actionable insights]
+    end
+
+    style WORKFLOW fill:#1B5E20
+    style ORCH fill:#2196F3
+    style REPORT fill:#4CAF50
+```
+
+**Implementation Details**:
+- **Module**: `stArchitectureIQ.py`
+- **Agent Workflow**: `ArchitectureIQ` on Azure AI Foundry
+- **Inputs**: Text questions or uploaded infrastructure images (`stimg.py`)
+
+**Business Impact**:
+- ⏱️ 80% reduction in architecture review time
+- 🔒 Consistent security benchmark checking across every design
+- 📋 Terraform IaC recommendations generated automatically
+- 🎯 Standardised Well-Architected alignment scores
+
+---
+
+## Strategic Planning
+
+### Use Case: Three Horizons Strategy with AI
+
+**Business Challenge**:
+Executive teams struggle to balance short-term operational priorities (Horizon 1) with medium-term growth initiatives (Horizon 2) and long-term transformational bets (Horizon 3). Strategy workshops are expensive and infrequent.
+
+**Traditional Process**:
+```mermaid
+graph LR
+    A[Annual Offsite] --> B[2 Days: Facilitated Workshop]
+    B --> C[1 Week: Report Writing]
+    C --> D[Quarterly Review]
+    D --> E[Strategy Document — often stale within months]
+
+    style B fill:#FFE082
+    style C fill:#FFE082
+```
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "Three Horizons Strategy Agent"
+        START[Executive opens StrategyIQ tool]
+
+        START --> CHAT[Chat Mode: AI Strategy Consultant]
+        START --> ASSESS[Assessment Mode: Slider Self-Assessment]
+
+        CHAT --> AGENT[Three Horizons LLM Agent]
+        ASSESS --> SLIDERS[H1 / H2 / H3 Initiative Sliders]
+
+        AGENT --> INSIGHTS[Strategic Insights & Recommendations]
+
+        SLIDERS --> SUMMARY[Assessment Summary]
+        SUMMARY --> LLM[GPT-4o Quadrant Analysis]
+        LLM --> CHART[Impact vs Feasibility Quadrant Chart]
+        CHART --> ROADMAP[Prioritised Initiative Roadmap]
+
+        INSIGHTS --> EXEC[Executive Decision Support]
+        ROADMAP  --> EXEC
+    end
+
+    style AGENT fill:#006A6A
+    style LLM fill:#4B607C
+    style ROADMAP fill:#4CAF50
+```
+
+**Implementation Details**:
+- **Module**: `stthreehori.py`
+- **Frameworks Applied**: McKinsey Three Horizons, Impact vs Feasibility quadrant
+- **Outputs**: Quadrant scatter chart, ranked recommendation table
+
+**Business Impact**:
+- 📅 Strategy workshops become continuous (not annual)
+- 🗺️ Objective prioritisation across 20+ initiatives in minutes
+- 💡 AI surfaces blind spots executives typically miss
+- 📊 Visual quadrant output drives faster consensus
+
+---
+
+## Workplace Productivity
+
+### Use Case: WorkIQ — AI Workplace Assistant
+
+**Business Challenge**:
+Employees spend hours searching HR policies, compliance documents, and internal procedures. Knowledge is siloed across departments and document repositories.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "WorkIQ Agent System"
+        EMP[Employee Query Text or Image] --> AGENT[workiqagent Workflow]
+
+        AGENT --> RESEARCH[Research Agent]
+        AGENT --> ANALYSIS[Policy Analysis Agent]
+        AGENT --> WRITER[Report Writer Agent]
+
+        RESEARCH --> |Document retrieval| SYNTH[Synthesis]
+        ANALYSIS --> |Compliance check| SYNTH
+        WRITER   --> |Formatted output| SYNTH
+
+        SYNTH --> ANSWER[Clear Actionable Answer]
+        ANSWER --> EMP
+    end
+
+    style AGENT fill:#0D47A1
+    style SYNTH fill:#2196F3
+    style ANSWER fill:#4CAF50
+```
+
+**Implementation Details**:
+- **Module**: `stworkiq.py`
+- **Agent**: `workiqagent` on Azure AI Foundry
+- **Multi-modal**: Text queries + image uploads (org charts, floor plans, diagrams)
+
+**Business Impact**:
+- ⏱️ 75% reduction in time-to-answer for policy questions
+- 📋 Consistent, auditable answers across all employees
+- 🔒 Azure Monitor telemetry for compliance logging
+- 🌐 Supports both text and visual workplace queries
+
+---
+
+## Manufacturing Intelligence
+
+### Use Case: PlantIQ — Manufacturing Plant Design & Monitoring
+
+**Business Challenge**:
+Manufacturing plant engineers need to design facility layouts, optimise production flows, and ensure safety compliance simultaneously. These require separate specialist teams and days of analysis.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "PlantIQ Multi-Agent System"
+        INPUT[Engineer: text query or plant image] --> AGENT[MFGPlantIQ Workflow]
+
+        AGENT --> LAYOUT[Plant Layout Agent]
+        AGENT --> PROCESS[Process Optimisation Agent]
+        AGENT --> SAFETY[Safety & Compliance Agent]
+
+        LAYOUT  --> |Spatial recommendations| REPORT[Plant Design Report]
+        PROCESS --> |Throughput analysis| REPORT
+        SAFETY  --> |Regulatory compliance| REPORT
+
+        REPORT --> ENG[Engineer receives integrated recommendations]
+    end
+
+    style AGENT fill:#1565C0
+    style REPORT fill:#4CAF50
+```
+
+**Implementation Details**:
+- **Module**: `stmfgplantiq.py`
+- **Agent Workflow**: `MFGPlantIQ` on Azure AI Foundry
+- **Inputs**: Text descriptions, floor plan images, CAD screenshots
+
+**Business Impact**:
+- 🏭 Plant design cycles reduced from weeks to hours
+- ⚙️ Process optimisation suggestions generated automatically
+- 🦺 Safety compliance checks embedded in every design review
+- 📐 Image-aware: analyses uploaded plant photos and diagrams
+
+---
+
+## Education & Learning
+
+### Use Case: StudentIQ — AI Tutor with Voice
+
+**Business Challenge**:
+Students need personalised tutoring available 24/7, with explanations adapted to their level. Traditional e-learning platforms provide static content without interactive clarification or audio support.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "StudentIQ Learning System"
+        STUDENT[Student submits question] --> AGENT[StudentIQ Agent Workflow]
+
+        AGENT --> TUTOR[Tutor Agent]
+        AGENT --> EXPLAIN[Explainer Agent]
+        AGENT --> QUIZ[Quiz Generator Agent]
+
+        TUTOR   --> |Conceptual explanation| RESP[Learning Response]
+        EXPLAIN --> |Worked examples| RESP
+        QUIZ    --> |Practice questions| RESP
+
+        RESP --> CLEAN[Text cleaner removes markdown]
+        CLEAN --> TTS[Azure OpenAI TTS]
+        TTS --> AUDIO[In-browser audio playback]
+
+        RESP  --> TEXT[On-screen text answer]
+        AUDIO --> STUDENT
+        TEXT  --> STUDENT
+    end
+
+    style AGENT fill:#4A148C
+    style TTS fill:#FF6F00
+    style AUDIO fill:#4CAF50
+```
+
+**TTS Voice Pipeline**:
+```mermaid
+sequenceDiagram
+    participant Student
+    participant Agent as StudentIQ Agent
+    participant TTS as Azure OpenAI TTS
+    participant UI as Streamlit Audio Widget
+
+    Student->>Agent: "Explain photosynthesis"
+    Agent-->>Student: Streaming text response
+    Agent->>TTS: Clean text (no markdown)
+    TTS-->>UI: Base64 MP3 audio
+    UI-->>Student: Audio player (play/pause/stop)
+```
+
+**Implementation Details**:
+- **Module**: `ststudentiq.py`
+- **Agent Workflow**: `StudentIQ` on Azure AI Foundry
+- **TTS Voices**: alloy, echo, fable, onyx, nova, shimmer
+
+**Business Impact**:
+- 📚 24/7 personalised tutoring at scale
+- 🔊 Audio output improves accessibility for learners with reading difficulties
+- 🧠 Multi-agent approach delivers richer, multi-faceted explanations
+- 🎯 Quiz generation reinforces learning immediately after explanation
+
+---
+
+## Creative Content Generation
+
+### Use Case: AI Skit & Video Production
+
+**Business Challenge**:
+Marketing and training teams need short video content (product demos, educational skits, training scenarios) but video production is expensive and time-consuming.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "AI Skit Production Pipeline"
+        BRIEF[Creative Brief / Text Prompt] --> EXPAND[Multi-Agent Script Writer]
+
+        EXPAND --> IDEATION[Ideation Agent]
+        EXPAND --> WRITER[Skit Writer Agent]
+        EXPAND --> CRITIC[Critic & Refiner Agent]
+
+        IDEATION --> |Story concepts| SCRIPT[Final Script]
+        WRITER   --> |Scene dialogue| SCRIPT
+        CRITIC   --> |Quality refinements| SCRIPT
+
+        SCRIPT --> SORA[Azure OpenAI Sora v2]
+        SORA --> JOB[Video Generation Job]
+        JOB --> |Poll until complete| VIDEO[.mp4 Video File]
+        VIDEO --> PLAYER[In-page video playback]
+    end
+
+    style EXPAND fill:#FF6F00
+    style SORA fill:#2196F3
+    style PLAYER fill:#4CAF50
+```
+
+**Implementation Details**:
+- **Modules**: `stskit.py` (UI + agents), `sora2.py` (video generation backend)
+- **Video API**: Azure OpenAI Sora v2 via Cognitive Services REST API
+- **Pipeline**: AI-written script → video generation → in-browser playback
+
+**Business Impact**:
+- 🎬 Marketing videos produced in minutes (vs days of production)
+- 💰 70-80% reduction in content production costs
+- 🔄 Rapid iteration: script + video regenerated on demand
+- 📱 Consistent brand messaging across all generated content
+
+---
+
+## AI Agent Lifecycle & Governance
+
+### Use Case: Agent Lifecycle Management & Safety Assurance
+
+**Business Challenge**:
+Enterprises deploying AI agents need end-to-end governance: testing agent quality, evaluating responses at scale, and validating safety before production deployment.
+
+**Traditional Process**:
+```mermaid
+graph LR
+    A[Build Agent] --> B[Manual Testing]
+    B --> C[Ad-hoc Safety Review]
+    C --> D[Deploy — hoping for the best]
+
+    style B fill:#FFE082
+    style C fill:#FFE082
+```
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "Agent Lifecycle Governance"
+        BUILD[Build Agent] --> LIFECYCLE[Agent Lifecycle Manager]
+
+        LIFECYCLE --> TAB1[🤖 Agent Execution]
+        LIFECYCLE --> TAB2[📊 Batch Evaluation]
+        LIFECYCLE --> TAB3[🔴 Red Team Safety]
+
+        TAB1 --> AGENT[existingagent: weather + stocks tools]
+        TAB2 --> EVAL[Batch Eval: Coherence, Fluency, Groundedness, Relevance]
+        TAB3 --> REDTEAM[Red Team: Jailbreak, Role Play, Base64 Attacks]
+
+        AGENT   --> METRICS[Quality Metrics Dashboard]
+        EVAL    --> METRICS
+        REDTEAM --> SAFETY[Safety Report]
+
+        METRICS --> DECISION{Deploy?}
+        SAFETY  --> DECISION
+        DECISION --> |Pass| PROD[Production Deployment]
+        DECISION --> |Fail| REBUILD[Back to Build]
+    end
+
+    style TAB3 fill:#D32F2F
+    style PROD fill:#4CAF50
+    style DECISION fill:#FF9800
+```
+
+**Implementation Details**:
+- **Lifecycle Dashboard**: `stlifecycle.py`
+- **Batch Evaluation**: `batchevalagent.py`, `batchmodeleval.py`
+- **Safety Testing**: `redteam.py` (agent-based), `redteam_classic.py` (Azure AI RedTeam)
+- **Evaluators**: ToolCallAccuracy, IntentResolution, TaskAdherence, ResponseCompleteness
+
+**Business Impact**:
+- ✅ Consistent quality gates before every production deployment
+- 🔒 Automated safety validation against adversarial attacks
+- 📊 Quantitative evaluation scores (not just subjective reviews)
+- 🔄 Continuous evaluation integrated into CI/CD pipelines
 
 ---
 
