@@ -274,6 +274,82 @@ sequenceDiagram
     Note over Agent,LLM: Observability traces all steps
 ```
 
+
+## SmartThings MCP Architecture
+
+The SmartThings implementation introduces a dedicated MCP server (`samsung_smartthings_mcp.py`) plus two consumption paths:
+
+- `stsmartthings_agent.py` creates a `HostedMCPTool` and runs a chat agent directly against the local MCP server.
+- `stsmartthings.py` connects to an existing Azure AI Foundry agent, auto-approves MCP requests, and presents chat/debug output in Streamlit.
+
+```mermaid
+graph TB
+    subgraph Client Experiences
+        UI1[stsmartthings.py Streamlit UI]
+        UI2[stsmartthings_agent.py Example Client]
+    end
+
+    subgraph Agent Execution
+        FND[Azure AI Foundry Agent]
+        CFA[ChatAgent with HostedMCPTool]
+    end
+
+    subgraph MCP Runtime
+        MCP[samsung_smartthings_mcp.py]
+        TOOLS[get_devices / get_device_logs]
+        SESSION[aiohttp ClientSession]
+    end
+
+    subgraph IoT Backend
+        API[pysmartthings]
+        ST[Samsung SmartThings API]
+        DEV[Registered Devices]
+    end
+
+    UI1 --> FND
+    UI2 --> CFA
+    FND --> MCP
+    CFA --> MCP
+    MCP --> TOOLS
+    TOOLS --> SESSION
+    TOOLS --> API
+    API --> ST
+    ST --> DEV
+```
+
+### SmartThings Request Workflow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI as Streamlit or Agent Client
+    participant Agent as Azure AI Agent
+    participant MCP as SmartThings MCP Server
+    participant ST as SmartThings API
+
+    User->>UI: Ask for device inventory or status
+    UI->>Agent: Submit prompt
+    Agent->>MCP: Request get_devices/get_device_logs
+    MCP->>ST: Query devices with SAMSUNG_PAT
+    ST-->>MCP: Return device metadata/status
+    MCP-->>Agent: Return JSON payload
+    Agent-->>UI: Generate grounded answer
+    UI-->>User: Show answer and diagnostics
+```
+
+### SmartThings Server Lifecycle
+
+```mermaid
+flowchart LR
+    A[load_dotenv] --> B[Read SAMSUNG_PAT]
+    B --> C[Create Server app]
+    C --> D[list_tools advertises tool contracts]
+    D --> E[call_tool dispatches request]
+    E --> F[get_api builds or reuses client]
+    F --> G[Return JSON TextContent]
+    G --> H[cleanup closes session]
+```
+
 ## Security Architecture
 
 ```mermaid

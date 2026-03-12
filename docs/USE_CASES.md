@@ -310,13 +310,29 @@ graph TB
 ```
 
 **Implementation Details**:
-- **Modules**: `stsmartthings.py`, `stsmartthings_agent.py`, `samsung_smartthings_mcp.py`
-- **Integration**: Samsung SmartThings API via pysmartthings
-- **Capabilities**: 
-  - Multi-device orchestration
-  - Scene/routine creation
-  - Energy monitoring
-  - Automation rules
+- **Modules**: `stsmartthings.py`, `stsmartthings_agent.py`, `samsung_smartthings_mcp.py`, `stsamdevices.py`
+- **Integration**: Samsung SmartThings API via `pysmartthings`
+- **Operational modes**:
+  - Streamlit UI calling an existing Azure AI Foundry agent
+  - Direct Agent Framework sample using `HostedMCPTool`
+  - Standalone device inventory script for raw connectivity validation
+- **Current tool scope from code**:
+  - Device inventory with component/capability discovery
+  - Device detail lookup with attribute and health inspection
+
+**Workflow in this repository**:
+```mermaid
+flowchart TD
+    A[User asks SmartThings question] --> B[Azure AI agent or ChatAgent]
+    B --> C{Need tools?}
+    C -->|Inventory| D[get_devices]
+    C -->|Specific device| E[get_device_logs]
+    D --> F[Device list with device_id values]
+    E --> G[Detailed attributes and health]
+    F --> H[Agent summarizes findings]
+    G --> H
+    H --> I[User receives grounded answer]
+```
 
 **Business Impact**:
 - 🏠 85% reduction in user interaction time
@@ -345,6 +361,30 @@ Agent Actions:
 - Adjust thermostat to eco mode
 - Power off idle devices
 - Notify user of energy saving
+```
+
+
+3. **Device Diagnostics Workflow**:
+```mermaid
+sequenceDiagram
+    participant User
+    participant Agent
+    participant MCP as SmartThings MCP Server
+    participant ST as SmartThings API
+
+    User->>Agent: What devices do I have?
+    Agent->>MCP: get_devices
+    MCP->>ST: List devices
+    ST-->>MCP: Devices + capabilities
+    MCP-->>Agent: Structured JSON
+    Agent-->>User: Device summary
+
+    User->>Agent: Show details for one device
+    Agent->>MCP: get_device_logs(device_id)
+    MCP->>ST: Fetch device status
+    ST-->>MCP: Attributes + health
+    MCP-->>Agent: Structured JSON
+    Agent-->>User: Detailed diagnostics
 ```
 
 ---
