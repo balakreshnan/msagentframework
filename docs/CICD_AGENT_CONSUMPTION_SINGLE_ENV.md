@@ -67,7 +67,7 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    A[GitHub Actions Runner] -->|actions/checkout@v4| B[Clone Repository]
+    A[GitHub Actions Runner] -->|actions/checkout v4| B[Clone Repository]
     B --> C[Workspace Ready]
 ```
 
@@ -86,7 +86,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A[Runner] -->|actions/setup-python@v5| B[Install Python 3.12]
+    A[Runner] -->|actions/setup-python v5| B[Install Python 3.12]
     B --> C[Configure PATH]
     C --> D[Python Ready]
 ```
@@ -142,7 +142,7 @@ flowchart TB
         RES[Azure AI Resources]
     end
 
-    SEC -->|azure/login@v1| AAD
+    SEC -->|azure/login v1| AAD
     AAD -->|Access Token| RES
 
     style SEC fill:#FFC107
@@ -423,10 +423,10 @@ sequenceDiagram
 ```mermaid
 stateDiagram-v2
     [*] --> Triggered : Manual Dispatch (workflow_dispatch)
-    Triggered --> Checkout : actions/checkout@v4
-    Checkout --> PythonSetup : actions/setup-python@v5
+    Triggered --> Checkout : actions/checkout v4
+    Checkout --> PythonSetup : actions/setup-python v5
     PythonSetup --> InstallDeps : pip install -r requirements.txt
-    InstallDeps --> AzureAuth : azure/login@v1
+    InstallDeps --> AzureAuth : azure/login v1
 
     AzureAuth --> AgentTest : python exagent.py
     AgentTest --> Evaluation : python agenteval.py
