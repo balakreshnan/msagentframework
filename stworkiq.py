@@ -1,8 +1,11 @@
 import logging
 import re
 import base64
+import html as html_lib
+from openai import AzureOpenAI
 import streamlit as st
-from azure.identity import DefaultAzureCredential
+import streamlit.components.v1 as components
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 from azure.ai.projects import AIProjectClient
 from agent_framework.observability import create_resource, enable_instrumentation, get_tracer
 from azure.monitor.opentelemetry import configure_azure_monitor
@@ -379,6 +382,271 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
 
 
 # ============================================================================
+# TEXT-TO-SPEECH
+# ============================================================================
+def clean_text_for_tts(text: str) -> str:
+    """Strip markdown and non-speech elements from text."""
+    text = re.sub(r'⏱️.*$', '', text, flags=re.MULTILINE)
+    text = re.sub(r'```[\s\S]*?```', '', text)
+    text = re.sub(r'`[^`]+`', '', text)
+    text = re.sub(r'#{1,6}\s*', '', text)
+    text = re.sub(r'\*{1,3}(.*?)\*{1,3}', r'\1', text)
+    text = re.sub(r'_{1,3}(.*?)_{1,3}', r'\1', text)
+    text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
+    text = re.sub(r'!\[([^\]]*)\]\([^)]+\)', '', text)
+    text = re.sub(r'^\s*[-*+]\s+', '', text, flags=re.MULTILINE)
+    text = re.sub(r'^\s*\d+\.\s+', '', text, flags=re.MULTILINE)
+    text = re.sub(r'\n{2,}', '\n', text)
+    text = re.sub(r' {2,}', ' ', text)
+    return text.strip()
+
+
+# Available TTS voices with descriptions
+TTS_VOICES = {
+    "alloy": "Alloy — Neutral, balanced",
+    "echo": "Echo — Deeper, authoritative",
+    "fable": "Fable — Expressive storytelling",
+    "onyx": "Onyx — Deep, confident",
+    "nova": "Nova — Bright, energetic",
+    "shimmer": "Shimmer — Soft, calm",
+}
+
+
+def generate_speech(text: str, voice: str = "alloy") -> tuple:
+    """Generate speech audio from text using gpt-audio-1.5."""
+    openai_client = AzureOpenAI(
+        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+        azure_ad_token_provider=get_bearer_token_provider(
+            DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
+        ),
+        api_version="2025-01-01-preview",
+    )
+    clean_text = clean_text_for_tts(text)
+    if len(clean_text) > 4000:
+        clean_text = clean_text[:4000] + "..."
+    response = openai_client.chat.completions.create(
+        model="gpt-audio-1.5",
+        modalities=["text", "audio"],
+        audio={"voice": voice, "format": "wav"},
+        messages=[
+            {"role": "user", "content": f"Read the following text aloud exactly as written:\n\n{clean_text}"}
+        ],
+    )
+    audio_data = response.choices[0].message.audio
+    if audio_data and hasattr(audio_data, 'data'):
+        return base64.b64decode(audio_data.data), clean_text
+    raise RuntimeError("No audio output returned from gpt-audio-1.5")
+
+
+def render_tts_player(audio_bytes: bytes, text: str):
+    """Render an audio player with playback controls and synchronized text highlighting."""
+    audio_b64 = base64.b64encode(audio_bytes).decode()
+
+    # Split into sentences for highlighting
+    sentences = re.split(r'(?<=[.!?])\s+|\n+', text)
+    sentences = [s.strip() for s in sentences if s.strip()]
+    if not sentences:
+        sentences = [text]
+
+    # Build HTML-escaped sentence spans
+    sentence_spans = ""
+    for i, sent in enumerate(sentences):
+        escaped = html_lib.escape(sent)
+        sentence_spans += f'<span id="sent-{i}" class="tts-sentence">{escaped} </span>'
+
+    # Build the HTML template without f-string to avoid brace conflicts with JS
+    player_html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; padding: 12px; background: transparent; }
+        .tts-controls {
+            display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB); border-radius: 14px;
+            margin-bottom: 12px; box-shadow: 0 2px 8px rgba(13,71,161,0.1);
+        }
+        .tts-btn {
+            border: none; background: #0D47A1; color: white; width: 34px; height: 34px;
+            border-radius: 50%; cursor: pointer; font-size: 14px; display: flex;
+            align-items: center; justify-content: center; transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .tts-btn:hover { background: #1565C0; transform: scale(1.1); }
+        .tts-btn:active { transform: scale(0.95); }
+        .tts-progress-wrap {
+            flex: 1; height: 8px; background: rgba(255,255,255,0.7); border-radius: 4px;
+            cursor: pointer; position: relative; overflow: hidden;
+        }
+        .tts-progress-fill {
+            height: 100%; background: linear-gradient(90deg, #0D47A1, #42A5F5);
+            border-radius: 4px; width: 0%; transition: width 0.15s linear;
+        }
+        .tts-time { font-size: 11px; color: #49454F; min-width: 75px; text-align: right; font-weight: 500; }
+        .tts-status { font-size: 11px; color: #0D47A1; font-weight: 600; min-width: 60px; }
+        .tts-text-details {
+            margin-top: 10px; border: 1px solid #90CAF9; border-radius: 14px;
+            overflow: hidden; background: #FAFBFE;
+        }
+        .tts-text-details summary {
+            padding: 10px 16px; cursor: pointer; font-size: 12.5px; font-weight: 600;
+            color: #0D47A1; background: #E3F2FD; user-select: none;
+            list-style: none; display: flex; align-items: center; gap: 6px;
+        }
+        .tts-text-details summary::-webkit-details-marker { display: none; }
+        .tts-text-details summary::before { content: '▶'; font-size: 10px; transition: transform 0.2s; }
+        .tts-text-details[open] summary::before { transform: rotate(90deg); }
+        .tts-text-container {
+            padding: 14px 16px; line-height: 1.9; font-size: 13.5px; color: #1C1B1F;
+            max-height: 300px; overflow-y: auto; scroll-behavior: smooth;
+        }
+        .tts-sentence { padding: 1px 2px; border-radius: 4px; transition: background-color 0.3s ease, color 0.3s ease; }
+        .tts-sentence.active {
+            background: linear-gradient(135deg, #BBDEFB, #90CAF9);
+            padding: 2px 4px; border-radius: 6px; font-weight: 500;
+        }
+        .tts-sentence.spoken { color: #78909C; }
+    </style>
+    </head>
+    <body>
+        <div class="tts-controls">
+            <button class="tts-btn" onclick="ttsRestart()" title="Restart from beginning">⏮</button>
+            <button class="tts-btn" id="tts-play-btn" onclick="ttsPlayPause()" title="Play / Pause">▶</button>
+            <button class="tts-btn" onclick="ttsStop()" title="Stop">⏹</button>
+            <div class="tts-progress-wrap" onclick="ttsSeek(event)">
+                <div class="tts-progress-fill" id="tts-progress-fill"></div>
+            </div>
+            <span class="tts-time" id="tts-time">0:00 / 0:00</span>
+            <span class="tts-status" id="tts-status">Ready</span>
+        </div>
+        <details class="tts-text-details" id="tts-text-details">
+            <summary>📖 Reading Text — click to expand</summary>
+            <div class="tts-text-container" id="tts-text-container">
+                %%SENTENCES%%
+            </div>
+        </details>
+        <audio id="tts-audio" preload="auto">
+            <source src="data:audio/wav;base64,%%AUDIO%%" type="audio/wav">
+        </audio>
+        <script>
+            const audio = document.getElementById('tts-audio');
+            const playBtn = document.getElementById('tts-play-btn');
+            const progressFill = document.getElementById('tts-progress-fill');
+            const timeDisplay = document.getElementById('tts-time');
+            const statusDisplay = document.getElementById('tts-status');
+            const textContainer = document.getElementById('tts-text-container');
+            const textDetails = document.getElementById('tts-text-details');
+            const sentences = document.querySelectorAll('.tts-sentence');
+
+            // Compute cumulative thresholds based on character length
+            const sentLengths = [];
+            let totalLen = 0;
+            sentences.forEach(s => {
+                const len = s.textContent.trim().length;
+                sentLengths.push(len);
+                totalLen += len;
+            });
+            const thresholds = [];
+            let cumLen = 0;
+            sentLengths.forEach(len => {
+                cumLen += len;
+                thresholds.push(cumLen / totalLen);
+            });
+
+            function getCurrentIdx(progress) {
+                for (let i = 0; i < thresholds.length; i++) {
+                    if (progress < thresholds[i]) return i;
+                }
+                return thresholds.length - 1;
+            }
+
+            function fmtTime(sec) {
+                const m = Math.floor(sec / 60);
+                const s = Math.floor(sec % 60);
+                return m + ':' + (s < 10 ? '0' : '') + s;
+            }
+
+            function updateHighlight() {
+                if (!audio.duration || sentences.length === 0) return;
+                const progress = audio.currentTime / audio.duration;
+                const idx = getCurrentIdx(progress);
+                sentences.forEach((s, i) => {
+                    s.classList.remove('active');
+                    if (i < idx) { s.classList.add('spoken'); }
+                    else { s.classList.remove('spoken'); }
+                });
+                if (idx < sentences.length) {
+                    sentences[idx].classList.add('active');
+                    sentences[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+
+            audio.addEventListener('timeupdate', () => {
+                const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+                progressFill.style.width = pct + '%';
+                timeDisplay.textContent = fmtTime(audio.currentTime) + ' / ' + fmtTime(audio.duration || 0);
+                updateHighlight();
+            });
+
+            audio.addEventListener('play', () => {
+                playBtn.textContent = '⏸';
+                statusDisplay.textContent = 'Playing';
+                textDetails.open = true;
+            });
+
+            audio.addEventListener('pause', () => {
+                playBtn.textContent = '▶';
+                if (audio.currentTime > 0 && audio.currentTime < audio.duration) {
+                    statusDisplay.textContent = 'Paused';
+                }
+            });
+
+            audio.addEventListener('ended', () => {
+                playBtn.textContent = '▶';
+                statusDisplay.textContent = 'Finished';
+                sentences.forEach(s => { s.classList.remove('active'); s.classList.add('spoken'); });
+            });
+
+            function ttsPlayPause() {
+                if (audio.paused) { audio.play(); }
+                else { audio.pause(); }
+            }
+
+            function ttsStop() {
+                audio.pause();
+                audio.currentTime = 0;
+                playBtn.textContent = '▶';
+                statusDisplay.textContent = 'Stopped';
+                progressFill.style.width = '0%';
+                timeDisplay.textContent = '0:00 / ' + fmtTime(audio.duration || 0);
+                sentences.forEach(s => { s.classList.remove('active', 'spoken'); });
+            }
+
+            function ttsRestart() {
+                audio.currentTime = 0;
+                sentences.forEach(s => { s.classList.remove('active', 'spoken'); });
+                audio.play();
+            }
+
+            function ttsSeek(event) {
+                if (!audio.duration) return;
+                const rect = event.currentTarget.getBoundingClientRect();
+                const pct = (event.clientX - rect.left) / rect.width;
+                audio.currentTime = pct * audio.duration;
+            }
+        </script>
+    </body>
+    </html>
+    """.replace("%%SENTENCES%%", sentence_spans).replace("%%AUDIO%%", audio_b64)
+
+    text_lines = max(3, min(12, len(sentences) // 2 + 2))
+    height = 80 + text_lines * 28 + 50
+    height = min(height, 500)
+    components.html(player_html, height=height, scrolling=True)
+
+
+# ============================================================================
 # SESSION STATE
 # ============================================================================
 def init_session():
@@ -392,6 +660,9 @@ def init_session():
         "telemetry_initialized": False,
         "conversation_count": 0,
         "last_elapsed": None,
+        "tts_audio_bytes": None,
+        "tts_clean_text": None,
+        "tts_voice": "alloy",
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -616,6 +887,51 @@ def main():
                         st.markdown("---")
                         st.markdown(content["final_response"])
 
+        # ── Text-to-Speech Section ──
+        if st.session_state.messages and any(m["role"] == "assistant" for m in st.session_state.messages):
+            st.markdown('<div class="md3-divider"></div>', unsafe_allow_html=True)
+            st.markdown('<div class="md3-label">🔊 Text-to-Speech</div>', unsafe_allow_html=True)
+
+            last_assistant_msg = None
+            for msg in reversed(st.session_state.messages):
+                if msg["role"] == "assistant":
+                    last_assistant_msg = msg["content"]
+                    break
+
+            if last_assistant_msg:
+                voice_col, btn_col1, btn_col2 = st.columns([1, 1, 1])
+                with voice_col:
+                    voice_options = list(TTS_VOICES.keys())
+                    voice_labels = list(TTS_VOICES.values())
+                    current_idx = voice_options.index(st.session_state.get("tts_voice", "alloy"))
+                    selected_label = st.selectbox(
+                        "Voice",
+                        voice_labels,
+                        index=current_idx,
+                        label_visibility="collapsed",
+                    )
+                    st.session_state.tts_voice = voice_options[voice_labels.index(selected_label)]
+                with btn_col1:
+                    if st.button("🔊 Listen to Response", use_container_width=True):
+                        with st.spinner("Generating speech…"):
+                            try:
+                                audio_bytes, clean_text = generate_speech(
+                                    last_assistant_msg, voice=st.session_state.tts_voice
+                                )
+                                st.session_state.tts_audio_bytes = audio_bytes
+                                st.session_state.tts_clean_text = clean_text
+                                st.rerun()
+                            except Exception as e:
+                                st.error(f"Failed to generate speech: {e}")
+                with btn_col2:
+                    if st.session_state.get("tts_audio_bytes") and st.button("🗑️ Clear Audio", use_container_width=True):
+                        st.session_state.tts_audio_bytes = None
+                        st.session_state.tts_clean_text = None
+                        st.rerun()
+
+                if st.session_state.get("tts_audio_bytes"):
+                    render_tts_player(st.session_state.tts_audio_bytes, st.session_state.tts_clean_text)
+
     # ================================================================
     # CHAT INPUT (full-width, bottom)
     # ================================================================
@@ -626,6 +942,8 @@ def main():
     )
 
     if user_input:
+        st.session_state.tts_audio_bytes = None
+        st.session_state.tts_clean_text = None
         image_bytes = st.session_state.current_image_bytes
         _add_message("user", user_input, image_bytes)
         _add_debug(f"User query: {user_input[:80]}…")
