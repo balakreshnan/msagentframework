@@ -443,7 +443,7 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
 
     client = AzureOpenAIResponsesClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME_AGENT"],
         credential=DefaultAzureCredential(),
     )
 
