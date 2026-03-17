@@ -221,7 +221,7 @@ def analyze_with_agent(query: str, image_bytes: bytes = None):
         results["trace_id"] = trace_id
 
         with project_client:
-            workflow = {"name": "workiqagent", "version": "11"}
+            workflow = {"name": "workiqagent", "version": "12"}
 
             openai_client = project_client.get_openai_client()
             conversation = openai_client.conversations.create()
