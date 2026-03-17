@@ -487,7 +487,7 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         manager_agent=manager_agent,
         max_round_count=6,
         max_stall_count=0,
-        max_reset_count=0,
+        max_reset_count=6,
     ).build()
 
     _update_status("Agents are collaborating…")
