@@ -7,6 +7,9 @@ import json
 import logging
 import os
 import re
+import threading
+import time as _time
+import traceback
 from typing import cast
 
 import streamlit as st
@@ -398,6 +401,50 @@ def setup_telemetry():
 
 
 # ============================================================================
+# LIVE TIMER — ticks every 0.5s so users always see progress
+# ============================================================================
+class _LiveTimer:
+    """Background thread that continuously updates a Streamlit placeholder with elapsed time."""
+
+    def __init__(self, placeholder, interval: float = 0.5):
+        self._placeholder = placeholder
+        self._interval = interval
+        self._message = "Processing…"
+        self._start = _time.time()
+        self._stop_event = threading.Event()
+        self._thread = threading.Thread(target=self._tick, daemon=True)
+        # Attach Streamlit script-run context so writes reach the client
+        try:
+            from streamlit.runtime.scriptrunner import add_script_run_ctx
+            add_script_run_ctx(self._thread)
+        except Exception:
+            pass  # older Streamlit — updates may queue until next event
+
+    # -- public API ----------------------------------------------------------
+    def start(self):
+        self._thread.start()
+
+    def update(self, msg: str):
+        self._message = msg
+
+    def stop(self, final_msg: str | None = None):
+        self._stop_event.set()
+        self._thread.join(timeout=2)
+        if final_msg:
+            self._placeholder.info(final_msg)
+
+    # -- internal ------------------------------------------------------------
+    def _tick(self):
+        while not self._stop_event.is_set():
+            elapsed = _time.time() - self._start
+            try:
+                self._placeholder.info(f"{self._message}  ⏱️ {elapsed:.1f}s")
+            except Exception:
+                break
+            self._stop_event.wait(self._interval)
+
+
+# ============================================================================
 # AGENT ORCHESTRATION  (original MagenticBuilder logic with streaming UI)
 # ============================================================================
 async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
@@ -413,6 +460,18 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
     }
 
     def _update_summary():
+        """Show a waiting note while agents work; final summary is set after completion."""
+        if ui_hooks and ui_hooks.get("summary_ph"):
+            agent_count = len([ab for ab in result["agent_outputs"] if not ab.get("_streaming")])
+            if agent_count:
+                ui_hooks["summary_ph"].caption(
+                    f"⏳ {agent_count} agent(s) have responded so far — see individual outputs on the right →"
+                )
+            else:
+                ui_hooks["summary_ph"].caption("⏳ Waiting for agents to respond… see progress on the right →")
+
+    def _show_final_summary():
+        """Render the final composed summary into the left placeholder."""
         if ui_hooks and ui_hooks.get("summary_ph"):
             ui_hooks["summary_ph"].markdown(result["summary"])
 
@@ -430,20 +489,23 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         if ui_hooks and ui_hooks.get("debug_ph"):
             ui_hooks["debug_ph"].text("\n".join(result["debug_logs"][-20:]))
 
-    def _update_status(msg: str):
-        if ui_hooks and ui_hooks.get("status_container"):
-            import time as _time
-            elapsed = _time.time() - _workflow_start_time
-            ui_hooks["status_container"].info(f"{msg}  ⏱️ {elapsed:.1f}s")
+    # -- live timer (continuous clock) ------------------------------------
+    _timer: _LiveTimer | None = None
+    if ui_hooks and ui_hooks.get("status_container"):
+        _timer = _LiveTimer(ui_hooks["status_container"])
+        _timer.start()
 
-    import time as _time
+    def _update_status(msg: str):
+        if _timer:
+            _timer.update(msg)
+
     _workflow_start_time = _time.time()
 
     _update_status("Connecting to Azure AI Foundry…")
 
     client = AzureOpenAIResponsesClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME_AGENT"],
+        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
         credential=DefaultAzureCredential(),
     )
 
@@ -497,65 +559,75 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
     current_agent_text = ""
     current_agent_name = ""
 
-    async for event in workflow.run(task, stream=True):
-        if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
-            response_id = event.data.response_id
-            if response_id != last_response_id:
-                # Flush previous agent block (mark done)
-                if current_agent_name and current_agent_text.strip():
-                    # Remove _streaming flag from the last block
-                    for ab in result["agent_outputs"]:
-                        ab.pop("_streaming", None)
+    try:
+        async for event in workflow.run(task, stream=True):
+            if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+                response_id = event.data.response_id
+                if response_id != last_response_id:
+                    # Flush previous agent block (mark done)
+                    if current_agent_name and current_agent_text.strip():
+                        # Remove _streaming flag from the last block
+                        for ab in result["agent_outputs"]:
+                            ab.pop("_streaming", None)
+                        result["agent_outputs"].append({
+                            "agent": current_agent_name,
+                            "text": current_agent_text.strip(),
+                        })
+                    current_agent_name = event.executor_id or "Agent"
+                    current_agent_text = ""
+                    last_response_id = response_id
+                    _update_status(f"Agent '{current_agent_name}' is responding…")
+                    result["debug_logs"].append(f"Agent '{current_agent_name}' started streaming")
+                    _update_debug()
+
+                current_agent_text += str(event.data)
+
+                # Live-update: append/overwrite current streaming agent block
+                existing = [ab for ab in result["agent_outputs"] if ab.get("_streaming")]
+                if existing:
+                    existing[0]["text"] = current_agent_text
+                else:
                     result["agent_outputs"].append({
                         "agent": current_agent_name,
-                        "text": current_agent_text.strip(),
+                        "text": current_agent_text,
+                        "_streaming": True,
                     })
-                current_agent_name = event.executor_id or "Agent"
-                current_agent_text = ""
-                last_response_id = response_id
-                _update_status(f"Agent '{current_agent_name}' is responding…")
-                result["debug_logs"].append(f"Agent '{current_agent_name}' started streaming")
+                _update_agents()
+                _update_summary()
+
+            elif event.type == "magentic_orchestrator":
+                evt_name = event.data.event_type.name
+                if isinstance(event.data.content, Message):
+                    result["debug_logs"].append(f"[Orchestrator {evt_name}] {event.data.content.text[:200]}")
+                elif isinstance(event.data.content, MagenticProgressLedger):
+                    result["debug_logs"].append(
+                        f"[Orchestrator {evt_name}] Progress:\n{json.dumps(event.data.content.to_dict(), indent=2)}"
+                    )
+                else:
+                    result["debug_logs"].append(f"[Orchestrator {evt_name}] {type(event.data.content).__name__}")
                 _update_debug()
 
-            current_agent_text += str(event.data)
-
-            # Live-update: append/overwrite current streaming agent block
-            existing = [ab for ab in result["agent_outputs"] if ab.get("_streaming")]
-            if existing:
-                existing[0]["text"] = current_agent_text
-            else:
-                result["agent_outputs"].append({
-                    "agent": current_agent_name,
-                    "text": current_agent_text,
-                    "_streaming": True,
-                })
-            _update_agents()
-
-            # Also stream into summary live
-            result["summary"] += str(event.data)
-            _update_summary()
-
-        elif event.type == "magentic_orchestrator":
-            evt_name = event.data.event_type.name
-            if isinstance(event.data.content, Message):
-                result["debug_logs"].append(f"[Orchestrator {evt_name}] {event.data.content.text[:200]}")
-            elif isinstance(event.data.content, MagenticProgressLedger):
+            elif event.type == "group_chat" and isinstance(event.data, GroupChatRequestSentEvent):
                 result["debug_logs"].append(
-                    f"[Orchestrator {evt_name}] Progress:\n{json.dumps(event.data.content.to_dict(), indent=2)}"
+                    f"[Round {event.data.round_index}] Request sent to: {event.data.participant_name}"
                 )
-            else:
-                result["debug_logs"].append(f"[Orchestrator {evt_name}] {type(event.data.content).__name__}")
-            _update_debug()
+                _update_status(f"Round {event.data.round_index} → {event.data.participant_name}")
+                _update_debug()
 
-        elif event.type == "group_chat" and isinstance(event.data, GroupChatRequestSentEvent):
-            result["debug_logs"].append(
-                f"[Round {event.data.round_index}] Request sent to: {event.data.participant_name}"
-            )
-            _update_status(f"Round {event.data.round_index} → {event.data.participant_name}")
-            _update_debug()
+            elif event.type == "output":
+                output_event = event
 
-        elif event.type == "output":
-            output_event = event
+    except Exception as exc:
+        elapsed_total = _time.time() - _workflow_start_time
+        tb_str = traceback.format_exc()
+        err_msg = f"{type(exc).__name__}: {exc}"
+        result["error"] = f"{err_msg}\n\n```\n{tb_str}```"
+        result["debug_logs"].append(f"[ERROR @ {elapsed_total:.1f}s] {err_msg}")
+        _update_debug()
+        if _timer:
+            _timer.stop(f"❌ Error after {elapsed_total:.1f}s — {type(exc).__name__}")
+        result["elapsed_seconds"] = round(elapsed_total, 2)
+        return result
 
     # Flush last streaming agent block and mark all done
     for ab in result["agent_outputs"]:
@@ -582,10 +654,11 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
             author = message.author_name or message.role
             result["summary"] += f"**{author}:**\n{message.text}\n\n"
 
-    _update_summary()
+    _show_final_summary()
     _update_agents()
     elapsed_total = _time.time() - _workflow_start_time
-    _update_status(f"✅ Complete — {elapsed_total:.1f}s total")
+    if _timer:
+        _timer.stop(f"✅ Complete — {elapsed_total:.1f}s total")
 
     result["elapsed_seconds"] = round(elapsed_total, 2)
     return result
@@ -625,6 +698,7 @@ def main():
         "messages": [],
         "agent_outputs": [],
         "debug_logs": [],
+        "error_log": None,
         "total_queries": 0,
         "telemetry_initialized": False,
         "tts_audio_bytes": None,
@@ -741,6 +815,12 @@ def main():
 
             st.divider()
 
+            # ── Error log (shown when an error occurred) ──
+            if st.session_state.error_log:
+                with st.expander("🚨 Error Details", expanded=True):
+                    st.error("The workflow encountered an error. See details below.")
+                    st.markdown(st.session_state.error_log)
+
             # ── Debug / orchestrator logs ──
             with st.expander("🐛 Debug & Orchestrator Logs", expanded=False):
                 debug_stream_ph = st.empty()
@@ -773,11 +853,22 @@ def main():
         agent_stream_ph.empty()
         status_ph.empty()
 
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": result["summary"],
-            "timestamp": datetime.now().strftime("%I:%M %p"),
-        })
+        # Check if workflow returned an error
+        if result.get("error"):
+            st.session_state.error_log = result["error"]
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": "⚠️ The workflow encountered an error. Check the **Error Details** panel on the right for more information.",
+                "timestamp": datetime.now().strftime("%I:%M %p"),
+            })
+        else:
+            st.session_state.error_log = None
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": result["summary"],
+                "timestamp": datetime.now().strftime("%I:%M %p"),
+            })
+
         st.session_state.agent_outputs = result["agent_outputs"]
         st.session_state.debug_logs = result["debug_logs"]
         st.session_state.total_queries += 1
