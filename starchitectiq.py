@@ -7,7 +7,6 @@ import json
 import logging
 import os
 import re
-import threading
 import time as _time
 import traceback
 from typing import cast
@@ -401,57 +400,13 @@ def setup_telemetry():
 
 
 # ============================================================================
-# LIVE TIMER — ticks every 0.5s so users always see progress
-# ============================================================================
-class _LiveTimer:
-    """Background thread that continuously updates a Streamlit placeholder with elapsed time."""
-
-    def __init__(self, placeholder, interval: float = 0.5):
-        self._placeholder = placeholder
-        self._interval = interval
-        self._message = "Processing…"
-        self._start = _time.time()
-        self._stop_event = threading.Event()
-        self._thread = threading.Thread(target=self._tick, daemon=True)
-        # Attach Streamlit script-run context so writes reach the client
-        try:
-            from streamlit.runtime.scriptrunner import add_script_run_ctx
-            add_script_run_ctx(self._thread)
-        except Exception:
-            pass  # older Streamlit — updates may queue until next event
-
-    # -- public API ----------------------------------------------------------
-    def start(self):
-        self._thread.start()
-
-    def update(self, msg: str):
-        self._message = msg
-
-    def stop(self, final_msg: str | None = None):
-        self._stop_event.set()
-        self._thread.join(timeout=2)
-        if final_msg:
-            self._placeholder.info(final_msg)
-
-    # -- internal ------------------------------------------------------------
-    def _tick(self):
-        while not self._stop_event.is_set():
-            elapsed = _time.time() - self._start
-            try:
-                self._placeholder.info(f"{self._message}  ⏱️ {elapsed:.1f}s")
-            except Exception:
-                break
-            self._stop_event.wait(self._interval)
-
-
-# ============================================================================
 # AGENT ORCHESTRATION  (original MagenticBuilder logic with streaming UI)
 # ============================================================================
 async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
     """
     Run the multi-agent Magentic workflow and return structured results.
     If ui_hooks is provided, streams output to Streamlit placeholders live.
-    ui_hooks keys: summary_ph, agent_container, debug_ph, status_container
+    ui_hooks keys: summary_ph, agent_container, debug_ph, plan_container
     """
     result: dict = {
         "summary": "",
@@ -516,27 +471,13 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         if ui_hooks and ui_hooks.get("debug_ph"):
             ui_hooks["debug_ph"].text("\n".join(result["debug_logs"][-20:]))
 
-    # -- live timer (continuous clock) ------------------------------------
-    _timer: _LiveTimer | None = None
-    if ui_hooks and ui_hooks.get("status_container"):
-        _timer = _LiveTimer(ui_hooks["status_container"])
-        _timer.start()
-
-    def _update_status(msg: str):
-        if _timer:
-            _timer.update(msg)
-
     _workflow_start_time = _time.time()
-
-    _update_status("Connecting to Azure AI Foundry…")
 
     client = AzureOpenAIResponsesClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
         deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
         credential=DefaultAzureCredential(),
     )
-
-    _update_status("Loading agents from Foundry…")
 
     provider = AzureAIProjectAgentProvider(
         credential=DefaultAzureCredential(),
@@ -565,8 +506,6 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         client=client,
     )
 
-    _update_status("Building Magentic workflow…")
-
     workflow = MagenticBuilder(
         participants=[
             ideaagent, business_owner_agent, business_architect_agent,
@@ -578,8 +517,6 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         max_stall_count=0,
         max_reset_count=6,
     ).build()
-
-    _update_status("Agents are collaborating…")
 
     last_response_id: str | None = None
     output_event: WorkflowEvent | None = None
@@ -603,7 +540,6 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
                     current_agent_name = event.executor_id or "Agent"
                     current_agent_text = ""
                     last_response_id = response_id
-                    _update_status(f"Agent '{current_agent_name}' is responding…")
                     result["debug_logs"].append(f"Agent '{current_agent_name}' started streaming")
                     _update_debug()
 
@@ -641,7 +577,6 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
                 result["debug_logs"].append(
                     f"[Round {event.data.round_index}] Request sent to: {event.data.participant_name}"
                 )
-                _update_status(f"Round {event.data.round_index} → {event.data.participant_name}")
                 _update_debug()
 
             elif event.type == "output":
@@ -654,8 +589,6 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         result["error"] = f"{err_msg}\n\n```\n{tb_str}```"
         result["debug_logs"].append(f"[ERROR @ {elapsed_total:.1f}s] {err_msg}")
         _update_debug()
-        if _timer:
-            _timer.stop(f"❌ Error after {elapsed_total:.1f}s — {type(exc).__name__}")
         result["elapsed_seconds"] = round(elapsed_total, 2)
         return result
 
@@ -687,9 +620,6 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
     _show_final_summary()
     _update_agents()
     elapsed_total = _time.time() - _workflow_start_time
-    if _timer:
-        _timer.stop(f"✅ Complete — {elapsed_total:.1f}s total")
-
     result["elapsed_seconds"] = round(elapsed_total, 2)
     return result
 
@@ -788,9 +718,6 @@ def main():
             f'</div>',
             unsafe_allow_html=True,
         )
-        # Status line placeholder
-        status_ph = st.empty()
-
         # ── Text-to-Speech controls ──
         last_assistant = None
         for msg in reversed(st.session_state.messages):
@@ -901,16 +828,15 @@ def main():
             "summary_ph": summary_stream_ph,
             "agent_container": agent_stream_ph,
             "debug_ph": debug_stream_ph,
-            "status_container": status_ph,
             "plan_container": plan_stream_ph,
         }
 
-        result = analyze_with_agent(user_input, ui_hooks=ui_hooks)
+        with st.spinner("Agents are collaborating…", show_time=True):
+            result = analyze_with_agent(user_input, ui_hooks=ui_hooks)
 
         # Clear streaming placeholders (final data goes to session state)
         summary_stream_ph.empty()
         agent_stream_ph.empty()
-        status_ph.empty()
 
         # Check if workflow returned an error
         if result.get("error"):
