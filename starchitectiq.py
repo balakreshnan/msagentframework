@@ -457,6 +457,7 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         "summary": "",
         "agent_outputs": [],
         "debug_logs": [],
+        "planner_updates": [],
     }
 
     def _update_summary():
@@ -484,6 +485,32 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
                     icon = "🟡" if is_last and ab.get("_streaming") else "🟢"
                     with st.expander(f"{icon} {ab['agent']}", expanded=is_last):
                         st.markdown(ab["text"])
+
+    def _update_plan():
+        if ui_hooks and ui_hooks.get("plan_container"):
+            ui_hooks["plan_container"].empty()
+            with ui_hooks["plan_container"].container():
+                if result["planner_updates"]:
+                    for idx, plan_entry in enumerate(result["planner_updates"]):
+                        is_latest = (idx == len(result["planner_updates"]) - 1)
+                        icon = "🔵" if is_latest else "⚪"
+                        with st.expander(f"{icon} Plan Update #{idx + 1}", expanded=is_latest):
+                            ledger = plan_entry.get("ledger", {})
+                            if ledger.get("task"):
+                                st.markdown(f"**Task:** {ledger['task']}")
+                            if ledger.get("progress"):
+                                st.markdown(f"**Progress:** {ledger['progress']}")
+                            if ledger.get("next_speaker"):
+                                st.markdown(f"**Next Speaker:** `{ledger['next_speaker']}`")
+                            if ledger.get("instruction_or_question"):
+                                st.markdown(f"**Instruction:** {ledger['instruction_or_question']}")
+                            if ledger.get("is_request_satisfied"):
+                                st.markdown(f"**Request Satisfied:** {ledger['is_request_satisfied']}")
+                            # Show full JSON in a collapsed section
+                            with st.popover("📄 Raw JSON"):
+                                st.json(ledger)
+                else:
+                    st.caption("Waiting for planner updates…")
 
     def _update_debug():
         if ui_hooks and ui_hooks.get("debug_ph"):
@@ -600,8 +627,11 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
                 if isinstance(event.data.content, Message):
                     result["debug_logs"].append(f"[Orchestrator {evt_name}] {event.data.content.text[:200]}")
                 elif isinstance(event.data.content, MagenticProgressLedger):
+                    ledger_dict = event.data.content.to_dict()
+                    result["planner_updates"].append({"event": evt_name, "ledger": ledger_dict})
+                    _update_plan()
                     result["debug_logs"].append(
-                        f"[Orchestrator {evt_name}] Progress:\n{json.dumps(event.data.content.to_dict(), indent=2)}"
+                        f"[Orchestrator {evt_name}] Progress:\n{json.dumps(ledger_dict, indent=2)}"
                     )
                 else:
                     result["debug_logs"].append(f"[Orchestrator {evt_name}] {type(event.data.content).__name__}")
@@ -698,6 +728,7 @@ def main():
         "messages": [],
         "agent_outputs": [],
         "debug_logs": [],
+        "planner_updates": [],
         "error_log": None,
         "total_queries": 0,
         "telemetry_initialized": False,
@@ -796,6 +827,33 @@ def main():
     # RIGHT — Individual agent outputs (expanders) + debug logs
     # ════════════════════════════════════════════════════════════════════════
     with col_right:
+        # ── Planner / Plan expander (collapsible, expanded by default) ──
+        with st.expander("📋 MAGENTIC PLANNER", expanded=True):
+            plan_inner = st.container(height=250)
+            with plan_inner:
+                if not st.session_state.planner_updates:
+                    st.caption("The orchestrator's plan will appear here once agents start collaborating.")
+                else:
+                    for idx, plan_entry in enumerate(st.session_state.planner_updates):
+                        is_latest = (idx == len(st.session_state.planner_updates) - 1)
+                        icon = "🔵" if is_latest else "⚪"
+                        with st.expander(f"{icon} Plan Update #{idx + 1}", expanded=is_latest):
+                            ledger = plan_entry.get("ledger", {})
+                            if ledger.get("task"):
+                                st.markdown(f"**Task:** {ledger['task']}")
+                            if ledger.get("progress"):
+                                st.markdown(f"**Progress:** {ledger['progress']}")
+                            if ledger.get("next_speaker"):
+                                st.markdown(f"**Next Speaker:** `{ledger['next_speaker']}`")
+                            if ledger.get("instruction_or_question"):
+                                st.markdown(f"**Instruction:** {ledger['instruction_or_question']}")
+                            if ledger.get("is_request_satisfied"):
+                                st.markdown(f"**Request Satisfied:** {ledger['is_request_satisfied']}")
+                            with st.popover("📄 Raw JSON"):
+                                st.json(ledger)
+                # Live-streaming placeholder for plan updates
+                plan_stream_ph = st.empty()
+
         st.markdown('<div class="md3-label">🤖 INDIVIDUAL AGENT OUTPUTS</div>', unsafe_allow_html=True)
 
         agent_outer = st.container(height=500, border=True)
@@ -844,6 +902,7 @@ def main():
             "agent_container": agent_stream_ph,
             "debug_ph": debug_stream_ph,
             "status_container": status_ph,
+            "plan_container": plan_stream_ph,
         }
 
         result = analyze_with_agent(user_input, ui_hooks=ui_hooks)
@@ -871,6 +930,7 @@ def main():
 
         st.session_state.agent_outputs = result["agent_outputs"]
         st.session_state.debug_logs = result["debug_logs"]
+        st.session_state.planner_updates = result.get("planner_updates", [])
         st.session_state.total_queries += 1
         st.session_state.tts_audio_bytes = None
         st.session_state.tts_clean_text = None
