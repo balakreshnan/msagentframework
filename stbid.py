@@ -343,10 +343,10 @@ async def bidding(query: str, stream_placeholder):
             1. Start by asking BOTH agents for their initial offers (round 1).
             2. Compare the two offers and tell each agent what the other's best price is.
             3. Ask each agent to beat the competitor's price. Share the exact competing unit_price so they can undercut.
-            4. Continue this back-and-forth for up to 23 rounds of negotiation.
+            4. Continue this back-and-forth for up to 3 rounds of negotiation.
             5. On each round, share the competing best price so agents can undercut each other.
             6. Track all offers in a running comparison table.
-            7. Stop early only if both agents report the same price for 3 consecutive rounds (price floor reached).
+            7. Stop early if both agents report the same price for 2 consecutive rounds (price floor reached).
             8. At the end, present a FINAL COMPARISON with:
                - Best unit price from each retailer
                - Shipping costs
@@ -370,13 +370,13 @@ async def bidding(query: str, stream_placeholder):
             WORKFLOW:
             1. The bidding_agent drives the negotiation process.
             2. The walmart_agent and amazon_agent each calculate and present competitive offers.
-            3. Allow the bidding_agent to run up to 23 rounds of back-and-forth negotiation between the retailers.
+            3. Allow the bidding_agent to run up to 3 rounds of back-and-forth negotiation between the retailers.
             4. On each round, the bidding_agent should:
                a. Get/update offers from both retail agents
                b. Share the competing best price with each agent
                c. Ask them to beat it
             5. Let the negotiation continue until the bidding_agent determines the best possible price
-               has been reached (prices converge or 23 rounds complete).
+               has been reached (prices converge or 3 rounds complete).
             6. The bidding_agent then delivers the final comparison and recommendation.
 
             Do NOT terminate early — let the full negotiation play out for maximum savings.
@@ -390,8 +390,8 @@ async def bidding(query: str, stream_placeholder):
         participants=[walmart_agent, amazon_agent, bidding_agent],
         intermediate_outputs=True,
         manager_agent=manager_agent,
-        max_round_count=25,
-        max_stall_count=5,
+        max_round_count=50,
+        max_stall_count=10,
         max_reset_count=3,
     ).build()
 
