@@ -390,7 +390,7 @@ async def bidding(query: str, stream_placeholder):
         participants=[walmart_agent, amazon_agent, bidding_agent],
         intermediate_outputs=True,
         manager_agent=manager_agent,
-        max_round_count=50,
+        max_round_count=20,
         max_stall_count=10,
         max_reset_count=3,
     ).build()
@@ -412,27 +412,44 @@ async def bidding(query: str, stream_placeholder):
             md += f"**🤖 {name}**\n\n{text}\n\n---\n\n"
         stream_placeholder.markdown(md)
 
-    async for event in workflow.run(query, stream=True):
-        if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
-            message_id = event.data.message_id
-            agent_name = event.executor_id or "agent"
-            if agent_name not in agent_streams:
-                agent_streams[agent_name] = ""
-            agent_streams[agent_name] += str(event.data)
-            _render_agent_streams()
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            async for event in workflow.run(query, stream=True):
+                if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+                    message_id = event.data.message_id
+                    agent_name = event.executor_id or "agent"
+                    if agent_name not in agent_streams:
+                        agent_streams[agent_name] = ""
+                    agent_streams[agent_name] += str(event.data)
+                    _render_agent_streams()
 
-            if message_id != last_message_id:
-                last_message_id = message_id
+                    if message_id != last_message_id:
+                        last_message_id = message_id
 
-        elif event.type == "magentic_orchestrator":
-            if isinstance(event.data.content, Message):
-                plans.append(event.data.content.text)
-            elif isinstance(event.data.content, MagenticProgressLedger):
-                ledgers.append(event.data.content.to_dict())
-            # No blocking input – this is a UI app
+                elif event.type == "magentic_orchestrator":
+                    if isinstance(event.data.content, Message):
+                        plans.append(event.data.content.text)
+                    elif isinstance(event.data.content, MagenticProgressLedger):
+                        ledgers.append(event.data.content.to_dict())
+                    # No blocking input – this is a UI app
 
-        elif event.type == "output":
-            output_event = event
+                elif event.type == "output":
+                    output_event = event
+            break  # success – exit retry loop
+        except Exception as e:
+            if "Too Many Requests" in str(e) and attempt < max_retries - 1:
+                wait = 2 ** (attempt + 1)  # 2s, 4s
+                stream_placeholder.warning(f"⏳ Rate limited by Azure OpenAI. Retrying in {wait}s… (attempt {attempt + 2}/{max_retries})")
+                await asyncio.sleep(wait)
+                # Reset collectors for the retry
+                agent_streams.clear()
+                plans.clear()
+                ledgers.clear()
+                last_message_id = None
+                output_event = None
+                continue
+            raise
 
     # Extract final output
     final_output = ""
