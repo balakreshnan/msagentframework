@@ -164,7 +164,8 @@ def run_agent_query(query):
         stream = openai_client.responses.create(**create_kwargs)
         approval_requests, response_id, got_text = _process_stream(stream, turn)
 
-        if approval_requests and not got_text:
+        # Keep approving MCP requests until we get text or run out of approvals
+        while approval_requests and not got_text:
             previous_response_id = response_id
             approve_input = [{"type": "mcp_approval_response", "approve": True, "approval_request_id": req.id} for req in approval_requests]
             stream = openai_client.responses.create(
@@ -173,12 +174,11 @@ def run_agent_query(query):
                 extra_body=agent_ref,
                 stream=True,
             )
-            _, response_id, got_text = _process_stream(stream, turn, "cont")
-            if got_text:
-                break
-            previous_response_id = response_id
-        else:
+            approval_requests, response_id, got_text = _process_stream(stream, turn, "cont")
+
+        if got_text:
             break
+        previous_response_id = response_id
 
     unique_sources = list(dict.fromkeys(sources))
     return {
