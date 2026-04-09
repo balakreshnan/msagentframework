@@ -110,6 +110,22 @@ Covers:
 
 ---
 
+### 🔀 [MODEL_ROUTER_BEST_PRACTICES.md](MODEL_ROUTER_BEST_PRACTICES.md)
+**Azure AI Foundry model router — best practices, architecture & flow diagrams**
+
+Covers:
+- How `stmodelrouter.py` uses the Azure AI Foundry model router agent
+- Detailed architecture diagram showing Foundry, model pool, and knowledge base
+- Request flow and internal processing flow diagrams (Mermaid)
+- Pros and cons of the model router pattern
+- Why to choose model router over direct model deployments
+- 20 actionable best practices across configuration, routing policy, observability, and security
+- Side-by-side comparison: Model Router vs Direct Model Deployment
+
+**Audience**: Software architects, solution engineers, DevOps, business decision makers
+
+---
+
 ### 🏠 SmartThings MCP Documentation
 **SmartThings architecture, setup, and MCP workflows**
 
@@ -290,7 +306,7 @@ START → AGENTIC_AI_VALUE.md → USE_CASES.md → Implementation Roadmap
 
 #### Software Architect
 ```
-START → ARCHITECTURE.md → PYTHON_MODULES.md → Integration Planning
+START → ARCHITECTURE.md → MODEL_ROUTER_BEST_PRACTICES.md → PYTHON_MODULES.md → Integration Planning
 ```
 
 #### Developer
@@ -333,10 +349,12 @@ PYTHON_MODULES.md (agenteval.py) → GITHUB_WORKFLOWS.md (Evaluation Step) → M
 - Data Flow ([ARCHITECTURE.md](ARCHITECTURE.md))
 - Security Architecture ([ARCHITECTURE.md](ARCHITECTURE.md))
 - Deployment Architecture ([ARCHITECTURE.md](ARCHITECTURE.md))
+- Model Router Architecture ([MODEL_ROUTER_BEST_PRACTICES.md](MODEL_ROUTER_BEST_PRACTICES.md))
 
 ### Process Flows
 - Traditional vs. Agentic AI ([AGENTIC_AI_VALUE.md](AGENTIC_AI_VALUE.md))
 - Domain-specific workflows ([USE_CASES.md](USE_CASES.md))
+- Model Router request & processing flows ([MODEL_ROUTER_BEST_PRACTICES.md](MODEL_ROUTER_BEST_PRACTICES.md))
 - SmartThings MCP setup and execution ([SMARTTHINGS_MCP.md](SMARTTHINGS_MCP.md))
 - CI/CD Pipeline ([GITHUB_WORKFLOWS.md](GITHUB_WORKFLOWS.md))
 - Agent Consumption Single-Env Flow ([CICD_AGENT_CONSUMPTION_SINGLE_ENV.md](CICD_AGENT_CONSUMPTION_SINGLE_ENV.md))
