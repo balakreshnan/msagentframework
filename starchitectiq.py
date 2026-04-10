@@ -20,10 +20,9 @@ from agent_framework import (
     Message,
     WorkflowEvent,
 )
-from agent_framework.azure import AzureOpenAIResponsesClient
+from agent_framework.foundry import FoundryChatClient, FoundryAgent
 from agent_framework.orchestrations import GroupChatRequestSentEvent, MagenticBuilder, MagenticProgressLedger
 from azure.identity import DefaultAzureCredential, get_bearer_token_provider
-from agent_framework.azure import AzureAIProjectAgentProvider
 from agent_framework.observability import create_resource, enable_instrumentation, get_tracer
 from azure.monitor.opentelemetry import configure_azure_monitor
 from azure.ai.projects import AIProjectClient
@@ -473,22 +472,22 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
 
     _workflow_start_time = _time.time()
 
-    client = AzureOpenAIResponsesClient(
+    client = FoundryChatClient(
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-        deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+        model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
         credential=DefaultAzureCredential(),
     )
 
-    provider = AzureAIProjectAgentProvider(
+    _foundry_kwargs = dict(
         credential=DefaultAzureCredential(),
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
     )
-    ideaagent = await provider.get_agent(name="ideaagent")
-    business_owner_agent = await provider.get_agent(name="BusinessOwnerAgent")
-    business_architect_agent = await provider.get_agent(name="BusinessArchitectAgent")
-    solution_architect_agent = await provider.get_agent(name="SolutionArchitectAgent")
-    raia_agent = await provider.get_agent(name="RAIAgent")
-    architecture_summarizer_agent = await provider.get_agent(name="ArchitectureSummarizerAgent")
+    ideaagent = FoundryAgent(agent_name="ideaagent", name="ideaagent", **_foundry_kwargs)
+    business_owner_agent = FoundryAgent(agent_name="BusinessOwnerAgent", name="BusinessOwnerAgent", **_foundry_kwargs)
+    business_architect_agent = FoundryAgent(agent_name="BusinessArchitectAgent", name="BusinessArchitectAgent", **_foundry_kwargs)
+    solution_architect_agent = FoundryAgent(agent_name="SolutionArchitectAgent", name="SolutionArchitectAgent", **_foundry_kwargs)
+    raia_agent = FoundryAgent(agent_name="RAIAgent", name="RAIAgent", **_foundry_kwargs)
+    architecture_summarizer_agent = FoundryAgent(agent_name="ArchitectureSummarizerAgent", name="ArchitectureSummarizerAgent", **_foundry_kwargs)
 
     manager_agent = Agent(
         name="MagenticManager",
