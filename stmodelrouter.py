@@ -130,53 +130,60 @@ def run_agent_query(query):
     sources = []
     response_metadata = {}
 
-    def _process_stream(stream, turn, label=""):
+    def _process_response(resp, turn):
+        """Process a non-streaming Response object; mirrors the streaming handler."""
         nonlocal full_text, sources, response_metadata
         approval_requests = []
-        response_id = None
         got_text = False
-        for event in stream:
-            event_type = getattr(event, 'type', None)
-            if event_type == 'response.output_text.delta':
-                full_text += event.delta
+        for item in getattr(resp, 'output', []) or []:
+            item_type = getattr(item, 'type', None)
+            if item_type == 'message':
+                for part in getattr(item, 'content', []) or []:
+                    text = getattr(part, 'text', None)
+                    if text:
+                        full_text += text
+                        got_text = True
+            elif item_type == 'mcp_approval_request':
+                approval_requests.append(item)
+            elif item_type == 'mcp_call':
+                output = getattr(item, 'output', None)
+                _extract_sources(output, sources)
+        # Fallback: some SDKs expose a flat output_text helper
+        if not got_text:
+            output_text = getattr(resp, 'output_text', None)
+            if output_text:
+                full_text += output_text
                 got_text = True
-            elif event_type == 'response.output_item.done':
-                item = event.item
-                if getattr(item, 'type', None) == 'mcp_approval_request':
-                    approval_requests.append(item)
-                elif getattr(item, 'type', None) == 'mcp_call':
-                    output = getattr(item, 'output', None)
-                    _extract_sources(output, sources)
-            elif event_type == 'response.completed':
-                resp = event.response
-                response_id = resp.id
-                response_metadata = _extract_response_metadata(resp, turn, response_metadata)
-        return approval_requests, response_id, got_text
+        response_metadata = _extract_response_metadata(resp, turn, response_metadata)
+        return approval_requests, resp.id, got_text
 
     for turn in range(max_turns):
-        create_kwargs = dict(extra_body=agent_ref, stream=True)
+        create_kwargs = dict(extra_body=agent_ref)
         if previous_response_id:
             create_kwargs["input"] = []
             create_kwargs["previous_response_id"] = previous_response_id
         else:
             create_kwargs["input"] = [{"role": "user", "content": query}]
 
-        stream = openai_client.responses.create(**create_kwargs)
-        approval_requests, response_id, got_text = _process_stream(stream, turn)
+        resp = openai_client.responses.create(**create_kwargs)
+        approval_requests, response_id, got_text = _process_response(resp, turn)
 
         # Keep approving MCP requests until we get text or run out of approvals
         while approval_requests and not got_text:
             previous_response_id = response_id
             approve_input = [{"type": "mcp_approval_response", "approve": True, "approval_request_id": req.id} for req in approval_requests]
-            stream = openai_client.responses.create(
+            resp = openai_client.responses.create(
                 input=approve_input,
                 previous_response_id=previous_response_id,
                 extra_body=agent_ref,
-                stream=True,
             )
-            approval_requests, response_id, got_text = _process_stream(stream, turn, "cont")
+            approval_requests, response_id, got_text = _process_response(resp, turn)
 
         if got_text:
+            break
+        # No text and no approval requests left — nothing more to do; avoid
+        # continuing with an empty input which the Responses API rejects (400).
+        if not approval_requests:
             break
         previous_response_id = response_id
 
