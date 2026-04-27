@@ -1,0 +1,656 @@
+{
+  "@context": {
+    "chipsc": "https://example.org/chip-supplychain/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "chipsc:Thing",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "chipsc:Agent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:PhysicalEntity",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Process",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Organization",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Person",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Supplier",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Organization"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Manufacturer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Organization"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Distributor",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Organization"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Facility",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:PhysicalEntity"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Material",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:PhysicalEntity"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Equipment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:PhysicalEntity"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Product",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:PhysicalEntity"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:RawMaterial",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Material"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:ProcessedMaterial",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Material"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Wafer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:ProcessedMaterial"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Chemical",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:RawMaterial"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Chip",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Product"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:PackagedProduct",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Product"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Machine",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Equipment"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Tool",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Equipment"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Furnace",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Machine"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:LithographyMachine",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Machine"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Cleanroom",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Facility"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Warehouse",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Facility"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Employee",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Person"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Operator",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Engineer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:LogisticsStaff",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:ManufacturingProcess",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Process"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:LogisticsProcess",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:Process"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:DopingProcess",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:ManufacturingProcess"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:LithographyProcess",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:ManufacturingProcess"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:PackagingProcess",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:ManufacturingProcess"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:ShippingProcess",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:LogisticsProcess"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:StorageProcess",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:LogisticsProcess"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:Shipment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipsc:PhysicalEntity"
+        }
+      ]
+    },
+    {
+      "@id": "chipsc:AcmeChemicals",
+      "@type": [
+        "chipsc:Supplier"
+      ],
+      "chipsc:supplies": [
+        {
+          "@id": "chipsc:HydrofluoricAcid"
+        },
+        {
+          "@id": "chipsc:PureSilicon"
+        }
+      ],
+      "chipsc:organizationName": [
+        "Acme Chemicals Inc."
+      ]
+    },
+    {
+      "@id": "chipsc:PureSilicon",
+      "@type": [
+        "chipsc:RawMaterial"
+      ],
+      "chipsc:suppliedBy": [
+        {
+          "@id": "chipsc:AcmeChemicals"
+        }
+      ],
+      "chipsc:materialName": [
+        "High Purity Silicon"
+      ]
+    },
+    {
+      "@id": "chipsc:FabCorp",
+      "@type": [
+        "chipsc:Manufacturer"
+      ],
+      "chipsc:employs": [
+        {
+          "@id": "chipsc:AliceWong"
+        },
+        {
+          "@id": "chipsc:BobLee"
+        }
+      ],
+      "chipsc:organizationName": [
+        "FabCorp Ltd."
+      ]
+    },
+    {
+      "@id": "chipsc:MainFab",
+      "@type": [
+        "chipsc:Cleanroom"
+      ],
+      "chipsc:facilityName": [
+        "Main Fab Cleanroom"
+      ]
+    },
+    {
+      "@id": "chipsc:AliceWong",
+      "@type": [
+        "chipsc:Engineer"
+      ],
+      "chipsc:employedBy": [
+        {
+          "@id": "chipsc:FabCorp"
+        }
+      ],
+      "chipsc:employeeName": [
+        "Alice Wong"
+      ]
+    },
+    {
+      "@id": "chipsc:BobLee",
+      "@type": [
+        "chipsc:Operator"
+      ],
+      "chipsc:employedBy": [
+        {
+          "@id": "chipsc:FabCorp"
+        }
+      ],
+      "chipsc:operates": [
+        {
+          "@id": "chipsc:FurnaceA1"
+        },
+        {
+          "@id": "chipsc:LithoMachineX"
+        }
+      ],
+      "chipsc:employeeName": [
+        "Bob Lee"
+      ]
+    },
+    {
+      "@id": "chipsc:FurnaceA1",
+      "@type": [
+        "chipsc:Furnace"
+      ],
+      "chipsc:operatedBy": [
+        {
+          "@id": "chipsc:BobLee"
+        }
+      ],
+      "chipsc:locatedIn": [
+        {
+          "@id": "chipsc:MainFab"
+        }
+      ],
+      "chipsc:equipmentSerial": [
+        "FURN-001"
+      ]
+    },
+    {
+      "@id": "chipsc:DopingStep1",
+      "@type": [
+        "chipsc:DopingProcess"
+      ],
+      "chipsc:performedAt": [
+        {
+          "@id": "chipsc:MainFab"
+        }
+      ],
+      "chipsc:performedBy": [
+        {
+          "@id": "chipsc:AliceWong"
+        }
+      ],
+      "chipsc:usesMaterial": [
+        {
+          "@id": "chipsc:PureSilicon"
+        }
+      ],
+      "chipsc:processTimestamp": [
+        "2024-06-01T09:30:00"
+      ]
+    },
+    {
+      "@id": "chipsc:Wafer123",
+      "@type": [
+        "chipsc:Wafer"
+      ],
+      "chipsc:locatedIn": [
+        {
+          "@id": "chipsc:MainFab"
+        }
+      ],
+      "chipsc:materialName": [
+        "Wafer Batch 123"
+      ]
+    },
+    {
+      "@id": "chipsc:LithoMachineX",
+      "@type": [
+        "chipsc:LithographyMachine"
+      ],
+      "chipsc:operatedBy": [
+        {
+          "@id": "chipsc:BobLee"
+        }
+      ],
+      "chipsc:locatedIn": [
+        {
+          "@id": "chipsc:MainFab"
+        }
+      ],
+      "chipsc:equipmentSerial": [
+        "LITHO-007"
+      ]
+    },
+    {
+      "@id": "chipsc:LithoStep1",
+      "@type": [
+        "chipsc:LithographyProcess"
+      ],
+      "chipsc:performedAt": [
+        {
+          "@id": "chipsc:MainFab"
+        }
+      ],
+      "chipsc:performedBy": [
+        {
+          "@id": "chipsc:AliceWong"
+        }
+      ],
+      "chipsc:usesMaterial": [
+        {
+          "@id": "chipsc:Wafer123"
+        }
+      ],
+      "chipsc:produces": [
+        {
+          "@id": "chipsc:ChipA"
+        }
+      ],
+      "chipsc:processTimestamp": [
+        "2024-06-02T10:00:00"
+      ]
+    },
+    {
+      "@id": "chipsc:ChipA",
+      "@type": [
+        "chipsc:Chip"
+      ],
+      "chipsc:locatedIn": [
+        {
+          "@id": "chipsc:MainFab"
+        }
+      ],
+      "chipsc:productName": [
+        "Logic Chip A"
+      ]
+    },
+    {
+      "@id": "chipsc:PackagedChipA",
+      "@type": [
+        "chipsc:PackagedProduct"
+      ],
+      "chipsc:partOf": [
+        {
+          "@id": "chipsc:ChipA"
+        }
+      ],
+      "chipsc:productName": [
+        "Packaged Logic Chip A"
+      ]
+    },
+    {
+      "@id": "chipsc:PackProcess1",
+      "@type": [
+        "chipsc:PackagingProcess"
+      ],
+      "chipsc:performedAt": [
+        {
+          "@id": "chipsc:MainFab"
+        }
+      ],
+      "chipsc:performedBy": [
+        {
+          "@id": "chipsc:AliceWong"
+        }
+      ],
+      "chipsc:produces": [
+        {
+          "@id": "chipsc:PackagedChipA"
+        }
+      ],
+      "chipsc:processTimestamp": [
+        "2024-06-03T14:00:00"
+      ]
+    },
+    {
+      "@id": "chipsc:LogiDistrib",
+      "@type": [
+        "chipsc:Distributor"
+      ],
+      "chipsc:ships": [
+        {
+          "@id": "chipsc:Shipment001"
+        }
+      ],
+      "chipsc:organizationName": [
+        "LogiDistrib LLC"
+      ]
+    },
+    {
+      "@id": "chipsc:Shipment001",
+      "@type": [
+        "chipsc:Shipment"
+      ],
+      "chipsc:shippedBy": [
+        {
+          "@id": "chipsc:LogiDistrib"
+        }
+      ],
+      "chipsc:containsProduct": [
+        {
+          "@id": "chipsc:PackagedChipA"
+        }
+      ],
+      "chipsc:locatedIn": [
+        {
+          "@id": "chipsc:Warehouse1"
+        }
+      ],
+      "chipsc:shipmentId": [
+        "SHIP-001"
+      ],
+      "chipsc:quantity": [
+        "100"
+      ]
+    },
+    {
+      "@id": "chipsc:Warehouse1",
+      "@type": [
+        "chipsc:Warehouse"
+      ],
+      "chipsc:facilityName": [
+        "Central Warehouse"
+      ]
+    },
+    {
+      "@id": "chipsc:HydrofluoricAcid",
+      "@type": [
+        "chipsc:Chemical"
+      ],
+      "chipsc:suppliedBy": [
+        {
+          "@id": "chipsc:AcmeChemicals"
+        }
+      ],
+      "chipsc:materialName": [
+        "Hydrofluoric Acid"
+      ],
+      "chipsc:purity": [
+        "99.9"
+      ]
+    }
+  ]
+}

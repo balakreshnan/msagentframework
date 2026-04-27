@@ -1,0 +1,900 @@
+{
+  "iri": "https://example.org/chip-supplychain/",
+  "classes": {
+    "Thing": {
+      "name": "Thing",
+      "parents": [],
+      "comment": "The root class for all entities.",
+      "disjoint_with": []
+    },
+    "Agent": {
+      "name": "Agent",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "An entity that acts in the supply chain.",
+      "disjoint_with": [
+        "PhysicalEntity"
+      ]
+    },
+    "PhysicalEntity": {
+      "name": "PhysicalEntity",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "A tangible object or material.",
+      "disjoint_with": [
+        "Agent",
+        "Process"
+      ]
+    },
+    "Process": {
+      "name": "Process",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "An activity or operation in the supply chain.",
+      "disjoint_with": [
+        "PhysicalEntity"
+      ]
+    },
+    "Organization": {
+      "name": "Organization",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "A company or business entity.",
+      "disjoint_with": [
+        "Person"
+      ]
+    },
+    "Person": {
+      "name": "Person",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "A human involved in the supply chain.",
+      "disjoint_with": [
+        "Organization"
+      ]
+    },
+    "Supplier": {
+      "name": "Supplier",
+      "parents": [
+        "Organization"
+      ],
+      "comment": "An organization that supplies materials.",
+      "disjoint_with": [
+        "Manufacturer"
+      ]
+    },
+    "Manufacturer": {
+      "name": "Manufacturer",
+      "parents": [
+        "Organization"
+      ],
+      "comment": "An organization that manufactures chips or components.",
+      "disjoint_with": [
+        "Distributor",
+        "Supplier"
+      ]
+    },
+    "Distributor": {
+      "name": "Distributor",
+      "parents": [
+        "Organization"
+      ],
+      "comment": "An organization that distributes finished products.",
+      "disjoint_with": [
+        "Manufacturer"
+      ]
+    },
+    "Facility": {
+      "name": "Facility",
+      "parents": [
+        "PhysicalEntity"
+      ],
+      "comment": "A location where supply chain activities occur.",
+      "disjoint_with": [
+        "Equipment",
+        "Material"
+      ]
+    },
+    "Material": {
+      "name": "Material",
+      "parents": [
+        "PhysicalEntity"
+      ],
+      "comment": "A physical substance used in manufacturing.",
+      "disjoint_with": [
+        "Equipment",
+        "Product"
+      ]
+    },
+    "Equipment": {
+      "name": "Equipment",
+      "parents": [
+        "PhysicalEntity"
+      ],
+      "comment": "A machine or tool used in processes.",
+      "disjoint_with": [
+        "Material",
+        "Product"
+      ]
+    },
+    "Product": {
+      "name": "Product",
+      "parents": [
+        "PhysicalEntity"
+      ],
+      "comment": "A finished or intermediate product.",
+      "disjoint_with": [
+        "Equipment",
+        "Material"
+      ]
+    },
+    "RawMaterial": {
+      "name": "RawMaterial",
+      "parents": [
+        "Material"
+      ],
+      "comment": "Unprocessed material used in fabrication.",
+      "disjoint_with": [
+        "ProcessedMaterial"
+      ]
+    },
+    "ProcessedMaterial": {
+      "name": "ProcessedMaterial",
+      "parents": [
+        "Material"
+      ],
+      "comment": "Material that has undergone processing.",
+      "disjoint_with": [
+        "RawMaterial"
+      ]
+    },
+    "Wafer": {
+      "name": "Wafer",
+      "parents": [
+        "ProcessedMaterial"
+      ],
+      "comment": "A processed silicon wafer.",
+      "disjoint_with": [
+        "Chemical"
+      ]
+    },
+    "Chemical": {
+      "name": "Chemical",
+      "parents": [
+        "RawMaterial"
+      ],
+      "comment": "A chemical substance used in chip fabrication.",
+      "disjoint_with": [
+        "Wafer"
+      ]
+    },
+    "Chip": {
+      "name": "Chip",
+      "parents": [
+        "Product"
+      ],
+      "comment": "A finished semiconductor chip.",
+      "disjoint_with": [
+        "PackagedProduct"
+      ]
+    },
+    "PackagedProduct": {
+      "name": "PackagedProduct",
+      "parents": [
+        "Product"
+      ],
+      "comment": "A chip that has been packaged for distribution.",
+      "disjoint_with": [
+        "Chip"
+      ]
+    },
+    "Machine": {
+      "name": "Machine",
+      "parents": [
+        "Equipment"
+      ],
+      "comment": "A machine used in manufacturing.",
+      "disjoint_with": [
+        "Tool"
+      ]
+    },
+    "Tool": {
+      "name": "Tool",
+      "parents": [
+        "Equipment"
+      ],
+      "comment": "A tool used in processes.",
+      "disjoint_with": [
+        "Machine"
+      ]
+    },
+    "Furnace": {
+      "name": "Furnace",
+      "parents": [
+        "Machine"
+      ],
+      "comment": "A furnace used for wafer processing.",
+      "disjoint_with": [
+        "LithographyMachine"
+      ]
+    },
+    "LithographyMachine": {
+      "name": "LithographyMachine",
+      "parents": [
+        "Machine"
+      ],
+      "comment": "A machine for photolithography.",
+      "disjoint_with": [
+        "Furnace"
+      ]
+    },
+    "Cleanroom": {
+      "name": "Cleanroom",
+      "parents": [
+        "Facility"
+      ],
+      "comment": "A controlled environment for fabrication.",
+      "disjoint_with": [
+        "Warehouse"
+      ]
+    },
+    "Warehouse": {
+      "name": "Warehouse",
+      "parents": [
+        "Facility"
+      ],
+      "comment": "A facility for storing materials or products.",
+      "disjoint_with": [
+        "Cleanroom"
+      ]
+    },
+    "Employee": {
+      "name": "Employee",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person employed by an organization.",
+      "disjoint_with": [
+        "Operator"
+      ]
+    },
+    "Operator": {
+      "name": "Operator",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who operates equipment.",
+      "disjoint_with": [
+        "Engineer"
+      ]
+    },
+    "Engineer": {
+      "name": "Engineer",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who designs or maintains processes.",
+      "disjoint_with": [
+        "Operator"
+      ]
+    },
+    "LogisticsStaff": {
+      "name": "LogisticsStaff",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee involved in logistics.",
+      "disjoint_with": [
+        "Engineer"
+      ]
+    },
+    "ManufacturingProcess": {
+      "name": "ManufacturingProcess",
+      "parents": [
+        "Process"
+      ],
+      "comment": "A process that transforms materials into products.",
+      "disjoint_with": [
+        "LogisticsProcess"
+      ]
+    },
+    "LogisticsProcess": {
+      "name": "LogisticsProcess",
+      "parents": [
+        "Process"
+      ],
+      "comment": "A process involving movement or storage.",
+      "disjoint_with": [
+        "ManufacturingProcess"
+      ]
+    },
+    "DopingProcess": {
+      "name": "DopingProcess",
+      "parents": [
+        "ManufacturingProcess"
+      ],
+      "comment": "A process for doping wafers.",
+      "disjoint_with": [
+        "LithographyProcess"
+      ]
+    },
+    "LithographyProcess": {
+      "name": "LithographyProcess",
+      "parents": [
+        "ManufacturingProcess"
+      ],
+      "comment": "A process for patterning wafers.",
+      "disjoint_with": [
+        "DopingProcess"
+      ]
+    },
+    "PackagingProcess": {
+      "name": "PackagingProcess",
+      "parents": [
+        "ManufacturingProcess"
+      ],
+      "comment": "A process for packaging chips.",
+      "disjoint_with": [
+        "LithographyProcess"
+      ]
+    },
+    "ShippingProcess": {
+      "name": "ShippingProcess",
+      "parents": [
+        "LogisticsProcess"
+      ],
+      "comment": "A process for shipping products.",
+      "disjoint_with": [
+        "StorageProcess"
+      ]
+    },
+    "StorageProcess": {
+      "name": "StorageProcess",
+      "parents": [
+        "LogisticsProcess"
+      ],
+      "comment": "A process for storing materials or products.",
+      "disjoint_with": [
+        "ShippingProcess"
+      ]
+    },
+    "Shipment": {
+      "name": "Shipment",
+      "parents": [
+        "PhysicalEntity"
+      ],
+      "comment": "A batch of products or materials being shipped.",
+      "disjoint_with": [
+        "Facility"
+      ]
+    }
+  },
+  "object_properties": {
+    "employs": {
+      "name": "employs",
+      "domain": "Organization",
+      "range_": "Employee",
+      "inverse_of": "employedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Organization employs Employee."
+    },
+    "employedBy": {
+      "name": "employedBy",
+      "domain": "Employee",
+      "range_": "Organization",
+      "inverse_of": "employs",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Employee is employed by Organization."
+    },
+    "operates": {
+      "name": "operates",
+      "domain": "Operator",
+      "range_": "Equipment",
+      "inverse_of": "operatedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Operator operates Equipment."
+    },
+    "operatedBy": {
+      "name": "operatedBy",
+      "domain": "Equipment",
+      "range_": "Operator",
+      "inverse_of": "operates",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Equipment is operated by Operator."
+    },
+    "locatedIn": {
+      "name": "locatedIn",
+      "domain": "PhysicalEntity",
+      "range_": "Facility",
+      "inverse_of": null,
+      "transitive": true,
+      "symmetric": false,
+      "functional": false,
+      "comment": "PhysicalEntity is located in Facility."
+    },
+    "partOf": {
+      "name": "partOf",
+      "domain": "PhysicalEntity",
+      "range_": "PhysicalEntity",
+      "inverse_of": null,
+      "transitive": true,
+      "symmetric": false,
+      "functional": false,
+      "comment": "PhysicalEntity is part of another PhysicalEntity."
+    },
+    "usesMaterial": {
+      "name": "usesMaterial",
+      "domain": "ManufacturingProcess",
+      "range_": "Material",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "ManufacturingProcess uses Material."
+    },
+    "produces": {
+      "name": "produces",
+      "domain": "ManufacturingProcess",
+      "range_": "Product",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "ManufacturingProcess produces Product."
+    },
+    "performedAt": {
+      "name": "performedAt",
+      "domain": "Process",
+      "range_": "Facility",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Process is performed at Facility."
+    },
+    "performedBy": {
+      "name": "performedBy",
+      "domain": "Process",
+      "range_": "Employee",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Process is performed by Employee."
+    },
+    "ships": {
+      "name": "ships",
+      "domain": "Distributor",
+      "range_": "Shipment",
+      "inverse_of": "shippedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Distributor ships Shipment."
+    },
+    "shippedBy": {
+      "name": "shippedBy",
+      "domain": "Shipment",
+      "range_": "Distributor",
+      "inverse_of": "ships",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Shipment is shipped by Distributor."
+    },
+    "containsProduct": {
+      "name": "containsProduct",
+      "domain": "Shipment",
+      "range_": "Product",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Shipment contains Product."
+    },
+    "supplies": {
+      "name": "supplies",
+      "domain": "Supplier",
+      "range_": "Material",
+      "inverse_of": "suppliedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Supplier supplies Material."
+    },
+    "suppliedBy": {
+      "name": "suppliedBy",
+      "domain": "Material",
+      "range_": "Supplier",
+      "inverse_of": "supplies",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Material is supplied by Supplier."
+    }
+  },
+  "data_properties": {
+    "organizationName": {
+      "name": "organizationName",
+      "domain": "Organization",
+      "datatype": "xsd:string",
+      "comment": "The name of the organization."
+    },
+    "employeeName": {
+      "name": "employeeName",
+      "domain": "Employee",
+      "datatype": "xsd:string",
+      "comment": "The name of the employee."
+    },
+    "facilityName": {
+      "name": "facilityName",
+      "domain": "Facility",
+      "datatype": "xsd:string",
+      "comment": "The name of the facility."
+    },
+    "materialName": {
+      "name": "materialName",
+      "domain": "Material",
+      "datatype": "xsd:string",
+      "comment": "The name of the material."
+    },
+    "productName": {
+      "name": "productName",
+      "domain": "Product",
+      "datatype": "xsd:string",
+      "comment": "The name of the product."
+    },
+    "equipmentSerial": {
+      "name": "equipmentSerial",
+      "domain": "Equipment",
+      "datatype": "xsd:string",
+      "comment": "Serial number of the equipment."
+    },
+    "processTimestamp": {
+      "name": "processTimestamp",
+      "domain": "Process",
+      "datatype": "xsd:dateTime",
+      "comment": "Timestamp when the process occurred."
+    },
+    "shipmentId": {
+      "name": "shipmentId",
+      "domain": "Shipment",
+      "datatype": "xsd:string",
+      "comment": "Identifier for the shipment."
+    },
+    "quantity": {
+      "name": "quantity",
+      "domain": "Shipment",
+      "datatype": "xsd:integer",
+      "comment": "Quantity of items in the shipment."
+    },
+    "purity": {
+      "name": "purity",
+      "domain": "Chemical",
+      "datatype": "xsd:double",
+      "comment": "Purity percentage of the chemical."
+    }
+  },
+  "individuals": {
+    "AcmeChemicals": {
+      "types": [
+        "Supplier"
+      ],
+      "object_props": {
+        "supplies": [
+          "HydrofluoricAcid",
+          "PureSilicon"
+        ]
+      },
+      "data_props": {
+        "organizationName": [
+          "Acme Chemicals Inc."
+        ]
+      }
+    },
+    "PureSilicon": {
+      "types": [
+        "RawMaterial"
+      ],
+      "object_props": {
+        "suppliedBy": [
+          "AcmeChemicals"
+        ]
+      },
+      "data_props": {
+        "materialName": [
+          "High Purity Silicon"
+        ]
+      }
+    },
+    "FabCorp": {
+      "types": [
+        "Manufacturer"
+      ],
+      "object_props": {
+        "employs": [
+          "AliceWong",
+          "BobLee"
+        ]
+      },
+      "data_props": {
+        "organizationName": [
+          "FabCorp Ltd."
+        ]
+      }
+    },
+    "MainFab": {
+      "types": [
+        "Cleanroom"
+      ],
+      "object_props": {},
+      "data_props": {
+        "facilityName": [
+          "Main Fab Cleanroom"
+        ]
+      }
+    },
+    "AliceWong": {
+      "types": [
+        "Engineer"
+      ],
+      "object_props": {
+        "employedBy": [
+          "FabCorp"
+        ]
+      },
+      "data_props": {
+        "employeeName": [
+          "Alice Wong"
+        ]
+      }
+    },
+    "BobLee": {
+      "types": [
+        "Operator"
+      ],
+      "object_props": {
+        "employedBy": [
+          "FabCorp"
+        ],
+        "operates": [
+          "FurnaceA1",
+          "LithoMachineX"
+        ]
+      },
+      "data_props": {
+        "employeeName": [
+          "Bob Lee"
+        ]
+      }
+    },
+    "FurnaceA1": {
+      "types": [
+        "Furnace"
+      ],
+      "object_props": {
+        "operatedBy": [
+          "BobLee"
+        ],
+        "locatedIn": [
+          "MainFab"
+        ]
+      },
+      "data_props": {
+        "equipmentSerial": [
+          "FURN-001"
+        ]
+      }
+    },
+    "DopingStep1": {
+      "types": [
+        "DopingProcess"
+      ],
+      "object_props": {
+        "performedAt": [
+          "MainFab"
+        ],
+        "performedBy": [
+          "AliceWong"
+        ],
+        "usesMaterial": [
+          "PureSilicon"
+        ]
+      },
+      "data_props": {
+        "processTimestamp": [
+          "2024-06-01T09:30:00"
+        ]
+      }
+    },
+    "Wafer123": {
+      "types": [
+        "Wafer"
+      ],
+      "object_props": {
+        "locatedIn": [
+          "MainFab"
+        ]
+      },
+      "data_props": {
+        "materialName": [
+          "Wafer Batch 123"
+        ]
+      }
+    },
+    "LithoMachineX": {
+      "types": [
+        "LithographyMachine"
+      ],
+      "object_props": {
+        "operatedBy": [
+          "BobLee"
+        ],
+        "locatedIn": [
+          "MainFab"
+        ]
+      },
+      "data_props": {
+        "equipmentSerial": [
+          "LITHO-007"
+        ]
+      }
+    },
+    "LithoStep1": {
+      "types": [
+        "LithographyProcess"
+      ],
+      "object_props": {
+        "performedAt": [
+          "MainFab"
+        ],
+        "performedBy": [
+          "AliceWong"
+        ],
+        "usesMaterial": [
+          "Wafer123"
+        ],
+        "produces": [
+          "ChipA"
+        ]
+      },
+      "data_props": {
+        "processTimestamp": [
+          "2024-06-02T10:00:00"
+        ]
+      }
+    },
+    "ChipA": {
+      "types": [
+        "Chip"
+      ],
+      "object_props": {
+        "locatedIn": [
+          "MainFab"
+        ]
+      },
+      "data_props": {
+        "productName": [
+          "Logic Chip A"
+        ]
+      }
+    },
+    "PackagedChipA": {
+      "types": [
+        "PackagedProduct"
+      ],
+      "object_props": {
+        "partOf": [
+          "ChipA"
+        ]
+      },
+      "data_props": {
+        "productName": [
+          "Packaged Logic Chip A"
+        ]
+      }
+    },
+    "PackProcess1": {
+      "types": [
+        "PackagingProcess"
+      ],
+      "object_props": {
+        "performedAt": [
+          "MainFab"
+        ],
+        "performedBy": [
+          "AliceWong"
+        ],
+        "produces": [
+          "PackagedChipA"
+        ]
+      },
+      "data_props": {
+        "processTimestamp": [
+          "2024-06-03T14:00:00"
+        ]
+      }
+    },
+    "LogiDistrib": {
+      "types": [
+        "Distributor"
+      ],
+      "object_props": {
+        "ships": [
+          "Shipment001"
+        ]
+      },
+      "data_props": {
+        "organizationName": [
+          "LogiDistrib LLC"
+        ]
+      }
+    },
+    "Shipment001": {
+      "types": [
+        "Shipment"
+      ],
+      "object_props": {
+        "shippedBy": [
+          "LogiDistrib"
+        ],
+        "containsProduct": [
+          "PackagedChipA"
+        ],
+        "locatedIn": [
+          "Warehouse1"
+        ]
+      },
+      "data_props": {
+        "shipmentId": [
+          "SHIP-001"
+        ],
+        "quantity": [
+          "100"
+        ]
+      }
+    },
+    "Warehouse1": {
+      "types": [
+        "Warehouse"
+      ],
+      "object_props": {},
+      "data_props": {
+        "facilityName": [
+          "Central Warehouse"
+        ]
+      }
+    },
+    "HydrofluoricAcid": {
+      "types": [
+        "Chemical"
+      ],
+      "object_props": {
+        "suppliedBy": [
+          "AcmeChemicals"
+        ]
+      },
+      "data_props": {
+        "materialName": [
+          "Hydrofluoric Acid"
+        ],
+        "purity": [
+          "99.9"
+        ]
+      }
+    }
+  }
+}

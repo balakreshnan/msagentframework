@@ -1,0 +1,388 @@
+@prefix chipsc: <https://example.org/chip-supplychain/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/chip-supplychain> a owl:Ontology .
+
+chipsc:Thing a owl:Class ;
+    rdfs:comment "The root class for all entities." .
+
+chipsc:Agent a owl:Class ;
+    rdfs:subClassOf chipsc:Thing ;
+    owl:disjointWith chipsc:PhysicalEntity ;
+    rdfs:comment "An entity that acts in the supply chain." .
+
+chipsc:PhysicalEntity a owl:Class ;
+    rdfs:subClassOf chipsc:Thing ;
+    owl:disjointWith chipsc:Agent ;
+    owl:disjointWith chipsc:Process ;
+    rdfs:comment "A tangible object or material." .
+
+chipsc:Process a owl:Class ;
+    rdfs:subClassOf chipsc:Thing ;
+    owl:disjointWith chipsc:PhysicalEntity ;
+    rdfs:comment "An activity or operation in the supply chain." .
+
+chipsc:Organization a owl:Class ;
+    rdfs:subClassOf chipsc:Agent ;
+    owl:disjointWith chipsc:Person ;
+    rdfs:comment "A company or business entity." .
+
+chipsc:Person a owl:Class ;
+    rdfs:subClassOf chipsc:Agent ;
+    owl:disjointWith chipsc:Organization ;
+    rdfs:comment "A human involved in the supply chain." .
+
+chipsc:Supplier a owl:Class ;
+    rdfs:subClassOf chipsc:Organization ;
+    owl:disjointWith chipsc:Manufacturer ;
+    rdfs:comment "An organization that supplies materials." .
+
+chipsc:Manufacturer a owl:Class ;
+    rdfs:subClassOf chipsc:Organization ;
+    owl:disjointWith chipsc:Distributor ;
+    owl:disjointWith chipsc:Supplier ;
+    rdfs:comment "An organization that manufactures chips or components." .
+
+chipsc:Distributor a owl:Class ;
+    rdfs:subClassOf chipsc:Organization ;
+    owl:disjointWith chipsc:Manufacturer ;
+    rdfs:comment "An organization that distributes finished products." .
+
+chipsc:Facility a owl:Class ;
+    rdfs:subClassOf chipsc:PhysicalEntity ;
+    owl:disjointWith chipsc:Equipment ;
+    owl:disjointWith chipsc:Material ;
+    rdfs:comment "A location where supply chain activities occur." .
+
+chipsc:Material a owl:Class ;
+    rdfs:subClassOf chipsc:PhysicalEntity ;
+    owl:disjointWith chipsc:Equipment ;
+    owl:disjointWith chipsc:Product ;
+    rdfs:comment "A physical substance used in manufacturing." .
+
+chipsc:Equipment a owl:Class ;
+    rdfs:subClassOf chipsc:PhysicalEntity ;
+    owl:disjointWith chipsc:Material ;
+    owl:disjointWith chipsc:Product ;
+    rdfs:comment "A machine or tool used in processes." .
+
+chipsc:Product a owl:Class ;
+    rdfs:subClassOf chipsc:PhysicalEntity ;
+    owl:disjointWith chipsc:Equipment ;
+    owl:disjointWith chipsc:Material ;
+    rdfs:comment "A finished or intermediate product." .
+
+chipsc:RawMaterial a owl:Class ;
+    rdfs:subClassOf chipsc:Material ;
+    owl:disjointWith chipsc:ProcessedMaterial ;
+    rdfs:comment "Unprocessed material used in fabrication." .
+
+chipsc:ProcessedMaterial a owl:Class ;
+    rdfs:subClassOf chipsc:Material ;
+    owl:disjointWith chipsc:RawMaterial ;
+    rdfs:comment "Material that has undergone processing." .
+
+chipsc:Wafer a owl:Class ;
+    rdfs:subClassOf chipsc:ProcessedMaterial ;
+    owl:disjointWith chipsc:Chemical ;
+    rdfs:comment "A processed silicon wafer." .
+
+chipsc:Chemical a owl:Class ;
+    rdfs:subClassOf chipsc:RawMaterial ;
+    owl:disjointWith chipsc:Wafer ;
+    rdfs:comment "A chemical substance used in chip fabrication." .
+
+chipsc:Chip a owl:Class ;
+    rdfs:subClassOf chipsc:Product ;
+    owl:disjointWith chipsc:PackagedProduct ;
+    rdfs:comment "A finished semiconductor chip." .
+
+chipsc:PackagedProduct a owl:Class ;
+    rdfs:subClassOf chipsc:Product ;
+    owl:disjointWith chipsc:Chip ;
+    rdfs:comment "A chip that has been packaged for distribution." .
+
+chipsc:Machine a owl:Class ;
+    rdfs:subClassOf chipsc:Equipment ;
+    owl:disjointWith chipsc:Tool ;
+    rdfs:comment "A machine used in manufacturing." .
+
+chipsc:Tool a owl:Class ;
+    rdfs:subClassOf chipsc:Equipment ;
+    owl:disjointWith chipsc:Machine ;
+    rdfs:comment "A tool used in processes." .
+
+chipsc:Furnace a owl:Class ;
+    rdfs:subClassOf chipsc:Machine ;
+    owl:disjointWith chipsc:LithographyMachine ;
+    rdfs:comment "A furnace used for wafer processing." .
+
+chipsc:LithographyMachine a owl:Class ;
+    rdfs:subClassOf chipsc:Machine ;
+    owl:disjointWith chipsc:Furnace ;
+    rdfs:comment "A machine for photolithography." .
+
+chipsc:Cleanroom a owl:Class ;
+    rdfs:subClassOf chipsc:Facility ;
+    owl:disjointWith chipsc:Warehouse ;
+    rdfs:comment "A controlled environment for fabrication." .
+
+chipsc:Warehouse a owl:Class ;
+    rdfs:subClassOf chipsc:Facility ;
+    owl:disjointWith chipsc:Cleanroom ;
+    rdfs:comment "A facility for storing materials or products." .
+
+chipsc:Employee a owl:Class ;
+    rdfs:subClassOf chipsc:Person ;
+    owl:disjointWith chipsc:Operator ;
+    rdfs:comment "A person employed by an organization." .
+
+chipsc:Operator a owl:Class ;
+    rdfs:subClassOf chipsc:Employee ;
+    owl:disjointWith chipsc:Engineer ;
+    rdfs:comment "An employee who operates equipment." .
+
+chipsc:Engineer a owl:Class ;
+    rdfs:subClassOf chipsc:Employee ;
+    owl:disjointWith chipsc:Operator ;
+    rdfs:comment "An employee who designs or maintains processes." .
+
+chipsc:LogisticsStaff a owl:Class ;
+    rdfs:subClassOf chipsc:Employee ;
+    owl:disjointWith chipsc:Engineer ;
+    rdfs:comment "An employee involved in logistics." .
+
+chipsc:ManufacturingProcess a owl:Class ;
+    rdfs:subClassOf chipsc:Process ;
+    owl:disjointWith chipsc:LogisticsProcess ;
+    rdfs:comment "A process that transforms materials into products." .
+
+chipsc:LogisticsProcess a owl:Class ;
+    rdfs:subClassOf chipsc:Process ;
+    owl:disjointWith chipsc:ManufacturingProcess ;
+    rdfs:comment "A process involving movement or storage." .
+
+chipsc:DopingProcess a owl:Class ;
+    rdfs:subClassOf chipsc:ManufacturingProcess ;
+    owl:disjointWith chipsc:LithographyProcess ;
+    rdfs:comment "A process for doping wafers." .
+
+chipsc:LithographyProcess a owl:Class ;
+    rdfs:subClassOf chipsc:ManufacturingProcess ;
+    owl:disjointWith chipsc:DopingProcess ;
+    rdfs:comment "A process for patterning wafers." .
+
+chipsc:PackagingProcess a owl:Class ;
+    rdfs:subClassOf chipsc:ManufacturingProcess ;
+    owl:disjointWith chipsc:LithographyProcess ;
+    rdfs:comment "A process for packaging chips." .
+
+chipsc:ShippingProcess a owl:Class ;
+    rdfs:subClassOf chipsc:LogisticsProcess ;
+    owl:disjointWith chipsc:StorageProcess ;
+    rdfs:comment "A process for shipping products." .
+
+chipsc:StorageProcess a owl:Class ;
+    rdfs:subClassOf chipsc:LogisticsProcess ;
+    owl:disjointWith chipsc:ShippingProcess ;
+    rdfs:comment "A process for storing materials or products." .
+
+chipsc:Shipment a owl:Class ;
+    rdfs:subClassOf chipsc:PhysicalEntity ;
+    owl:disjointWith chipsc:Facility ;
+    rdfs:comment "A batch of products or materials being shipped." .
+
+chipsc:employs a owl:ObjectProperty ;
+    rdfs:domain chipsc:Organization ;
+    rdfs:range  chipsc:Employee ;
+    owl:inverseOf chipsc:employedBy .
+
+chipsc:employedBy a owl:ObjectProperty ;
+    rdfs:domain chipsc:Employee ;
+    rdfs:range  chipsc:Organization ;
+    owl:inverseOf chipsc:employs .
+
+chipsc:operates a owl:ObjectProperty ;
+    rdfs:domain chipsc:Operator ;
+    rdfs:range  chipsc:Equipment ;
+    owl:inverseOf chipsc:operatedBy .
+
+chipsc:operatedBy a owl:ObjectProperty ;
+    rdfs:domain chipsc:Equipment ;
+    rdfs:range  chipsc:Operator ;
+    owl:inverseOf chipsc:operates .
+
+chipsc:locatedIn a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:domain chipsc:PhysicalEntity ;
+    rdfs:range  chipsc:Facility .
+
+chipsc:partOf a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:domain chipsc:PhysicalEntity ;
+    rdfs:range  chipsc:PhysicalEntity .
+
+chipsc:usesMaterial a owl:ObjectProperty ;
+    rdfs:domain chipsc:ManufacturingProcess ;
+    rdfs:range  chipsc:Material .
+
+chipsc:produces a owl:ObjectProperty ;
+    rdfs:domain chipsc:ManufacturingProcess ;
+    rdfs:range  chipsc:Product .
+
+chipsc:performedAt a owl:ObjectProperty ;
+    rdfs:domain chipsc:Process ;
+    rdfs:range  chipsc:Facility .
+
+chipsc:performedBy a owl:ObjectProperty ;
+    rdfs:domain chipsc:Process ;
+    rdfs:range  chipsc:Employee .
+
+chipsc:ships a owl:ObjectProperty ;
+    rdfs:domain chipsc:Distributor ;
+    rdfs:range  chipsc:Shipment ;
+    owl:inverseOf chipsc:shippedBy .
+
+chipsc:shippedBy a owl:ObjectProperty ;
+    rdfs:domain chipsc:Shipment ;
+    rdfs:range  chipsc:Distributor ;
+    owl:inverseOf chipsc:ships .
+
+chipsc:containsProduct a owl:ObjectProperty ;
+    rdfs:domain chipsc:Shipment ;
+    rdfs:range  chipsc:Product .
+
+chipsc:supplies a owl:ObjectProperty ;
+    rdfs:domain chipsc:Supplier ;
+    rdfs:range  chipsc:Material ;
+    owl:inverseOf chipsc:suppliedBy .
+
+chipsc:suppliedBy a owl:ObjectProperty ;
+    rdfs:domain chipsc:Material ;
+    rdfs:range  chipsc:Supplier ;
+    owl:inverseOf chipsc:supplies .
+
+chipsc:organizationName a owl:DatatypeProperty ;
+    rdfs:domain chipsc:Organization ;
+    rdfs:range  xsd:string .
+
+chipsc:employeeName a owl:DatatypeProperty ;
+    rdfs:domain chipsc:Employee ;
+    rdfs:range  xsd:string .
+
+chipsc:facilityName a owl:DatatypeProperty ;
+    rdfs:domain chipsc:Facility ;
+    rdfs:range  xsd:string .
+
+chipsc:materialName a owl:DatatypeProperty ;
+    rdfs:domain chipsc:Material ;
+    rdfs:range  xsd:string .
+
+chipsc:productName a owl:DatatypeProperty ;
+    rdfs:domain chipsc:Product ;
+    rdfs:range  xsd:string .
+
+chipsc:equipmentSerial a owl:DatatypeProperty ;
+    rdfs:domain chipsc:Equipment ;
+    rdfs:range  xsd:string .
+
+chipsc:processTimestamp a owl:DatatypeProperty ;
+    rdfs:domain chipsc:Process ;
+    rdfs:range  xsd:dateTime .
+
+chipsc:shipmentId a owl:DatatypeProperty ;
+    rdfs:domain chipsc:Shipment ;
+    rdfs:range  xsd:string .
+
+chipsc:quantity a owl:DatatypeProperty ;
+    rdfs:domain chipsc:Shipment ;
+    rdfs:range  xsd:integer .
+
+chipsc:purity a owl:DatatypeProperty ;
+    rdfs:domain chipsc:Chemical ;
+    rdfs:range  xsd:double .
+
+chipsc:AcmeChemicals a chipsc:Supplier ;
+    chipsc:supplies chipsc:HydrofluoricAcid, chipsc:PureSilicon ;
+    chipsc:organizationName "Acme Chemicals Inc." .
+
+chipsc:PureSilicon a chipsc:RawMaterial ;
+    chipsc:suppliedBy chipsc:AcmeChemicals ;
+    chipsc:materialName "High Purity Silicon" .
+
+chipsc:FabCorp a chipsc:Manufacturer ;
+    chipsc:employs chipsc:AliceWong, chipsc:BobLee ;
+    chipsc:organizationName "FabCorp Ltd." .
+
+chipsc:MainFab a chipsc:Cleanroom ;
+    chipsc:facilityName "Main Fab Cleanroom" .
+
+chipsc:AliceWong a chipsc:Engineer ;
+    chipsc:employedBy chipsc:FabCorp ;
+    chipsc:employeeName "Alice Wong" .
+
+chipsc:BobLee a chipsc:Operator ;
+    chipsc:employedBy chipsc:FabCorp ;
+    chipsc:operates chipsc:FurnaceA1, chipsc:LithoMachineX ;
+    chipsc:employeeName "Bob Lee" .
+
+chipsc:FurnaceA1 a chipsc:Furnace ;
+    chipsc:operatedBy chipsc:BobLee ;
+    chipsc:locatedIn chipsc:MainFab ;
+    chipsc:equipmentSerial "FURN-001" .
+
+chipsc:DopingStep1 a chipsc:DopingProcess ;
+    chipsc:performedAt chipsc:MainFab ;
+    chipsc:performedBy chipsc:AliceWong ;
+    chipsc:usesMaterial chipsc:PureSilicon ;
+    chipsc:processTimestamp "2024-06-01T09:30:00" .
+
+chipsc:Wafer123 a chipsc:Wafer ;
+    chipsc:locatedIn chipsc:MainFab ;
+    chipsc:materialName "Wafer Batch 123" .
+
+chipsc:LithoMachineX a chipsc:LithographyMachine ;
+    chipsc:operatedBy chipsc:BobLee ;
+    chipsc:locatedIn chipsc:MainFab ;
+    chipsc:equipmentSerial "LITHO-007" .
+
+chipsc:LithoStep1 a chipsc:LithographyProcess ;
+    chipsc:performedAt chipsc:MainFab ;
+    chipsc:performedBy chipsc:AliceWong ;
+    chipsc:usesMaterial chipsc:Wafer123 ;
+    chipsc:produces chipsc:ChipA ;
+    chipsc:processTimestamp "2024-06-02T10:00:00" .
+
+chipsc:ChipA a chipsc:Chip ;
+    chipsc:locatedIn chipsc:MainFab ;
+    chipsc:productName "Logic Chip A" .
+
+chipsc:PackagedChipA a chipsc:PackagedProduct ;
+    chipsc:partOf chipsc:ChipA ;
+    chipsc:productName "Packaged Logic Chip A" .
+
+chipsc:PackProcess1 a chipsc:PackagingProcess ;
+    chipsc:performedAt chipsc:MainFab ;
+    chipsc:performedBy chipsc:AliceWong ;
+    chipsc:produces chipsc:PackagedChipA ;
+    chipsc:processTimestamp "2024-06-03T14:00:00" .
+
+chipsc:LogiDistrib a chipsc:Distributor ;
+    chipsc:ships chipsc:Shipment001 ;
+    chipsc:organizationName "LogiDistrib LLC" .
+
+chipsc:Shipment001 a chipsc:Shipment ;
+    chipsc:shippedBy chipsc:LogiDistrib ;
+    chipsc:containsProduct chipsc:PackagedChipA ;
+    chipsc:locatedIn chipsc:Warehouse1 ;
+    chipsc:shipmentId "SHIP-001" ;
+    chipsc:quantity "100" .
+
+chipsc:Warehouse1 a chipsc:Warehouse ;
+    chipsc:facilityName "Central Warehouse" .
+
+chipsc:HydrofluoricAcid a chipsc:Chemical ;
+    chipsc:suppliedBy chipsc:AcmeChemicals ;
+    chipsc:materialName "Hydrofluoric Acid" ;
+    chipsc:purity "99.9" .
