@@ -13,6 +13,6 @@ azure-identity
 aiofiles
 agent-framework[viz] --pre
 agent-framework-azure-ai-search --pre
-azure-monitor-opentelemetry
+azure-monitor-opentelemetry==1.8.6
 pysmartthings
 matplotlib
