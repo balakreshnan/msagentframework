@@ -1,0 +1,562 @@
+{
+  "ontology_name": "manufacturing-supply-chain",
+  "iri_base": "https://example.org/manufacturing-scm/",
+  "prefix": "mscm",
+  "description": "An ontology for representing entities, processes, and relationships in manufacturing supply chain management, including suppliers, manufacturers, products, orders, shipments, and logistics.",
+  "classes": [
+    {
+      "name": "Agent",
+      "parents": [],
+      "comment": "A general actor in the supply chain, such as a company or person.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Supplier",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "An entity that supplies raw materials or components.",
+      "disjoint_with": [
+        "Manufacturer",
+        "Customer"
+      ]
+    },
+    {
+      "name": "Manufacturer",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "An entity that manufactures products from materials.",
+      "disjoint_with": [
+        "Supplier",
+        "Customer"
+      ]
+    },
+    {
+      "name": "Customer",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "An entity that receives finished products.",
+      "disjoint_with": [
+        "Supplier",
+        "Manufacturer"
+      ]
+    },
+    {
+      "name": "Product",
+      "parents": [],
+      "comment": "A manufactured or supplied item.",
+      "disjoint_with": []
+    },
+    {
+      "name": "RawMaterial",
+      "parents": [
+        "Product"
+      ],
+      "comment": "A basic material supplied for manufacturing.",
+      "disjoint_with": [
+        "FinishedProduct"
+      ]
+    },
+    {
+      "name": "Component",
+      "parents": [
+        "Product"
+      ],
+      "comment": "A part used in the assembly of finished products.",
+      "disjoint_with": []
+    },
+    {
+      "name": "FinishedProduct",
+      "parents": [
+        "Product"
+      ],
+      "comment": "A product ready for delivery to customers.",
+      "disjoint_with": [
+        "RawMaterial"
+      ]
+    },
+    {
+      "name": "Order",
+      "parents": [],
+      "comment": "A request for products or materials.",
+      "disjoint_with": []
+    },
+    {
+      "name": "PurchaseOrder",
+      "parents": [
+        "Order"
+      ],
+      "comment": "An order placed by a manufacturer or customer to a supplier.",
+      "disjoint_with": [
+        "SalesOrder"
+      ]
+    },
+    {
+      "name": "SalesOrder",
+      "parents": [
+        "Order"
+      ],
+      "comment": "An order received by a manufacturer from a customer.",
+      "disjoint_with": [
+        "PurchaseOrder"
+      ]
+    },
+    {
+      "name": "Shipment",
+      "parents": [],
+      "comment": "A consignment of products being transported.",
+      "disjoint_with": []
+    },
+    {
+      "name": "LogisticsProvider",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "An entity responsible for transporting shipments.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Warehouse",
+      "parents": [],
+      "comment": "A facility for storing products.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Location",
+      "parents": [],
+      "comment": "A geographical place relevant to the supply chain.",
+      "disjoint_with": []
+    }
+  ],
+  "object_properties": [
+    {
+      "name": "supplies",
+      "domain": "Supplier",
+      "range": "Product",
+      "inverse_of": "suppliedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates which products a supplier provides."
+    },
+    {
+      "name": "suppliedBy",
+      "domain": "Product",
+      "range": "Supplier",
+      "inverse_of": "supplies",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the supplier of a product."
+    },
+    {
+      "name": "manufactures",
+      "domain": "Manufacturer",
+      "range": "FinishedProduct",
+      "inverse_of": "manufacturedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates which finished products a manufacturer produces."
+    },
+    {
+      "name": "manufacturedBy",
+      "domain": "FinishedProduct",
+      "range": "Manufacturer",
+      "inverse_of": "manufactures",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the manufacturer of a finished product."
+    },
+    {
+      "name": "orderedBy",
+      "domain": "Order",
+      "range": "Agent",
+      "inverse_of": "placesOrder",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the agent who placed the order."
+    },
+    {
+      "name": "placesOrder",
+      "domain": "Agent",
+      "range": "Order",
+      "inverse_of": "orderedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates an order placed by an agent."
+    },
+    {
+      "name": "delivers",
+      "domain": "LogisticsProvider",
+      "range": "Shipment",
+      "inverse_of": "deliveredBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates shipments delivered by a logistics provider."
+    },
+    {
+      "name": "deliveredBy",
+      "domain": "Shipment",
+      "range": "LogisticsProvider",
+      "inverse_of": "delivers",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the logistics provider for a shipment."
+    },
+    {
+      "name": "containsProduct",
+      "domain": "Shipment",
+      "range": "Product",
+      "inverse_of": "includedInShipment",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates products included in a shipment."
+    },
+    {
+      "name": "includedInShipment",
+      "domain": "Product",
+      "range": "Shipment",
+      "inverse_of": "containsProduct",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the shipment in which a product is included."
+    },
+    {
+      "name": "storedIn",
+      "domain": "Product",
+      "range": "Warehouse",
+      "inverse_of": "stores",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the warehouse where a product is stored."
+    },
+    {
+      "name": "stores",
+      "domain": "Warehouse",
+      "range": "Product",
+      "inverse_of": "storedIn",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates products stored in a warehouse."
+    },
+    {
+      "name": "locatedAt",
+      "domain": "Agent",
+      "range": "Location",
+      "inverse_of": "locationOf",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the location of an agent."
+    },
+    {
+      "name": "locationOf",
+      "domain": "Location",
+      "range": "Agent",
+      "inverse_of": "locatedAt",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the agent at a location."
+    }
+  ],
+  "data_properties": [
+    {
+      "name": "productName",
+      "domain": "Product",
+      "datatype": "xsd:string",
+      "comment": "The name of the product."
+    },
+    {
+      "name": "productCode",
+      "domain": "Product",
+      "datatype": "xsd:string",
+      "comment": "A unique code for the product."
+    },
+    {
+      "name": "orderNumber",
+      "domain": "Order",
+      "datatype": "xsd:string",
+      "comment": "A unique identifier for the order."
+    },
+    {
+      "name": "orderDate",
+      "domain": "Order",
+      "datatype": "xsd:dateTime",
+      "comment": "The date the order was placed."
+    },
+    {
+      "name": "shipmentNumber",
+      "domain": "Shipment",
+      "datatype": "xsd:string",
+      "comment": "A unique identifier for the shipment."
+    },
+    {
+      "name": "shipmentDate",
+      "domain": "Shipment",
+      "datatype": "xsd:dateTime",
+      "comment": "The date the shipment was sent."
+    },
+    {
+      "name": "warehouseName",
+      "domain": "Warehouse",
+      "datatype": "xsd:string",
+      "comment": "The name of the warehouse."
+    },
+    {
+      "name": "locationName",
+      "domain": "Location",
+      "datatype": "xsd:string",
+      "comment": "The name of the location."
+    },
+    {
+      "name": "agentName",
+      "domain": "Agent",
+      "datatype": "xsd:string",
+      "comment": "The name of the agent."
+    }
+  ],
+  "individuals": [
+    {
+      "name": "acmeSupplier",
+      "types": [
+        "Supplier"
+      ],
+      "object_props": {
+        "locatedAt": [
+          "cityA"
+        ]
+      },
+      "data_props": {
+        "agentName": [
+          "ACME Raw Materials Ltd."
+        ]
+      }
+    },
+    {
+      "name": "bestManufacturer",
+      "types": [
+        "Manufacturer"
+      ],
+      "object_props": {
+        "locatedAt": [
+          "cityB"
+        ]
+      },
+      "data_props": {
+        "agentName": [
+          "Best Manufacturing Inc."
+        ]
+      }
+    },
+    {
+      "name": "johnCustomer",
+      "types": [
+        "Customer"
+      ],
+      "object_props": {
+        "locatedAt": [
+          "cityC"
+        ]
+      },
+      "data_props": {
+        "agentName": [
+          "John's Retail"
+        ]
+      }
+    },
+    {
+      "name": "steelRod",
+      "types": [
+        "RawMaterial"
+      ],
+      "object_props": {
+        "suppliedBy": [
+          "acmeSupplier"
+        ]
+      },
+      "data_props": {
+        "productName": [
+          "Steel Rod"
+        ],
+        "productCode": [
+          "RM-001"
+        ]
+      }
+    },
+    {
+      "name": "widgetComponent",
+      "types": [
+        "Component"
+      ],
+      "object_props": {
+        "suppliedBy": [
+          "acmeSupplier"
+        ]
+      },
+      "data_props": {
+        "productName": [
+          "Widget Component"
+        ],
+        "productCode": [
+          "CP-100"
+        ]
+      }
+    },
+    {
+      "name": "superWidget",
+      "types": [
+        "FinishedProduct"
+      ],
+      "object_props": {
+        "manufacturedBy": [
+          "bestManufacturer"
+        ]
+      },
+      "data_props": {
+        "productName": [
+          "Super Widget"
+        ],
+        "productCode": [
+          "FP-900"
+        ]
+      }
+    },
+    {
+      "name": "order123",
+      "types": [
+        "PurchaseOrder"
+      ],
+      "object_props": {
+        "orderedBy": [
+          "bestManufacturer"
+        ]
+      },
+      "data_props": {
+        "orderNumber": [
+          "PO-123"
+        ],
+        "orderDate": [
+          "2024-06-01T10:00:00"
+        ]
+      }
+    },
+    {
+      "name": "order456",
+      "types": [
+        "SalesOrder"
+      ],
+      "object_props": {
+        "orderedBy": [
+          "johnCustomer"
+        ]
+      },
+      "data_props": {
+        "orderNumber": [
+          "SO-456"
+        ],
+        "orderDate": [
+          "2024-06-02T15:30:00"
+        ]
+      }
+    },
+    {
+      "name": "mainWarehouse",
+      "types": [
+        "Warehouse"
+      ],
+      "object_props": {},
+      "data_props": {
+        "warehouseName": [
+          "Main Warehouse"
+        ]
+      }
+    },
+    {
+      "name": "cityA",
+      "types": [
+        "Location"
+      ],
+      "object_props": {},
+      "data_props": {
+        "locationName": [
+          "City A"
+        ]
+      }
+    },
+    {
+      "name": "cityB",
+      "types": [
+        "Location"
+      ],
+      "object_props": {},
+      "data_props": {
+        "locationName": [
+          "City B"
+        ]
+      }
+    },
+    {
+      "name": "cityC",
+      "types": [
+        "Location"
+      ],
+      "object_props": {},
+      "data_props": {
+        "locationName": [
+          "City C"
+        ]
+      }
+    },
+    {
+      "name": "fastLogistics",
+      "types": [
+        "LogisticsProvider"
+      ],
+      "object_props": {
+        "locatedAt": [
+          "cityB"
+        ]
+      },
+      "data_props": {
+        "agentName": [
+          "Fast Logistics Co."
+        ]
+      }
+    },
+    {
+      "name": "shipment789",
+      "types": [
+        "Shipment"
+      ],
+      "object_props": {
+        "deliveredBy": [
+          "fastLogistics"
+        ],
+        "containsProduct": [
+          "superWidget"
+        ]
+      },
+      "data_props": {
+        "shipmentNumber": [
+          "SH-789"
+        ],
+        "shipmentDate": [
+          "2024-06-03T08:00:00"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,599 @@
+{
+  "ontology_name": "retail-ontology",
+  "iri_base": "https://example.org/retail/",
+  "prefix": "retail",
+  "description": "An ontology for modeling the retail domain, including stores, products, customers, employees, sales, and inventory.",
+  "classes": [
+    {
+      "name": "Entity",
+      "parents": [],
+      "comment": "Top-level class for all entities in the retail domain.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Person",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A human involved in the retail domain.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Customer",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person who purchases products.",
+      "disjoint_with": [
+        "Employee"
+      ]
+    },
+    {
+      "name": "Employee",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person who works at a store.",
+      "disjoint_with": [
+        "Customer"
+      ]
+    },
+    {
+      "name": "Cashier",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who handles sales transactions.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Manager",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who manages a store.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Store",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A physical or online location where products are sold.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Product",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "An item available for sale.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Category",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A classification for products.",
+      "disjoint_with": []
+    },
+    {
+      "name": "InventoryItem",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A specific stock of a product in a store.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Sale",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A transaction where a customer purchases products.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Payment",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A payment made for a sale.",
+      "disjoint_with": []
+    }
+  ],
+  "object_properties": [
+    {
+      "name": "purchasedBy",
+      "domain": "Sale",
+      "range": "Customer",
+      "inverse_of": "madePurchase",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a sale to the customer who made the purchase."
+    },
+    {
+      "name": "madePurchase",
+      "domain": "Customer",
+      "range": "Sale",
+      "inverse_of": "purchasedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a customer to sales they made."
+    },
+    {
+      "name": "soldBy",
+      "domain": "Sale",
+      "range": "Cashier",
+      "inverse_of": "handledSale",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a sale to the cashier who handled it."
+    },
+    {
+      "name": "handledSale",
+      "domain": "Cashier",
+      "range": "Sale",
+      "inverse_of": "soldBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a cashier to sales they handled."
+    },
+    {
+      "name": "occursAt",
+      "domain": "Sale",
+      "range": "Store",
+      "inverse_of": "hasSale",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a sale to the store where it occurred."
+    },
+    {
+      "name": "hasSale",
+      "domain": "Store",
+      "range": "Sale",
+      "inverse_of": "occursAt",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a store to its sales."
+    },
+    {
+      "name": "manages",
+      "domain": "Manager",
+      "range": "Store",
+      "inverse_of": "managedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a manager to the store they manage."
+    },
+    {
+      "name": "managedBy",
+      "domain": "Store",
+      "range": "Manager",
+      "inverse_of": "manages",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a store to its manager."
+    },
+    {
+      "name": "employedAt",
+      "domain": "Employee",
+      "range": "Store",
+      "inverse_of": "hasEmployee",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an employee to their store."
+    },
+    {
+      "name": "hasEmployee",
+      "domain": "Store",
+      "range": "Employee",
+      "inverse_of": "employedAt",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a store to its employees."
+    },
+    {
+      "name": "hasInventoryItem",
+      "domain": "Store",
+      "range": "InventoryItem",
+      "inverse_of": "inStore",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a store to its inventory items."
+    },
+    {
+      "name": "inStore",
+      "domain": "InventoryItem",
+      "range": "Store",
+      "inverse_of": "hasInventoryItem",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an inventory item to the store where it is stocked."
+    },
+    {
+      "name": "ofProduct",
+      "domain": "InventoryItem",
+      "range": "Product",
+      "inverse_of": "hasInventoryItemOf",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an inventory item to the product it represents."
+    },
+    {
+      "name": "hasInventoryItemOf",
+      "domain": "Product",
+      "range": "InventoryItem",
+      "inverse_of": "ofProduct",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a product to its inventory items."
+    },
+    {
+      "name": "belongsToCategory",
+      "domain": "Product",
+      "range": "Category",
+      "inverse_of": "hasProduct",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a product to its category."
+    },
+    {
+      "name": "hasProduct",
+      "domain": "Category",
+      "range": "Product",
+      "inverse_of": "belongsToCategory",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a category to its products."
+    },
+    {
+      "name": "includesProduct",
+      "domain": "Sale",
+      "range": "Product",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a sale to products sold."
+    },
+    {
+      "name": "hasPayment",
+      "domain": "Sale",
+      "range": "Payment",
+      "inverse_of": "paymentFor",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a sale to its payment."
+    },
+    {
+      "name": "paymentFor",
+      "domain": "Payment",
+      "range": "Sale",
+      "inverse_of": "hasPayment",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a payment to the sale it is for."
+    }
+  ],
+  "data_properties": [
+    {
+      "name": "productName",
+      "domain": "Product",
+      "datatype": "xsd:string",
+      "comment": "The name of the product."
+    },
+    {
+      "name": "sku",
+      "domain": "Product",
+      "datatype": "xsd:string",
+      "comment": "Stock keeping unit identifier for the product."
+    },
+    {
+      "name": "categoryName",
+      "domain": "Category",
+      "datatype": "xsd:string",
+      "comment": "The name of the category."
+    },
+    {
+      "name": "storeName",
+      "domain": "Store",
+      "datatype": "xsd:string",
+      "comment": "The name of the store."
+    },
+    {
+      "name": "storeLocation",
+      "domain": "Store",
+      "datatype": "xsd:string",
+      "comment": "The location of the store."
+    },
+    {
+      "name": "personName",
+      "domain": "Person",
+      "datatype": "xsd:string",
+      "comment": "The name of the person."
+    },
+    {
+      "name": "employeeId",
+      "domain": "Employee",
+      "datatype": "xsd:string",
+      "comment": "The employee's identifier."
+    },
+    {
+      "name": "customerId",
+      "domain": "Customer",
+      "datatype": "xsd:string",
+      "comment": "The customer's identifier."
+    },
+    {
+      "name": "quantity",
+      "domain": "InventoryItem",
+      "datatype": "xsd:integer",
+      "comment": "The quantity of the product in stock."
+    },
+    {
+      "name": "saleDate",
+      "domain": "Sale",
+      "datatype": "xsd:dateTime",
+      "comment": "The date and time of the sale."
+    },
+    {
+      "name": "saleTotal",
+      "domain": "Sale",
+      "datatype": "xsd:double",
+      "comment": "The total amount of the sale."
+    },
+    {
+      "name": "paymentAmount",
+      "domain": "Payment",
+      "datatype": "xsd:double",
+      "comment": "The amount paid in the payment."
+    },
+    {
+      "name": "paymentMethod",
+      "domain": "Payment",
+      "datatype": "xsd:string",
+      "comment": "The method of payment (e.g., cash, card)."
+    }
+  ],
+  "individuals": [
+    {
+      "name": "storeMainStreet",
+      "types": [
+        "Store"
+      ],
+      "object_props": {},
+      "data_props": {
+        "storeName": [
+          "Main Street Store"
+        ],
+        "storeLocation": [
+          "123 Main St"
+        ]
+      }
+    },
+    {
+      "name": "catElectronics",
+      "types": [
+        "Category"
+      ],
+      "object_props": {},
+      "data_props": {
+        "categoryName": [
+          "Electronics"
+        ]
+      }
+    },
+    {
+      "name": "catGroceries",
+      "types": [
+        "Category"
+      ],
+      "object_props": {},
+      "data_props": {
+        "categoryName": [
+          "Groceries"
+        ]
+      }
+    },
+    {
+      "name": "prodLaptop",
+      "types": [
+        "Product"
+      ],
+      "object_props": {
+        "belongsToCategory": [
+          "catElectronics"
+        ]
+      },
+      "data_props": {
+        "productName": [
+          "Laptop"
+        ],
+        "sku": [
+          "ELEC123"
+        ]
+      }
+    },
+    {
+      "name": "prodApple",
+      "types": [
+        "Product"
+      ],
+      "object_props": {
+        "belongsToCategory": [
+          "catGroceries"
+        ]
+      },
+      "data_props": {
+        "productName": [
+          "Apple"
+        ],
+        "sku": [
+          "GROC456"
+        ]
+      }
+    },
+    {
+      "name": "invLaptopMain",
+      "types": [
+        "InventoryItem"
+      ],
+      "object_props": {
+        "ofProduct": [
+          "prodLaptop"
+        ],
+        "inStore": [
+          "storeMainStreet"
+        ]
+      },
+      "data_props": {
+        "quantity": [
+          "10"
+        ]
+      }
+    },
+    {
+      "name": "invAppleMain",
+      "types": [
+        "InventoryItem"
+      ],
+      "object_props": {
+        "ofProduct": [
+          "prodApple"
+        ],
+        "inStore": [
+          "storeMainStreet"
+        ]
+      },
+      "data_props": {
+        "quantity": [
+          "50"
+        ]
+      }
+    },
+    {
+      "name": "custAlice",
+      "types": [
+        "Customer"
+      ],
+      "object_props": {},
+      "data_props": {
+        "personName": [
+          "Alice Smith"
+        ],
+        "customerId": [
+          "CUST001"
+        ]
+      }
+    },
+    {
+      "name": "empBob",
+      "types": [
+        "Cashier"
+      ],
+      "object_props": {
+        "employedAt": [
+          "storeMainStreet"
+        ]
+      },
+      "data_props": {
+        "personName": [
+          "Bob Jones"
+        ],
+        "employeeId": [
+          "EMP100"
+        ]
+      }
+    },
+    {
+      "name": "empCarol",
+      "types": [
+        "Manager"
+      ],
+      "object_props": {
+        "employedAt": [
+          "storeMainStreet"
+        ],
+        "manages": [
+          "storeMainStreet"
+        ]
+      },
+      "data_props": {
+        "personName": [
+          "Carol Lee"
+        ],
+        "employeeId": [
+          "EMP200"
+        ]
+      }
+    },
+    {
+      "name": "sale001",
+      "types": [
+        "Sale"
+      ],
+      "object_props": {
+        "purchasedBy": [
+          "custAlice"
+        ],
+        "soldBy": [
+          "empBob"
+        ],
+        "occursAt": [
+          "storeMainStreet"
+        ],
+        "includesProduct": [
+          "prodLaptop",
+          "prodApple"
+        ]
+      },
+      "data_props": {
+        "saleDate": [
+          "2024-06-01T10:30:00"
+        ],
+        "saleTotal": [
+          "1200.50"
+        ]
+      }
+    },
+    {
+      "name": "pay001",
+      "types": [
+        "Payment"
+      ],
+      "object_props": {
+        "paymentFor": [
+          "sale001"
+        ]
+      },
+      "data_props": {
+        "paymentAmount": [
+          "1200.50"
+        ],
+        "paymentMethod": [
+          "Credit Card"
+        ]
+      }
+    }
+  ]
+}

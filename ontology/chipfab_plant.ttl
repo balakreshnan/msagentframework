@@ -1,0 +1,514 @@
+@prefix chipfab: <https://example.org/chipfab/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/chipfab> a owl:Ontology .
+
+chipfab:Thing a owl:Class ;
+    rdfs:comment "The root class for all entities." .
+
+chipfab:Agent a owl:Class ;
+    rdfs:subClassOf chipfab:Thing ;
+    owl:disjointWith chipfab:Asset ;
+    owl:disjointWith chipfab:Event ;
+    owl:disjointWith chipfab:Material ;
+    rdfs:comment "An entity capable of action, such as people or software." .
+
+chipfab:Person a owl:Class ;
+    rdfs:subClassOf chipfab:Agent ;
+    owl:disjointWith chipfab:SoftwareAgent ;
+    rdfs:comment "A human agent." .
+
+chipfab:Employee a owl:Class ;
+    rdfs:subClassOf chipfab:Person ;
+    owl:disjointWith chipfab:Visitor ;
+    rdfs:comment "A person employed at the plant." .
+
+chipfab:Operator a owl:Class ;
+    rdfs:subClassOf chipfab:Employee ;
+    owl:disjointWith chipfab:Engineer ;
+    owl:disjointWith chipfab:Technician ;
+    rdfs:comment "An employee who operates equipment." .
+
+chipfab:Engineer a owl:Class ;
+    rdfs:subClassOf chipfab:Employee ;
+    owl:disjointWith chipfab:Operator ;
+    owl:disjointWith chipfab:Technician ;
+    rdfs:comment "An employee responsible for engineering tasks." .
+
+chipfab:ProcessEngineer a owl:Class ;
+    rdfs:subClassOf chipfab:Engineer ;
+    owl:disjointWith chipfab:MaintenanceEngineer ;
+    rdfs:comment "Engineer specializing in process optimization." .
+
+chipfab:MaintenanceEngineer a owl:Class ;
+    rdfs:subClassOf chipfab:Engineer ;
+    owl:disjointWith chipfab:ProcessEngineer ;
+    rdfs:comment "Engineer responsible for equipment maintenance." .
+
+chipfab:Technician a owl:Class ;
+    rdfs:subClassOf chipfab:Employee ;
+    owl:disjointWith chipfab:Engineer ;
+    owl:disjointWith chipfab:Operator ;
+    rdfs:comment "An employee performing technical support." .
+
+chipfab:Visitor a owl:Class ;
+    rdfs:subClassOf chipfab:Person ;
+    owl:disjointWith chipfab:Employee ;
+    rdfs:comment "A non-employee present in the plant." .
+
+chipfab:SoftwareAgent a owl:Class ;
+    rdfs:subClassOf chipfab:Agent ;
+    owl:disjointWith chipfab:Person ;
+    rdfs:comment "A non-human agent, such as a control system." .
+
+chipfab:MESystem a owl:Class ;
+    rdfs:subClassOf chipfab:SoftwareAgent ;
+    rdfs:comment "Manufacturing Execution System software agent." .
+
+chipfab:Asset a owl:Class ;
+    rdfs:subClassOf chipfab:Thing ;
+    owl:disjointWith chipfab:Agent ;
+    owl:disjointWith chipfab:Event ;
+    owl:disjointWith chipfab:Material ;
+    rdfs:comment "A physical or informational asset." .
+
+chipfab:Equipment a owl:Class ;
+    rdfs:subClassOf chipfab:Asset ;
+    owl:disjointWith chipfab:Facility ;
+    owl:disjointWith chipfab:Tool ;
+    rdfs:comment "Physical equipment used in fabrication." .
+
+chipfab:ProcessEquipment a owl:Class ;
+    rdfs:subClassOf chipfab:Equipment ;
+    owl:disjointWith chipfab:SupportEquipment ;
+    rdfs:comment "Equipment used directly in chip processing." .
+
+chipfab:PhotolithographyTool a owl:Class ;
+    rdfs:subClassOf chipfab:ProcessEquipment ;
+    owl:disjointWith chipfab:DepositionTool ;
+    owl:disjointWith chipfab:Etcher ;
+    rdfs:comment "Tool for photolithography steps." .
+
+chipfab:Stepper a owl:Class ;
+    rdfs:subClassOf chipfab:PhotolithographyTool ;
+    owl:disjointWith chipfab:MaskAligner ;
+    rdfs:comment "Stepper for projecting circuit patterns." .
+
+chipfab:MaskAligner a owl:Class ;
+    rdfs:subClassOf chipfab:PhotolithographyTool ;
+    owl:disjointWith chipfab:Stepper ;
+    rdfs:comment "Aligner for mask positioning." .
+
+chipfab:Etcher a owl:Class ;
+    rdfs:subClassOf chipfab:ProcessEquipment ;
+    owl:disjointWith chipfab:DepositionTool ;
+    owl:disjointWith chipfab:PhotolithographyTool ;
+    rdfs:comment "Equipment for etching processes." .
+
+chipfab:DryEtcher a owl:Class ;
+    rdfs:subClassOf chipfab:Etcher ;
+    owl:disjointWith chipfab:WetEtcher ;
+    rdfs:comment "Etcher using plasma or dry chemicals." .
+
+chipfab:WetEtcher a owl:Class ;
+    rdfs:subClassOf chipfab:Etcher ;
+    owl:disjointWith chipfab:DryEtcher ;
+    rdfs:comment "Etcher using wet chemicals." .
+
+chipfab:DepositionTool a owl:Class ;
+    rdfs:subClassOf chipfab:ProcessEquipment ;
+    owl:disjointWith chipfab:Etcher ;
+    owl:disjointWith chipfab:PhotolithographyTool ;
+    rdfs:comment "Tool for material deposition." .
+
+chipfab:CVDTool a owl:Class ;
+    rdfs:subClassOf chipfab:DepositionTool ;
+    owl:disjointWith chipfab:PVDTool ;
+    rdfs:comment "Chemical Vapor Deposition tool." .
+
+chipfab:PVDTool a owl:Class ;
+    rdfs:subClassOf chipfab:DepositionTool ;
+    owl:disjointWith chipfab:CVDTool ;
+    rdfs:comment "Physical Vapor Deposition tool." .
+
+chipfab:SupportEquipment a owl:Class ;
+    rdfs:subClassOf chipfab:Equipment ;
+    owl:disjointWith chipfab:ProcessEquipment ;
+    rdfs:comment "Equipment supporting the process." .
+
+chipfab:MetrologyTool a owl:Class ;
+    rdfs:subClassOf chipfab:SupportEquipment ;
+    owl:disjointWith chipfab:TransportSystem ;
+    rdfs:comment "Tool for measuring wafers." .
+
+chipfab:SEM a owl:Class ;
+    rdfs:subClassOf chipfab:MetrologyTool ;
+    owl:disjointWith chipfab:Ellipsometer ;
+    rdfs:comment "Scanning Electron Microscope." .
+
+chipfab:Ellipsometer a owl:Class ;
+    rdfs:subClassOf chipfab:MetrologyTool ;
+    owl:disjointWith chipfab:SEM ;
+    rdfs:comment "Optical measurement tool." .
+
+chipfab:TransportSystem a owl:Class ;
+    rdfs:subClassOf chipfab:SupportEquipment ;
+    owl:disjointWith chipfab:MetrologyTool ;
+    rdfs:comment "System for moving materials." .
+
+chipfab:AGV a owl:Class ;
+    rdfs:subClassOf chipfab:TransportSystem ;
+    owl:disjointWith chipfab:Conveyor ;
+    rdfs:comment "Automated Guided Vehicle." .
+
+chipfab:Conveyor a owl:Class ;
+    rdfs:subClassOf chipfab:TransportSystem ;
+    owl:disjointWith chipfab:AGV ;
+    rdfs:comment "Conveyor belt system." .
+
+chipfab:Facility a owl:Class ;
+    rdfs:subClassOf chipfab:Asset ;
+    owl:disjointWith chipfab:Equipment ;
+    owl:disjointWith chipfab:Tool ;
+    rdfs:comment "Physical facility or area." .
+
+chipfab:Cleanroom a owl:Class ;
+    rdfs:subClassOf chipfab:Facility ;
+    owl:disjointWith chipfab:StorageArea ;
+    rdfs:comment "Controlled environment for fabrication." .
+
+chipfab:StorageArea a owl:Class ;
+    rdfs:subClassOf chipfab:Facility ;
+    owl:disjointWith chipfab:Cleanroom ;
+    rdfs:comment "Area for storing materials." .
+
+chipfab:Tool a owl:Class ;
+    rdfs:subClassOf chipfab:Asset ;
+    owl:disjointWith chipfab:Equipment ;
+    owl:disjointWith chipfab:Facility ;
+    rdfs:comment "Handheld or small tool." .
+
+chipfab:Material a owl:Class ;
+    rdfs:subClassOf chipfab:Thing ;
+    owl:disjointWith chipfab:Agent ;
+    owl:disjointWith chipfab:Asset ;
+    owl:disjointWith chipfab:Event ;
+    rdfs:comment "Any physical material or substance." .
+
+chipfab:Wafer a owl:Class ;
+    rdfs:subClassOf chipfab:Material ;
+    owl:disjointWith chipfab:Chemical ;
+    owl:disjointWith chipfab:Mask ;
+    rdfs:comment "Semiconductor wafer." .
+
+chipfab:SiliconWafer a owl:Class ;
+    rdfs:subClassOf chipfab:Wafer ;
+    owl:disjointWith chipfab:SOIWafer ;
+    rdfs:comment "A wafer made of silicon." .
+
+chipfab:SOIWafer a owl:Class ;
+    rdfs:subClassOf chipfab:Wafer ;
+    owl:disjointWith chipfab:SiliconWafer ;
+    rdfs:comment "Silicon-on-insulator wafer." .
+
+chipfab:Chemical a owl:Class ;
+    rdfs:subClassOf chipfab:Material ;
+    owl:disjointWith chipfab:Mask ;
+    owl:disjointWith chipfab:Wafer ;
+    rdfs:comment "Chemical used in processing." .
+
+chipfab:Photoresist a owl:Class ;
+    rdfs:subClassOf chipfab:Chemical ;
+    owl:disjointWith chipfab:Etchant ;
+    rdfs:comment "Light-sensitive chemical for lithography." .
+
+chipfab:Etchant a owl:Class ;
+    rdfs:subClassOf chipfab:Chemical ;
+    owl:disjointWith chipfab:Photoresist ;
+    rdfs:comment "Chemical used for etching." .
+
+chipfab:Mask a owl:Class ;
+    rdfs:subClassOf chipfab:Material ;
+    owl:disjointWith chipfab:Chemical ;
+    owl:disjointWith chipfab:Wafer ;
+    rdfs:comment "Photomask for patterning." .
+
+chipfab:Event a owl:Class ;
+    rdfs:subClassOf chipfab:Thing ;
+    owl:disjointWith chipfab:Agent ;
+    owl:disjointWith chipfab:Asset ;
+    owl:disjointWith chipfab:Material ;
+    rdfs:comment "An occurrence or process step." .
+
+chipfab:ProcessEvent a owl:Class ;
+    rdfs:subClassOf chipfab:Event ;
+    owl:disjointWith chipfab:MaintenanceEvent ;
+    owl:disjointWith chipfab:TransportEvent ;
+    rdfs:comment "A fabrication process step." .
+
+chipfab:LithographyStep a owl:Class ;
+    rdfs:subClassOf chipfab:ProcessEvent ;
+    owl:disjointWith chipfab:DepositionStep ;
+    owl:disjointWith chipfab:EtchStep ;
+    rdfs:comment "A photolithography process step." .
+
+chipfab:Exposure a owl:Class ;
+    rdfs:subClassOf chipfab:LithographyStep ;
+    owl:disjointWith chipfab:Develop ;
+    rdfs:comment "Exposure of wafer to light." .
+
+chipfab:Develop a owl:Class ;
+    rdfs:subClassOf chipfab:LithographyStep ;
+    owl:disjointWith chipfab:Exposure ;
+    rdfs:comment "Development of photoresist." .
+
+chipfab:EtchStep a owl:Class ;
+    rdfs:subClassOf chipfab:ProcessEvent ;
+    owl:disjointWith chipfab:DepositionStep ;
+    owl:disjointWith chipfab:LithographyStep ;
+    rdfs:comment "An etching process step." .
+
+chipfab:DryEtchStep a owl:Class ;
+    rdfs:subClassOf chipfab:EtchStep ;
+    owl:disjointWith chipfab:WetEtchStep ;
+    rdfs:comment "A dry etching process." .
+
+chipfab:WetEtchStep a owl:Class ;
+    rdfs:subClassOf chipfab:EtchStep ;
+    owl:disjointWith chipfab:DryEtchStep ;
+    rdfs:comment "A wet etching process." .
+
+chipfab:DepositionStep a owl:Class ;
+    rdfs:subClassOf chipfab:ProcessEvent ;
+    owl:disjointWith chipfab:EtchStep ;
+    owl:disjointWith chipfab:LithographyStep ;
+    rdfs:comment "A material deposition step." .
+
+chipfab:CVDStep a owl:Class ;
+    rdfs:subClassOf chipfab:DepositionStep ;
+    owl:disjointWith chipfab:PVDStep ;
+    rdfs:comment "A chemical vapor deposition step." .
+
+chipfab:PVDStep a owl:Class ;
+    rdfs:subClassOf chipfab:DepositionStep ;
+    owl:disjointWith chipfab:CVDStep ;
+    rdfs:comment "A physical vapor deposition step." .
+
+chipfab:MaintenanceEvent a owl:Class ;
+    rdfs:subClassOf chipfab:Event ;
+    owl:disjointWith chipfab:ProcessEvent ;
+    owl:disjointWith chipfab:TransportEvent ;
+    rdfs:comment "Maintenance activity on equipment." .
+
+chipfab:ScheduledMaintenance a owl:Class ;
+    rdfs:subClassOf chipfab:MaintenanceEvent ;
+    owl:disjointWith chipfab:UnscheduledMaintenance ;
+    rdfs:comment "Planned maintenance." .
+
+chipfab:UnscheduledMaintenance a owl:Class ;
+    rdfs:subClassOf chipfab:MaintenanceEvent ;
+    owl:disjointWith chipfab:ScheduledMaintenance ;
+    rdfs:comment "Unplanned maintenance." .
+
+chipfab:TransportEvent a owl:Class ;
+    rdfs:subClassOf chipfab:Event ;
+    owl:disjointWith chipfab:MaintenanceEvent ;
+    owl:disjointWith chipfab:ProcessEvent ;
+    rdfs:comment "Movement of materials." .
+
+chipfab:WaferTransport a owl:Class ;
+    rdfs:subClassOf chipfab:TransportEvent ;
+    owl:disjointWith chipfab:ChemicalTransport ;
+    rdfs:comment "Transport of wafers." .
+
+chipfab:ChemicalTransport a owl:Class ;
+    rdfs:subClassOf chipfab:TransportEvent ;
+    owl:disjointWith chipfab:WaferTransport ;
+    rdfs:comment "Transport of chemicals." .
+
+chipfab:operates a owl:ObjectProperty ;
+    rdfs:domain chipfab:Operator ;
+    rdfs:range  chipfab:Equipment ;
+    owl:inverseOf chipfab:operatedBy .
+
+chipfab:operatedBy a owl:ObjectProperty ;
+    rdfs:domain chipfab:Equipment ;
+    rdfs:range  chipfab:Operator ;
+    owl:inverseOf chipfab:operates .
+
+chipfab:maintainedBy a owl:ObjectProperty ;
+    rdfs:domain chipfab:Equipment ;
+    rdfs:range  chipfab:MaintenanceEngineer ;
+    owl:inverseOf chipfab:maintains .
+
+chipfab:maintains a owl:ObjectProperty ;
+    rdfs:domain chipfab:MaintenanceEngineer ;
+    rdfs:range  chipfab:Equipment ;
+    owl:inverseOf chipfab:maintainedBy .
+
+chipfab:locatedIn a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:domain chipfab:Asset ;
+    rdfs:range  chipfab:Facility .
+
+chipfab:usesMaterial a owl:ObjectProperty ;
+    rdfs:domain chipfab:ProcessEvent ;
+    rdfs:range  chipfab:Material .
+
+chipfab:performedBy a owl:ObjectProperty ;
+    rdfs:domain chipfab:ProcessEvent ;
+    rdfs:range  chipfab:Operator .
+
+chipfab:performedOn a owl:ObjectProperty ;
+    rdfs:domain chipfab:ProcessEvent ;
+    rdfs:range  chipfab:Wafer .
+
+chipfab:involvesEquipment a owl:ObjectProperty ;
+    rdfs:domain chipfab:ProcessEvent ;
+    rdfs:range  chipfab:Equipment .
+
+chipfab:partOf a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:domain chipfab:Equipment ;
+    rdfs:range  chipfab:Facility .
+
+chipfab:transports a owl:ObjectProperty ;
+    rdfs:domain chipfab:TransportSystem ;
+    rdfs:range  chipfab:Material ;
+    owl:inverseOf chipfab:transportedBy .
+
+chipfab:transportedBy a owl:ObjectProperty ;
+    rdfs:domain chipfab:Material ;
+    rdfs:range  chipfab:TransportSystem ;
+    owl:inverseOf chipfab:transports .
+
+chipfab:supervisedBy a owl:ObjectProperty ;
+    rdfs:domain chipfab:Operator ;
+    rdfs:range  chipfab:ProcessEngineer .
+
+chipfab:employeeId a owl:DatatypeProperty ;
+    rdfs:domain chipfab:Employee ;
+    rdfs:range  xsd:string .
+
+chipfab:fullName a owl:DatatypeProperty ;
+    rdfs:domain chipfab:Person ;
+    rdfs:range  xsd:string .
+
+chipfab:serialNumber a owl:DatatypeProperty ;
+    rdfs:domain chipfab:Equipment ;
+    rdfs:range  xsd:string .
+
+chipfab:waferId a owl:DatatypeProperty ;
+    rdfs:domain chipfab:Wafer ;
+    rdfs:range  xsd:string .
+
+chipfab:materialLot a owl:DatatypeProperty ;
+    rdfs:domain chipfab:Material ;
+    rdfs:range  xsd:string .
+
+chipfab:eventTimestamp a owl:DatatypeProperty ;
+    rdfs:domain chipfab:Event ;
+    rdfs:range  xsd:dateTime .
+
+chipfab:processStepName a owl:DatatypeProperty ;
+    rdfs:domain chipfab:ProcessEvent ;
+    rdfs:range  xsd:string .
+
+chipfab:facilityName a owl:DatatypeProperty ;
+    rdfs:domain chipfab:Facility ;
+    rdfs:range  xsd:string .
+
+chipfab:softwareVersion a owl:DatatypeProperty ;
+    rdfs:domain chipfab:MESystem ;
+    rdfs:range  xsd:string .
+
+chipfab:chemicalName a owl:DatatypeProperty ;
+    rdfs:domain chipfab:Chemical ;
+    rdfs:range  xsd:string .
+
+chipfab:aliceWang a chipfab:ProcessEngineer ;
+    chipfab:employeeId "E1001" ;
+    chipfab:fullName "Alice Wang" .
+
+chipfab:bobSmith a chipfab:Operator ;
+    chipfab:supervisedBy chipfab:aliceWang ;
+    chipfab:operates chipfab:stepperA1 ;
+    chipfab:employeeId "E1022" ;
+    chipfab:fullName "Bob Smith" .
+
+chipfab:carolLee a chipfab:MaintenanceEngineer ;
+    chipfab:maintains chipfab:sem1, chipfab:stepperA1 ;
+    chipfab:employeeId "E1103" ;
+    chipfab:fullName "Carol Lee" .
+
+chipfab:daveKim a chipfab:Technician ;
+    chipfab:employeeId "E1204" ;
+    chipfab:fullName "Dave Kim" .
+
+chipfab:stepperA1 a chipfab:Stepper ;
+    chipfab:operatedBy chipfab:bobSmith ;
+    chipfab:maintainedBy chipfab:carolLee ;
+    chipfab:locatedIn chipfab:mainCleanroom ;
+    chipfab:partOf chipfab:mainCleanroom ;
+    chipfab:serialNumber "STP-001" .
+
+chipfab:sem1 a chipfab:SEM ;
+    chipfab:maintainedBy chipfab:carolLee ;
+    chipfab:locatedIn chipfab:metrologyLab ;
+    chipfab:partOf chipfab:metrologyLab ;
+    chipfab:serialNumber "SEM-100" .
+
+chipfab:mainCleanroom a chipfab:Cleanroom ;
+    chipfab:facilityName "Main Cleanroom" .
+
+chipfab:metrologyLab a chipfab:StorageArea ;
+    chipfab:facilityName "Metrology Lab" .
+
+chipfab:waferLotA a chipfab:SiliconWafer ;
+    chipfab:transportedBy chipfab:agv1 ;
+    chipfab:waferId "WAF-20230601A" ;
+    chipfab:materialLot "LOT-001" .
+
+chipfab:agv1 a chipfab:AGV ;
+    chipfab:transports chipfab:waferLotA ;
+    chipfab:locatedIn chipfab:mainCleanroom ;
+    chipfab:serialNumber "AGV-01" .
+
+chipfab:photoresistA a chipfab:Photoresist ;
+    chipfab:chemicalName "PR-193NM" ;
+    chipfab:materialLot "CHEM-PR-001" .
+
+chipfab:etchantB a chipfab:Etchant ;
+    chipfab:chemicalName "HF" ;
+    chipfab:materialLot "CHEM-ET-002" .
+
+chipfab:mask1 a chipfab:Mask ;
+    chipfab:materialLot "MASK-01" .
+
+chipfab:exposure1 a chipfab:Exposure ;
+    chipfab:performedBy chipfab:bobSmith ;
+    chipfab:performedOn chipfab:waferLotA ;
+    chipfab:involvesEquipment chipfab:stepperA1 ;
+    chipfab:usesMaterial chipfab:photoresistA ;
+    chipfab:eventTimestamp "2024-06-01T09:00:00" ;
+    chipfab:processStepName "Exposure Step 1" .
+
+chipfab:dryEtch1 a chipfab:DryEtchStep ;
+    chipfab:performedBy chipfab:bobSmith ;
+    chipfab:performedOn chipfab:waferLotA ;
+    chipfab:involvesEquipment chipfab:sem1 ;
+    chipfab:usesMaterial chipfab:etchantB ;
+    chipfab:eventTimestamp "2024-06-01T10:00:00" ;
+    chipfab:processStepName "Dry Etch Step 1" .
+
+chipfab:mesSystem1 a chipfab:MESystem ;
+    chipfab:softwareVersion "MES-5.2.1" .
+
+chipfab:scheduledMaint1 a chipfab:ScheduledMaintenance ;
+    chipfab:eventTimestamp "2024-06-01T07:00:00" ;
+    chipfab:processStepName "Stepper Preventive Maintenance" .
+
+chipfab:waferTransport1 a chipfab:WaferTransport ;
+    chipfab:eventTimestamp "2024-06-01T08:30:00" ;
+    chipfab:processStepName "Wafer Move to Stepper" .

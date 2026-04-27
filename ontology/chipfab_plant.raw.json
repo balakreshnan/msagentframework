@@ -1,0 +1,1154 @@
+{
+  "ontology_name": "chipfab-plant",
+  "iri_base": "https://example.org/chipfab/",
+  "prefix": "chipfab",
+  "description": "An ontology modeling the entities, equipment, personnel, materials, and events on a semiconductor chip fabrication plant floor, with deep is-a hierarchies for assets, agents, materials, and processes.",
+  "classes": [
+    {
+      "name": "Thing",
+      "parents": [],
+      "comment": "The root class for all entities.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Agent",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "An entity capable of action, such as people or software.",
+      "disjoint_with": [
+        "Asset",
+        "Material",
+        "Event"
+      ]
+    },
+    {
+      "name": "Person",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "A human agent.",
+      "disjoint_with": [
+        "SoftwareAgent"
+      ]
+    },
+    {
+      "name": "Employee",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person employed at the plant.",
+      "disjoint_with": [
+        "Visitor"
+      ]
+    },
+    {
+      "name": "Operator",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who operates equipment.",
+      "disjoint_with": [
+        "Engineer",
+        "Technician"
+      ]
+    },
+    {
+      "name": "Engineer",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee responsible for engineering tasks.",
+      "disjoint_with": [
+        "Operator",
+        "Technician"
+      ]
+    },
+    {
+      "name": "ProcessEngineer",
+      "parents": [
+        "Engineer"
+      ],
+      "comment": "Engineer specializing in process optimization.",
+      "disjoint_with": [
+        "MaintenanceEngineer"
+      ]
+    },
+    {
+      "name": "MaintenanceEngineer",
+      "parents": [
+        "Engineer"
+      ],
+      "comment": "Engineer responsible for equipment maintenance.",
+      "disjoint_with": [
+        "ProcessEngineer"
+      ]
+    },
+    {
+      "name": "Technician",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee performing technical support.",
+      "disjoint_with": [
+        "Operator",
+        "Engineer"
+      ]
+    },
+    {
+      "name": "Visitor",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A non-employee present in the plant.",
+      "disjoint_with": [
+        "Employee"
+      ]
+    },
+    {
+      "name": "SoftwareAgent",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "A non-human agent, such as a control system.",
+      "disjoint_with": [
+        "Person"
+      ]
+    },
+    {
+      "name": "MESystem",
+      "parents": [
+        "SoftwareAgent"
+      ],
+      "comment": "Manufacturing Execution System software agent.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Asset",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "A physical or informational asset.",
+      "disjoint_with": [
+        "Agent",
+        "Material",
+        "Event"
+      ]
+    },
+    {
+      "name": "Equipment",
+      "parents": [
+        "Asset"
+      ],
+      "comment": "Physical equipment used in fabrication.",
+      "disjoint_with": [
+        "Facility",
+        "Tool"
+      ]
+    },
+    {
+      "name": "ProcessEquipment",
+      "parents": [
+        "Equipment"
+      ],
+      "comment": "Equipment used directly in chip processing.",
+      "disjoint_with": [
+        "SupportEquipment"
+      ]
+    },
+    {
+      "name": "PhotolithographyTool",
+      "parents": [
+        "ProcessEquipment"
+      ],
+      "comment": "Tool for photolithography steps.",
+      "disjoint_with": [
+        "Etcher",
+        "DepositionTool"
+      ]
+    },
+    {
+      "name": "Stepper",
+      "parents": [
+        "PhotolithographyTool"
+      ],
+      "comment": "Stepper for projecting circuit patterns.",
+      "disjoint_with": [
+        "MaskAligner"
+      ]
+    },
+    {
+      "name": "MaskAligner",
+      "parents": [
+        "PhotolithographyTool"
+      ],
+      "comment": "Aligner for mask positioning.",
+      "disjoint_with": [
+        "Stepper"
+      ]
+    },
+    {
+      "name": "Etcher",
+      "parents": [
+        "ProcessEquipment"
+      ],
+      "comment": "Equipment for etching processes.",
+      "disjoint_with": [
+        "PhotolithographyTool",
+        "DepositionTool"
+      ]
+    },
+    {
+      "name": "DryEtcher",
+      "parents": [
+        "Etcher"
+      ],
+      "comment": "Etcher using plasma or dry chemicals.",
+      "disjoint_with": [
+        "WetEtcher"
+      ]
+    },
+    {
+      "name": "WetEtcher",
+      "parents": [
+        "Etcher"
+      ],
+      "comment": "Etcher using wet chemicals.",
+      "disjoint_with": [
+        "DryEtcher"
+      ]
+    },
+    {
+      "name": "DepositionTool",
+      "parents": [
+        "ProcessEquipment"
+      ],
+      "comment": "Tool for material deposition.",
+      "disjoint_with": [
+        "PhotolithographyTool",
+        "Etcher"
+      ]
+    },
+    {
+      "name": "CVDTool",
+      "parents": [
+        "DepositionTool"
+      ],
+      "comment": "Chemical Vapor Deposition tool.",
+      "disjoint_with": [
+        "PVDTool"
+      ]
+    },
+    {
+      "name": "PVDTool",
+      "parents": [
+        "DepositionTool"
+      ],
+      "comment": "Physical Vapor Deposition tool.",
+      "disjoint_with": [
+        "CVDTool"
+      ]
+    },
+    {
+      "name": "SupportEquipment",
+      "parents": [
+        "Equipment"
+      ],
+      "comment": "Equipment supporting the process.",
+      "disjoint_with": [
+        "ProcessEquipment"
+      ]
+    },
+    {
+      "name": "MetrologyTool",
+      "parents": [
+        "SupportEquipment"
+      ],
+      "comment": "Tool for measuring wafers.",
+      "disjoint_with": [
+        "TransportSystem"
+      ]
+    },
+    {
+      "name": "SEM",
+      "parents": [
+        "MetrologyTool"
+      ],
+      "comment": "Scanning Electron Microscope.",
+      "disjoint_with": [
+        "Ellipsometer"
+      ]
+    },
+    {
+      "name": "Ellipsometer",
+      "parents": [
+        "MetrologyTool"
+      ],
+      "comment": "Optical measurement tool.",
+      "disjoint_with": [
+        "SEM"
+      ]
+    },
+    {
+      "name": "TransportSystem",
+      "parents": [
+        "SupportEquipment"
+      ],
+      "comment": "System for moving materials.",
+      "disjoint_with": [
+        "MetrologyTool"
+      ]
+    },
+    {
+      "name": "AGV",
+      "parents": [
+        "TransportSystem"
+      ],
+      "comment": "Automated Guided Vehicle.",
+      "disjoint_with": [
+        "Conveyor"
+      ]
+    },
+    {
+      "name": "Conveyor",
+      "parents": [
+        "TransportSystem"
+      ],
+      "comment": "Conveyor belt system.",
+      "disjoint_with": [
+        "AGV"
+      ]
+    },
+    {
+      "name": "Facility",
+      "parents": [
+        "Asset"
+      ],
+      "comment": "Physical facility or area.",
+      "disjoint_with": [
+        "Equipment",
+        "Tool"
+      ]
+    },
+    {
+      "name": "Cleanroom",
+      "parents": [
+        "Facility"
+      ],
+      "comment": "Controlled environment for fabrication.",
+      "disjoint_with": [
+        "StorageArea"
+      ]
+    },
+    {
+      "name": "StorageArea",
+      "parents": [
+        "Facility"
+      ],
+      "comment": "Area for storing materials.",
+      "disjoint_with": [
+        "Cleanroom"
+      ]
+    },
+    {
+      "name": "Tool",
+      "parents": [
+        "Asset"
+      ],
+      "comment": "Handheld or small tool.",
+      "disjoint_with": [
+        "Equipment",
+        "Facility"
+      ]
+    },
+    {
+      "name": "Material",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "Any physical material or substance.",
+      "disjoint_with": [
+        "Agent",
+        "Asset",
+        "Event"
+      ]
+    },
+    {
+      "name": "Wafer",
+      "parents": [
+        "Material"
+      ],
+      "comment": "Semiconductor wafer.",
+      "disjoint_with": [
+        "Chemical",
+        "Mask"
+      ]
+    },
+    {
+      "name": "SiliconWafer",
+      "parents": [
+        "Wafer"
+      ],
+      "comment": "A wafer made of silicon.",
+      "disjoint_with": [
+        "SOIWafer"
+      ]
+    },
+    {
+      "name": "SOIWafer",
+      "parents": [
+        "Wafer"
+      ],
+      "comment": "Silicon-on-insulator wafer.",
+      "disjoint_with": [
+        "SiliconWafer"
+      ]
+    },
+    {
+      "name": "Chemical",
+      "parents": [
+        "Material"
+      ],
+      "comment": "Chemical used in processing.",
+      "disjoint_with": [
+        "Wafer",
+        "Mask"
+      ]
+    },
+    {
+      "name": "Photoresist",
+      "parents": [
+        "Chemical"
+      ],
+      "comment": "Light-sensitive chemical for lithography.",
+      "disjoint_with": [
+        "Etchant"
+      ]
+    },
+    {
+      "name": "Etchant",
+      "parents": [
+        "Chemical"
+      ],
+      "comment": "Chemical used for etching.",
+      "disjoint_with": [
+        "Photoresist"
+      ]
+    },
+    {
+      "name": "Mask",
+      "parents": [
+        "Material"
+      ],
+      "comment": "Photomask for patterning.",
+      "disjoint_with": [
+        "Wafer",
+        "Chemical"
+      ]
+    },
+    {
+      "name": "Event",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "An occurrence or process step.",
+      "disjoint_with": [
+        "Agent",
+        "Asset",
+        "Material"
+      ]
+    },
+    {
+      "name": "ProcessEvent",
+      "parents": [
+        "Event"
+      ],
+      "comment": "A fabrication process step.",
+      "disjoint_with": [
+        "MaintenanceEvent",
+        "TransportEvent"
+      ]
+    },
+    {
+      "name": "LithographyStep",
+      "parents": [
+        "ProcessEvent"
+      ],
+      "comment": "A photolithography process step.",
+      "disjoint_with": [
+        "EtchStep",
+        "DepositionStep"
+      ]
+    },
+    {
+      "name": "Exposure",
+      "parents": [
+        "LithographyStep"
+      ],
+      "comment": "Exposure of wafer to light.",
+      "disjoint_with": [
+        "Develop"
+      ]
+    },
+    {
+      "name": "Develop",
+      "parents": [
+        "LithographyStep"
+      ],
+      "comment": "Development of photoresist.",
+      "disjoint_with": [
+        "Exposure"
+      ]
+    },
+    {
+      "name": "EtchStep",
+      "parents": [
+        "ProcessEvent"
+      ],
+      "comment": "An etching process step.",
+      "disjoint_with": [
+        "LithographyStep",
+        "DepositionStep"
+      ]
+    },
+    {
+      "name": "DryEtchStep",
+      "parents": [
+        "EtchStep"
+      ],
+      "comment": "A dry etching process.",
+      "disjoint_with": [
+        "WetEtchStep"
+      ]
+    },
+    {
+      "name": "WetEtchStep",
+      "parents": [
+        "EtchStep"
+      ],
+      "comment": "A wet etching process.",
+      "disjoint_with": [
+        "DryEtchStep"
+      ]
+    },
+    {
+      "name": "DepositionStep",
+      "parents": [
+        "ProcessEvent"
+      ],
+      "comment": "A material deposition step.",
+      "disjoint_with": [
+        "LithographyStep",
+        "EtchStep"
+      ]
+    },
+    {
+      "name": "CVDStep",
+      "parents": [
+        "DepositionStep"
+      ],
+      "comment": "A chemical vapor deposition step.",
+      "disjoint_with": [
+        "PVDStep"
+      ]
+    },
+    {
+      "name": "PVDStep",
+      "parents": [
+        "DepositionStep"
+      ],
+      "comment": "A physical vapor deposition step.",
+      "disjoint_with": [
+        "CVDStep"
+      ]
+    },
+    {
+      "name": "MaintenanceEvent",
+      "parents": [
+        "Event"
+      ],
+      "comment": "Maintenance activity on equipment.",
+      "disjoint_with": [
+        "ProcessEvent",
+        "TransportEvent"
+      ]
+    },
+    {
+      "name": "ScheduledMaintenance",
+      "parents": [
+        "MaintenanceEvent"
+      ],
+      "comment": "Planned maintenance.",
+      "disjoint_with": [
+        "UnscheduledMaintenance"
+      ]
+    },
+    {
+      "name": "UnscheduledMaintenance",
+      "parents": [
+        "MaintenanceEvent"
+      ],
+      "comment": "Unplanned maintenance.",
+      "disjoint_with": [
+        "ScheduledMaintenance"
+      ]
+    },
+    {
+      "name": "TransportEvent",
+      "parents": [
+        "Event"
+      ],
+      "comment": "Movement of materials.",
+      "disjoint_with": [
+        "ProcessEvent",
+        "MaintenanceEvent"
+      ]
+    },
+    {
+      "name": "WaferTransport",
+      "parents": [
+        "TransportEvent"
+      ],
+      "comment": "Transport of wafers.",
+      "disjoint_with": [
+        "ChemicalTransport"
+      ]
+    },
+    {
+      "name": "ChemicalTransport",
+      "parents": [
+        "TransportEvent"
+      ],
+      "comment": "Transport of chemicals.",
+      "disjoint_with": [
+        "WaferTransport"
+      ]
+    }
+  ],
+  "object_properties": [
+    {
+      "name": "operates",
+      "domain": "Operator",
+      "range": "Equipment",
+      "inverse_of": "operatedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Operator operates equipment."
+    },
+    {
+      "name": "operatedBy",
+      "domain": "Equipment",
+      "range": "Operator",
+      "inverse_of": "operates",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Equipment is operated by operator."
+    },
+    {
+      "name": "maintainedBy",
+      "domain": "Equipment",
+      "range": "MaintenanceEngineer",
+      "inverse_of": "maintains",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Equipment is maintained by engineer."
+    },
+    {
+      "name": "maintains",
+      "domain": "MaintenanceEngineer",
+      "range": "Equipment",
+      "inverse_of": "maintainedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Engineer maintains equipment."
+    },
+    {
+      "name": "locatedIn",
+      "domain": "Asset",
+      "range": "Facility",
+      "inverse_of": null,
+      "transitive": true,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Asset is located in facility."
+    },
+    {
+      "name": "usesMaterial",
+      "domain": "ProcessEvent",
+      "range": "Material",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Process event uses material."
+    },
+    {
+      "name": "performedBy",
+      "domain": "ProcessEvent",
+      "range": "Operator",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Process event performed by operator."
+    },
+    {
+      "name": "performedOn",
+      "domain": "ProcessEvent",
+      "range": "Wafer",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Process event performed on wafer."
+    },
+    {
+      "name": "involvesEquipment",
+      "domain": "ProcessEvent",
+      "range": "Equipment",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Process event involves equipment."
+    },
+    {
+      "name": "partOf",
+      "domain": "Equipment",
+      "range": "Facility",
+      "inverse_of": null,
+      "transitive": true,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Equipment is part of a facility."
+    },
+    {
+      "name": "transports",
+      "domain": "TransportSystem",
+      "range": "Material",
+      "inverse_of": "transportedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Transport system transports material."
+    },
+    {
+      "name": "transportedBy",
+      "domain": "Material",
+      "range": "TransportSystem",
+      "inverse_of": "transports",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Material is transported by transport system."
+    },
+    {
+      "name": "supervisedBy",
+      "domain": "Operator",
+      "range": "ProcessEngineer",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Operator is supervised by process engineer."
+    }
+  ],
+  "data_properties": [
+    {
+      "name": "employeeId",
+      "domain": "Employee",
+      "datatype": "xsd:string",
+      "comment": "Unique employee identifier."
+    },
+    {
+      "name": "fullName",
+      "domain": "Person",
+      "datatype": "xsd:string",
+      "comment": "Full name of the person."
+    },
+    {
+      "name": "serialNumber",
+      "domain": "Equipment",
+      "datatype": "xsd:string",
+      "comment": "Equipment serial number."
+    },
+    {
+      "name": "waferId",
+      "domain": "Wafer",
+      "datatype": "xsd:string",
+      "comment": "Unique wafer identifier."
+    },
+    {
+      "name": "materialLot",
+      "domain": "Material",
+      "datatype": "xsd:string",
+      "comment": "Material lot number."
+    },
+    {
+      "name": "eventTimestamp",
+      "domain": "Event",
+      "datatype": "xsd:dateTime",
+      "comment": "Timestamp of the event."
+    },
+    {
+      "name": "processStepName",
+      "domain": "ProcessEvent",
+      "datatype": "xsd:string",
+      "comment": "Name of the process step."
+    },
+    {
+      "name": "facilityName",
+      "domain": "Facility",
+      "datatype": "xsd:string",
+      "comment": "Name of the facility."
+    },
+    {
+      "name": "softwareVersion",
+      "domain": "MESystem",
+      "datatype": "xsd:string",
+      "comment": "Version of the MES software."
+    },
+    {
+      "name": "chemicalName",
+      "domain": "Chemical",
+      "datatype": "xsd:string",
+      "comment": "Name of the chemical."
+    }
+  ],
+  "individuals": [
+    {
+      "name": "aliceWang",
+      "types": [
+        "ProcessEngineer"
+      ],
+      "object_props": {},
+      "data_props": {
+        "employeeId": [
+          "E1001"
+        ],
+        "fullName": [
+          "Alice Wang"
+        ]
+      }
+    },
+    {
+      "name": "bobSmith",
+      "types": [
+        "Operator"
+      ],
+      "object_props": {
+        "supervisedBy": [
+          "aliceWang"
+        ]
+      },
+      "data_props": {
+        "employeeId": [
+          "E1022"
+        ],
+        "fullName": [
+          "Bob Smith"
+        ]
+      }
+    },
+    {
+      "name": "carolLee",
+      "types": [
+        "MaintenanceEngineer"
+      ],
+      "object_props": {},
+      "data_props": {
+        "employeeId": [
+          "E1103"
+        ],
+        "fullName": [
+          "Carol Lee"
+        ]
+      }
+    },
+    {
+      "name": "daveKim",
+      "types": [
+        "Technician"
+      ],
+      "object_props": {},
+      "data_props": {
+        "employeeId": [
+          "E1204"
+        ],
+        "fullName": [
+          "Dave Kim"
+        ]
+      }
+    },
+    {
+      "name": "stepperA1",
+      "types": [
+        "Stepper"
+      ],
+      "object_props": {
+        "operatedBy": [
+          "bobSmith"
+        ],
+        "maintainedBy": [
+          "carolLee"
+        ],
+        "locatedIn": [
+          "mainCleanroom"
+        ],
+        "partOf": [
+          "mainCleanroom"
+        ]
+      },
+      "data_props": {
+        "serialNumber": [
+          "STP-001"
+        ]
+      }
+    },
+    {
+      "name": "sem1",
+      "types": [
+        "SEM"
+      ],
+      "object_props": {
+        "maintainedBy": [
+          "carolLee"
+        ],
+        "locatedIn": [
+          "metrologyLab"
+        ],
+        "partOf": [
+          "metrologyLab"
+        ]
+      },
+      "data_props": {
+        "serialNumber": [
+          "SEM-100"
+        ]
+      }
+    },
+    {
+      "name": "mainCleanroom",
+      "types": [
+        "Cleanroom"
+      ],
+      "object_props": {},
+      "data_props": {
+        "facilityName": [
+          "Main Cleanroom"
+        ]
+      }
+    },
+    {
+      "name": "metrologyLab",
+      "types": [
+        "StorageArea"
+      ],
+      "object_props": {},
+      "data_props": {
+        "facilityName": [
+          "Metrology Lab"
+        ]
+      }
+    },
+    {
+      "name": "waferLotA",
+      "types": [
+        "SiliconWafer"
+      ],
+      "object_props": {
+        "transportedBy": [
+          "agv1"
+        ]
+      },
+      "data_props": {
+        "waferId": [
+          "WAF-20230601A"
+        ],
+        "materialLot": [
+          "LOT-001"
+        ]
+      }
+    },
+    {
+      "name": "agv1",
+      "types": [
+        "AGV"
+      ],
+      "object_props": {
+        "transports": [
+          "waferLotA"
+        ],
+        "locatedIn": [
+          "mainCleanroom"
+        ]
+      },
+      "data_props": {
+        "serialNumber": [
+          "AGV-01"
+        ]
+      }
+    },
+    {
+      "name": "photoresistA",
+      "types": [
+        "Photoresist"
+      ],
+      "object_props": {},
+      "data_props": {
+        "chemicalName": [
+          "PR-193NM"
+        ],
+        "materialLot": [
+          "CHEM-PR-001"
+        ]
+      }
+    },
+    {
+      "name": "etchantB",
+      "types": [
+        "Etchant"
+      ],
+      "object_props": {},
+      "data_props": {
+        "chemicalName": [
+          "HF"
+        ],
+        "materialLot": [
+          "CHEM-ET-002"
+        ]
+      }
+    },
+    {
+      "name": "mask1",
+      "types": [
+        "Mask"
+      ],
+      "object_props": {},
+      "data_props": {
+        "materialLot": [
+          "MASK-01"
+        ]
+      }
+    },
+    {
+      "name": "exposure1",
+      "types": [
+        "Exposure"
+      ],
+      "object_props": {
+        "performedBy": [
+          "bobSmith"
+        ],
+        "performedOn": [
+          "waferLotA"
+        ],
+        "involvesEquipment": [
+          "stepperA1"
+        ],
+        "usesMaterial": [
+          "photoresistA"
+        ]
+      },
+      "data_props": {
+        "eventTimestamp": [
+          "2024-06-01T09:00:00"
+        ],
+        "processStepName": [
+          "Exposure Step 1"
+        ]
+      }
+    },
+    {
+      "name": "dryEtch1",
+      "types": [
+        "DryEtchStep"
+      ],
+      "object_props": {
+        "performedBy": [
+          "bobSmith"
+        ],
+        "performedOn": [
+          "waferLotA"
+        ],
+        "involvesEquipment": [
+          "sem1"
+        ],
+        "usesMaterial": [
+          "etchantB"
+        ]
+      },
+      "data_props": {
+        "eventTimestamp": [
+          "2024-06-01T10:00:00"
+        ],
+        "processStepName": [
+          "Dry Etch Step 1"
+        ]
+      }
+    },
+    {
+      "name": "mesSystem1",
+      "types": [
+        "MESystem"
+      ],
+      "object_props": {},
+      "data_props": {
+        "softwareVersion": [
+          "MES-5.2.1"
+        ]
+      }
+    },
+    {
+      "name": "scheduledMaint1",
+      "types": [
+        "ScheduledMaintenance"
+      ],
+      "object_props": {
+        "involvesEquipment": [
+          "stepperA1"
+        ],
+        "performedBy": [
+          "carolLee"
+        ]
+      },
+      "data_props": {
+        "eventTimestamp": [
+          "2024-06-01T07:00:00"
+        ],
+        "processStepName": [
+          "Stepper Preventive Maintenance"
+        ]
+      }
+    },
+    {
+      "name": "waferTransport1",
+      "types": [
+        "WaferTransport"
+      ],
+      "object_props": {
+        "performedBy": [
+          "daveKim"
+        ],
+        "performedOn": [
+          "waferLotA"
+        ],
+        "involvesEquipment": [
+          "agv1"
+        ]
+      },
+      "data_props": {
+        "eventTimestamp": [
+          "2024-06-01T08:30:00"
+        ],
+        "processStepName": [
+          "Wafer Move to Stepper"
+        ]
+      }
+    }
+  ]
+}

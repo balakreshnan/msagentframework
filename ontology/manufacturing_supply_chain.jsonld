@@ -1,0 +1,371 @@
+{
+  "@context": {
+    "mscm": "https://example.org/manufacturing-scm/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "mscm:Agent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "mscm:Supplier",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "mscm:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "mscm:Manufacturer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "mscm:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "mscm:Customer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "mscm:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "mscm:Product",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "mscm:RawMaterial",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "mscm:Product"
+        }
+      ]
+    },
+    {
+      "@id": "mscm:Component",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "mscm:Product"
+        }
+      ]
+    },
+    {
+      "@id": "mscm:FinishedProduct",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "mscm:Product"
+        }
+      ]
+    },
+    {
+      "@id": "mscm:Order",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "mscm:PurchaseOrder",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "mscm:Order"
+        }
+      ]
+    },
+    {
+      "@id": "mscm:SalesOrder",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "mscm:Order"
+        }
+      ]
+    },
+    {
+      "@id": "mscm:Shipment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "mscm:LogisticsProvider",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "mscm:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "mscm:Warehouse",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "mscm:Location",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "mscm:acmeSupplier",
+      "@type": [
+        "mscm:Supplier"
+      ],
+      "mscm:locatedAt": [
+        {
+          "@id": "mscm:cityA"
+        }
+      ],
+      "mscm:supplies": [
+        {
+          "@id": "mscm:steelRod"
+        },
+        {
+          "@id": "mscm:widgetComponent"
+        }
+      ],
+      "mscm:agentName": [
+        "ACME Raw Materials Ltd."
+      ]
+    },
+    {
+      "@id": "mscm:bestManufacturer",
+      "@type": [
+        "mscm:Manufacturer"
+      ],
+      "mscm:locatedAt": [
+        {
+          "@id": "mscm:cityB"
+        }
+      ],
+      "mscm:manufactures": [
+        {
+          "@id": "mscm:superWidget"
+        }
+      ],
+      "mscm:placesOrder": [
+        {
+          "@id": "mscm:order123"
+        }
+      ],
+      "mscm:agentName": [
+        "Best Manufacturing Inc."
+      ]
+    },
+    {
+      "@id": "mscm:johnCustomer",
+      "@type": [
+        "mscm:Customer"
+      ],
+      "mscm:locatedAt": [
+        {
+          "@id": "mscm:cityC"
+        }
+      ],
+      "mscm:placesOrder": [
+        {
+          "@id": "mscm:order456"
+        }
+      ],
+      "mscm:agentName": [
+        "John's Retail"
+      ]
+    },
+    {
+      "@id": "mscm:steelRod",
+      "@type": [
+        "mscm:RawMaterial"
+      ],
+      "mscm:suppliedBy": [
+        {
+          "@id": "mscm:acmeSupplier"
+        }
+      ],
+      "mscm:productName": [
+        "Steel Rod"
+      ],
+      "mscm:productCode": [
+        "RM-001"
+      ]
+    },
+    {
+      "@id": "mscm:widgetComponent",
+      "@type": [
+        "mscm:Component"
+      ],
+      "mscm:suppliedBy": [
+        {
+          "@id": "mscm:acmeSupplier"
+        }
+      ],
+      "mscm:productName": [
+        "Widget Component"
+      ],
+      "mscm:productCode": [
+        "CP-100"
+      ]
+    },
+    {
+      "@id": "mscm:superWidget",
+      "@type": [
+        "mscm:FinishedProduct"
+      ],
+      "mscm:manufacturedBy": [
+        {
+          "@id": "mscm:bestManufacturer"
+        }
+      ],
+      "mscm:includedInShipment": [
+        {
+          "@id": "mscm:shipment789"
+        }
+      ],
+      "mscm:productName": [
+        "Super Widget"
+      ],
+      "mscm:productCode": [
+        "FP-900"
+      ]
+    },
+    {
+      "@id": "mscm:order123",
+      "@type": [
+        "mscm:PurchaseOrder"
+      ],
+      "mscm:orderedBy": [
+        {
+          "@id": "mscm:bestManufacturer"
+        }
+      ],
+      "mscm:orderNumber": [
+        "PO-123"
+      ],
+      "mscm:orderDate": [
+        "2024-06-01T10:00:00"
+      ]
+    },
+    {
+      "@id": "mscm:order456",
+      "@type": [
+        "mscm:SalesOrder"
+      ],
+      "mscm:orderedBy": [
+        {
+          "@id": "mscm:johnCustomer"
+        }
+      ],
+      "mscm:orderNumber": [
+        "SO-456"
+      ],
+      "mscm:orderDate": [
+        "2024-06-02T15:30:00"
+      ]
+    },
+    {
+      "@id": "mscm:mainWarehouse",
+      "@type": [
+        "mscm:Warehouse"
+      ],
+      "mscm:warehouseName": [
+        "Main Warehouse"
+      ]
+    },
+    {
+      "@id": "mscm:cityA",
+      "@type": [
+        "mscm:Location"
+      ],
+      "mscm:locationOf": [
+        {
+          "@id": "mscm:acmeSupplier"
+        }
+      ],
+      "mscm:locationName": [
+        "City A"
+      ]
+    },
+    {
+      "@id": "mscm:cityB",
+      "@type": [
+        "mscm:Location"
+      ],
+      "mscm:locationOf": [
+        {
+          "@id": "mscm:bestManufacturer"
+        },
+        {
+          "@id": "mscm:fastLogistics"
+        }
+      ],
+      "mscm:locationName": [
+        "City B"
+      ]
+    },
+    {
+      "@id": "mscm:cityC",
+      "@type": [
+        "mscm:Location"
+      ],
+      "mscm:locationOf": [
+        {
+          "@id": "mscm:johnCustomer"
+        }
+      ],
+      "mscm:locationName": [
+        "City C"
+      ]
+    },
+    {
+      "@id": "mscm:fastLogistics",
+      "@type": [
+        "mscm:LogisticsProvider"
+      ],
+      "mscm:locatedAt": [
+        {
+          "@id": "mscm:cityB"
+        }
+      ],
+      "mscm:delivers": [
+        {
+          "@id": "mscm:shipment789"
+        }
+      ],
+      "mscm:agentName": [
+        "Fast Logistics Co."
+      ]
+    },
+    {
+      "@id": "mscm:shipment789",
+      "@type": [
+        "mscm:Shipment"
+      ],
+      "mscm:deliveredBy": [
+        {
+          "@id": "mscm:fastLogistics"
+        }
+      ],
+      "mscm:containsProduct": [
+        {
+          "@id": "mscm:superWidget"
+        }
+      ],
+      "mscm:shipmentNumber": [
+        "SH-789"
+      ],
+      "mscm:shipmentDate": [
+        "2024-06-03T08:00:00"
+      ]
+    }
+  ]
+}

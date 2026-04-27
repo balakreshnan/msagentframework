@@ -1,0 +1,380 @@
+{
+  "@context": {
+    "retail": "https://example.org/retail/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "retail:Entity",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "retail:Person",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Customer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Person"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Employee",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Person"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Cashier",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Manager",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Store",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Product",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Category",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "retail:InventoryItem",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Sale",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Payment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "retail:storeMainStreet",
+      "@type": [
+        "retail:Store"
+      ],
+      "retail:hasInventoryItem": [
+        {
+          "@id": "retail:invAppleMain"
+        },
+        {
+          "@id": "retail:invLaptopMain"
+        }
+      ],
+      "retail:hasEmployee": [
+        {
+          "@id": "retail:empBob"
+        },
+        {
+          "@id": "retail:empCarol"
+        }
+      ],
+      "retail:managedBy": [
+        {
+          "@id": "retail:empCarol"
+        }
+      ],
+      "retail:hasSale": [
+        {
+          "@id": "retail:sale001"
+        }
+      ],
+      "retail:storeName": [
+        "Main Street Store"
+      ],
+      "retail:storeLocation": [
+        "123 Main St"
+      ]
+    },
+    {
+      "@id": "retail:catElectronics",
+      "@type": [
+        "retail:Category"
+      ],
+      "retail:hasProduct": [
+        {
+          "@id": "retail:prodLaptop"
+        }
+      ],
+      "retail:categoryName": [
+        "Electronics"
+      ]
+    },
+    {
+      "@id": "retail:catGroceries",
+      "@type": [
+        "retail:Category"
+      ],
+      "retail:hasProduct": [
+        {
+          "@id": "retail:prodApple"
+        }
+      ],
+      "retail:categoryName": [
+        "Groceries"
+      ]
+    },
+    {
+      "@id": "retail:prodLaptop",
+      "@type": [
+        "retail:Product"
+      ],
+      "retail:belongsToCategory": [
+        {
+          "@id": "retail:catElectronics"
+        }
+      ],
+      "retail:hasInventoryItemOf": [
+        {
+          "@id": "retail:invLaptopMain"
+        }
+      ],
+      "retail:productName": [
+        "Laptop"
+      ],
+      "retail:sku": [
+        "ELEC123"
+      ]
+    },
+    {
+      "@id": "retail:prodApple",
+      "@type": [
+        "retail:Product"
+      ],
+      "retail:belongsToCategory": [
+        {
+          "@id": "retail:catGroceries"
+        }
+      ],
+      "retail:hasInventoryItemOf": [
+        {
+          "@id": "retail:invAppleMain"
+        }
+      ],
+      "retail:productName": [
+        "Apple"
+      ],
+      "retail:sku": [
+        "GROC456"
+      ]
+    },
+    {
+      "@id": "retail:invLaptopMain",
+      "@type": [
+        "retail:InventoryItem"
+      ],
+      "retail:ofProduct": [
+        {
+          "@id": "retail:prodLaptop"
+        }
+      ],
+      "retail:inStore": [
+        {
+          "@id": "retail:storeMainStreet"
+        }
+      ],
+      "retail:quantity": [
+        "10"
+      ]
+    },
+    {
+      "@id": "retail:invAppleMain",
+      "@type": [
+        "retail:InventoryItem"
+      ],
+      "retail:ofProduct": [
+        {
+          "@id": "retail:prodApple"
+        }
+      ],
+      "retail:inStore": [
+        {
+          "@id": "retail:storeMainStreet"
+        }
+      ],
+      "retail:quantity": [
+        "50"
+      ]
+    },
+    {
+      "@id": "retail:custAlice",
+      "@type": [
+        "retail:Customer"
+      ],
+      "retail:madePurchase": [
+        {
+          "@id": "retail:sale001"
+        }
+      ],
+      "retail:personName": [
+        "Alice Smith"
+      ],
+      "retail:customerId": [
+        "CUST001"
+      ]
+    },
+    {
+      "@id": "retail:empBob",
+      "@type": [
+        "retail:Cashier"
+      ],
+      "retail:employedAt": [
+        {
+          "@id": "retail:storeMainStreet"
+        }
+      ],
+      "retail:handledSale": [
+        {
+          "@id": "retail:sale001"
+        }
+      ],
+      "retail:personName": [
+        "Bob Jones"
+      ],
+      "retail:employeeId": [
+        "EMP100"
+      ]
+    },
+    {
+      "@id": "retail:empCarol",
+      "@type": [
+        "retail:Manager"
+      ],
+      "retail:employedAt": [
+        {
+          "@id": "retail:storeMainStreet"
+        }
+      ],
+      "retail:manages": [
+        {
+          "@id": "retail:storeMainStreet"
+        }
+      ],
+      "retail:personName": [
+        "Carol Lee"
+      ],
+      "retail:employeeId": [
+        "EMP200"
+      ]
+    },
+    {
+      "@id": "retail:sale001",
+      "@type": [
+        "retail:Sale"
+      ],
+      "retail:purchasedBy": [
+        {
+          "@id": "retail:custAlice"
+        }
+      ],
+      "retail:soldBy": [
+        {
+          "@id": "retail:empBob"
+        }
+      ],
+      "retail:occursAt": [
+        {
+          "@id": "retail:storeMainStreet"
+        }
+      ],
+      "retail:includesProduct": [
+        {
+          "@id": "retail:prodApple"
+        },
+        {
+          "@id": "retail:prodLaptop"
+        }
+      ],
+      "retail:hasPayment": [
+        {
+          "@id": "retail:pay001"
+        }
+      ],
+      "retail:saleDate": [
+        "2024-06-01T10:30:00"
+      ],
+      "retail:saleTotal": [
+        "1200.50"
+      ]
+    },
+    {
+      "@id": "retail:pay001",
+      "@type": [
+        "retail:Payment"
+      ],
+      "retail:paymentFor": [
+        {
+          "@id": "retail:sale001"
+        }
+      ],
+      "retail:paymentAmount": [
+        "1200.50"
+      ],
+      "retail:paymentMethod": [
+        "Credit Card"
+      ]
+    }
+  ]
+}

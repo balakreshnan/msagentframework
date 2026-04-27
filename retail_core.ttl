@@ -1,0 +1,286 @@
+@prefix retail: <https://example.org/retail/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/retail> a owl:Ontology .
+
+retail:Agent a owl:Class ;
+    rdfs:comment "A general entity capable of action in the retail domain." .
+
+retail:Person a owl:Class ;
+    rdfs:subClassOf retail:Agent ;
+    rdfs:comment "A human agent in the retail domain." .
+
+retail:Customer a owl:Class ;
+    rdfs:subClassOf retail:Person ;
+    owl:disjointWith retail:Employee ;
+    rdfs:comment "A person who purchases products from a store." .
+
+retail:Employee a owl:Class ;
+    rdfs:subClassOf retail:Person ;
+    owl:disjointWith retail:Customer ;
+    rdfs:comment "A person employed by a store." .
+
+retail:Cashier a owl:Class ;
+    rdfs:subClassOf retail:Employee ;
+    rdfs:comment "An employee who handles sales transactions." .
+
+retail:Manager a owl:Class ;
+    rdfs:subClassOf retail:Employee ;
+    rdfs:comment "An employee who manages a store." .
+
+retail:Store a owl:Class ;
+    rdfs:comment "A physical or online retail location." .
+
+retail:Product a owl:Class ;
+    rdfs:comment "An item available for sale in a store." .
+
+retail:Category a owl:Class ;
+    rdfs:comment "A classification for products." .
+
+retail:Transaction a owl:Class ;
+    rdfs:comment "A record of a sale between a customer and a store." .
+
+retail:InventoryItem a owl:Class ;
+    rdfs:comment "A specific stock of a product at a store." .
+
+retail:Promotion a owl:Class ;
+    rdfs:comment "A special offer or discount on products." .
+
+retail:employedBy a owl:ObjectProperty ;
+    rdfs:domain retail:Employee ;
+    rdfs:range  retail:Store ;
+    owl:inverseOf retail:employs .
+
+retail:employs a owl:ObjectProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  retail:Employee ;
+    owl:inverseOf retail:employedBy .
+
+retail:purchasedBy a owl:ObjectProperty ;
+    rdfs:domain retail:Transaction ;
+    rdfs:range  retail:Customer ;
+    owl:inverseOf retail:madePurchase .
+
+retail:madePurchase a owl:ObjectProperty ;
+    rdfs:domain retail:Customer ;
+    rdfs:range  retail:Transaction ;
+    owl:inverseOf retail:purchasedBy .
+
+retail:soldAt a owl:ObjectProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  retail:Store ;
+    owl:inverseOf retail:sells .
+
+retail:sells a owl:ObjectProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  retail:Product ;
+    owl:inverseOf retail:soldAt .
+
+retail:hasCategory a owl:ObjectProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  retail:Category ;
+    owl:inverseOf retail:categoryOf .
+
+retail:categoryOf a owl:ObjectProperty ;
+    rdfs:domain retail:Category ;
+    rdfs:range  retail:Product ;
+    owl:inverseOf retail:hasCategory .
+
+retail:handledBy a owl:ObjectProperty ;
+    rdfs:domain retail:Transaction ;
+    rdfs:range  retail:Cashier ;
+    owl:inverseOf retail:handledTransaction .
+
+retail:handledTransaction a owl:ObjectProperty ;
+    rdfs:domain retail:Cashier ;
+    rdfs:range  retail:Transaction ;
+    owl:inverseOf retail:handledBy .
+
+retail:involvesProduct a owl:ObjectProperty ;
+    rdfs:domain retail:Transaction ;
+    rdfs:range  retail:Product ;
+    owl:inverseOf retail:involvedInTransaction .
+
+retail:involvedInTransaction a owl:ObjectProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  retail:Transaction ;
+    owl:inverseOf retail:involvesProduct .
+
+retail:manages a owl:ObjectProperty ;
+    rdfs:domain retail:Manager ;
+    rdfs:range  retail:Store ;
+    owl:inverseOf retail:managedBy .
+
+retail:managedBy a owl:ObjectProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  retail:Manager ;
+    owl:inverseOf retail:manages .
+
+retail:hasInventoryItem a owl:ObjectProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  retail:InventoryItem ;
+    owl:inverseOf retail:inventoryOf .
+
+retail:inventoryOf a owl:ObjectProperty ;
+    rdfs:domain retail:InventoryItem ;
+    rdfs:range  retail:Store ;
+    owl:inverseOf retail:hasInventoryItem .
+
+retail:inventoryProduct a owl:ObjectProperty ;
+    rdfs:domain retail:InventoryItem ;
+    rdfs:range  retail:Product ;
+    owl:inverseOf retail:productInventoryItem .
+
+retail:productInventoryItem a owl:ObjectProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  retail:InventoryItem ;
+    owl:inverseOf retail:inventoryProduct .
+
+retail:appliesToProduct a owl:ObjectProperty ;
+    rdfs:domain retail:Promotion ;
+    rdfs:range  retail:Product ;
+    owl:inverseOf retail:hasPromotion .
+
+retail:hasPromotion a owl:ObjectProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  retail:Promotion ;
+    owl:inverseOf retail:appliesToProduct .
+
+retail:productName a owl:DatatypeProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  xsd:string .
+
+retail:productSKU a owl:DatatypeProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  xsd:string .
+
+retail:productPrice a owl:DatatypeProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  xsd:double .
+
+retail:categoryName a owl:DatatypeProperty ;
+    rdfs:domain retail:Category ;
+    rdfs:range  xsd:string .
+
+retail:storeName a owl:DatatypeProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  xsd:string .
+
+retail:storeLocation a owl:DatatypeProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  xsd:string .
+
+retail:personName a owl:DatatypeProperty ;
+    rdfs:domain retail:Person ;
+    rdfs:range  xsd:string .
+
+retail:transactionDate a owl:DatatypeProperty ;
+    rdfs:domain retail:Transaction ;
+    rdfs:range  xsd:dateTime .
+
+retail:transactionTotal a owl:DatatypeProperty ;
+    rdfs:domain retail:Transaction ;
+    rdfs:range  xsd:double .
+
+retail:inventoryQuantity a owl:DatatypeProperty ;
+    rdfs:domain retail:InventoryItem ;
+    rdfs:range  xsd:integer .
+
+retail:promotionName a owl:DatatypeProperty ;
+    rdfs:domain retail:Promotion ;
+    rdfs:range  xsd:string .
+
+retail:promotionDiscount a owl:DatatypeProperty ;
+    rdfs:domain retail:Promotion ;
+    rdfs:range  xsd:double .
+
+retail:storeMainStreet a retail:Store ;
+    retail:sells retail:prodLaptop ;
+    retail:employs retail:empCarol, retail:empDan ;
+    retail:managedBy retail:empDan ;
+    retail:hasInventoryItem retail:invLaptopMain ;
+    retail:storeName "Main Street Store" ;
+    retail:storeLocation "123 Main St" .
+
+retail:storeMall a retail:Store ;
+    retail:sells retail:prodJeans, retail:prodLaptop ;
+    retail:hasInventoryItem retail:invJeansMall ;
+    retail:storeName "Mall Outlet" ;
+    retail:storeLocation "Mall Blvd" .
+
+retail:catElectronics a retail:Category ;
+    retail:categoryOf retail:prodLaptop ;
+    retail:categoryName "Electronics" .
+
+retail:catClothing a retail:Category ;
+    retail:categoryOf retail:prodJeans ;
+    retail:categoryName "Clothing" .
+
+retail:prodLaptop a retail:Product ;
+    retail:hasCategory retail:catElectronics ;
+    retail:soldAt retail:storeMainStreet, retail:storeMall ;
+    retail:productInventoryItem retail:invLaptopMain ;
+    retail:hasPromotion retail:promoLaptop10 ;
+    retail:involvedInTransaction retail:trans1 ;
+    retail:productName "Laptop X" ;
+    retail:productSKU "LAP123" ;
+    retail:productPrice "999.99" .
+
+retail:prodJeans a retail:Product ;
+    retail:hasCategory retail:catClothing ;
+    retail:soldAt retail:storeMall ;
+    retail:productInventoryItem retail:invJeansMall ;
+    retail:involvedInTransaction retail:trans2 ;
+    retail:productName "Blue Jeans" ;
+    retail:productSKU "JEAN456" ;
+    retail:productPrice "49.99" .
+
+retail:custAlice a retail:Customer ;
+    retail:madePurchase retail:trans1 ;
+    retail:personName "Alice Smith" .
+
+retail:custBob a retail:Customer ;
+    retail:madePurchase retail:trans2 ;
+    retail:personName "Bob Lee" .
+
+retail:empCarol a retail:Cashier ;
+    retail:employedBy retail:storeMainStreet ;
+    retail:handledTransaction retail:trans1, retail:trans2 ;
+    retail:personName "Carol Jones" .
+
+retail:empDan a retail:Manager ;
+    retail:employedBy retail:storeMainStreet ;
+    retail:manages retail:storeMainStreet ;
+    retail:personName "Dan Miller" .
+
+retail:invLaptopMain a retail:InventoryItem ;
+    retail:inventoryOf retail:storeMainStreet ;
+    retail:inventoryProduct retail:prodLaptop ;
+    retail:inventoryQuantity "15" .
+
+retail:invJeansMall a retail:InventoryItem ;
+    retail:inventoryOf retail:storeMall ;
+    retail:inventoryProduct retail:prodJeans ;
+    retail:inventoryQuantity "40" .
+
+retail:promoLaptop10 a retail:Promotion ;
+    retail:appliesToProduct retail:prodLaptop ;
+    retail:promotionName "10% off Laptop X" ;
+    retail:promotionDiscount "10.0" .
+
+retail:trans1 a retail:Transaction ;
+    retail:purchasedBy retail:custAlice ;
+    retail:handledBy retail:empCarol ;
+    retail:involvesProduct retail:prodLaptop ;
+    retail:transactionDate "2024-06-01T10:30:00" ;
+    retail:transactionTotal "899.99" .
+
+retail:trans2 a retail:Transaction ;
+    retail:purchasedBy retail:custBob ;
+    retail:handledBy retail:empCarol ;
+    retail:involvesProduct retail:prodJeans ;
+    retail:transactionDate "2024-06-02T14:15:00" ;
+    retail:transactionTotal "49.99" .

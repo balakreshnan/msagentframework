@@ -1,0 +1,849 @@
+{
+  "@context": {
+    "chipfab": "https://example.org/chipfab/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "chipfab:Thing",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "chipfab:Agent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Person",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Employee",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Person"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Operator",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Engineer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:ProcessEngineer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Engineer"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:MaintenanceEngineer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Engineer"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Technician",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Visitor",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Person"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:SoftwareAgent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:MESystem",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:SoftwareAgent"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Asset",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Equipment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Asset"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:ProcessEquipment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Equipment"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:PhotolithographyTool",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:ProcessEquipment"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Stepper",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:PhotolithographyTool"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:MaskAligner",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:PhotolithographyTool"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Etcher",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:ProcessEquipment"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:DryEtcher",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Etcher"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:WetEtcher",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Etcher"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:DepositionTool",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:ProcessEquipment"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:CVDTool",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:DepositionTool"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:PVDTool",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:DepositionTool"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:SupportEquipment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Equipment"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:MetrologyTool",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:SupportEquipment"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:SEM",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:MetrologyTool"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Ellipsometer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:MetrologyTool"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:TransportSystem",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:SupportEquipment"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:AGV",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:TransportSystem"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Conveyor",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:TransportSystem"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Facility",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Asset"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Cleanroom",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Facility"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:StorageArea",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Facility"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Tool",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Asset"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Material",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Wafer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Material"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:SiliconWafer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Wafer"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:SOIWafer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Wafer"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Chemical",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Material"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Photoresist",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Chemical"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Etchant",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Chemical"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Mask",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Material"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Event",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:ProcessEvent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Event"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:LithographyStep",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:ProcessEvent"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Exposure",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:LithographyStep"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:Develop",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:LithographyStep"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:EtchStep",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:ProcessEvent"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:DryEtchStep",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:EtchStep"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:WetEtchStep",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:EtchStep"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:DepositionStep",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:ProcessEvent"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:CVDStep",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:DepositionStep"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:PVDStep",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:DepositionStep"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:MaintenanceEvent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Event"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:ScheduledMaintenance",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:MaintenanceEvent"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:UnscheduledMaintenance",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:MaintenanceEvent"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:TransportEvent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:Event"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:WaferTransport",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:TransportEvent"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:ChemicalTransport",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "chipfab:TransportEvent"
+        }
+      ]
+    },
+    {
+      "@id": "chipfab:aliceWang",
+      "@type": [
+        "chipfab:ProcessEngineer"
+      ],
+      "chipfab:employeeId": [
+        "E1001"
+      ],
+      "chipfab:fullName": [
+        "Alice Wang"
+      ]
+    },
+    {
+      "@id": "chipfab:bobSmith",
+      "@type": [
+        "chipfab:Operator"
+      ],
+      "chipfab:supervisedBy": [
+        {
+          "@id": "chipfab:aliceWang"
+        }
+      ],
+      "chipfab:operates": [
+        {
+          "@id": "chipfab:stepperA1"
+        }
+      ],
+      "chipfab:employeeId": [
+        "E1022"
+      ],
+      "chipfab:fullName": [
+        "Bob Smith"
+      ]
+    },
+    {
+      "@id": "chipfab:carolLee",
+      "@type": [
+        "chipfab:MaintenanceEngineer"
+      ],
+      "chipfab:maintains": [
+        {
+          "@id": "chipfab:sem1"
+        },
+        {
+          "@id": "chipfab:stepperA1"
+        }
+      ],
+      "chipfab:employeeId": [
+        "E1103"
+      ],
+      "chipfab:fullName": [
+        "Carol Lee"
+      ]
+    },
+    {
+      "@id": "chipfab:daveKim",
+      "@type": [
+        "chipfab:Technician"
+      ],
+      "chipfab:employeeId": [
+        "E1204"
+      ],
+      "chipfab:fullName": [
+        "Dave Kim"
+      ]
+    },
+    {
+      "@id": "chipfab:stepperA1",
+      "@type": [
+        "chipfab:Stepper"
+      ],
+      "chipfab:operatedBy": [
+        {
+          "@id": "chipfab:bobSmith"
+        }
+      ],
+      "chipfab:maintainedBy": [
+        {
+          "@id": "chipfab:carolLee"
+        }
+      ],
+      "chipfab:locatedIn": [
+        {
+          "@id": "chipfab:mainCleanroom"
+        }
+      ],
+      "chipfab:partOf": [
+        {
+          "@id": "chipfab:mainCleanroom"
+        }
+      ],
+      "chipfab:serialNumber": [
+        "STP-001"
+      ]
+    },
+    {
+      "@id": "chipfab:sem1",
+      "@type": [
+        "chipfab:SEM"
+      ],
+      "chipfab:maintainedBy": [
+        {
+          "@id": "chipfab:carolLee"
+        }
+      ],
+      "chipfab:locatedIn": [
+        {
+          "@id": "chipfab:metrologyLab"
+        }
+      ],
+      "chipfab:partOf": [
+        {
+          "@id": "chipfab:metrologyLab"
+        }
+      ],
+      "chipfab:serialNumber": [
+        "SEM-100"
+      ]
+    },
+    {
+      "@id": "chipfab:mainCleanroom",
+      "@type": [
+        "chipfab:Cleanroom"
+      ],
+      "chipfab:facilityName": [
+        "Main Cleanroom"
+      ]
+    },
+    {
+      "@id": "chipfab:metrologyLab",
+      "@type": [
+        "chipfab:StorageArea"
+      ],
+      "chipfab:facilityName": [
+        "Metrology Lab"
+      ]
+    },
+    {
+      "@id": "chipfab:waferLotA",
+      "@type": [
+        "chipfab:SiliconWafer"
+      ],
+      "chipfab:transportedBy": [
+        {
+          "@id": "chipfab:agv1"
+        }
+      ],
+      "chipfab:waferId": [
+        "WAF-20230601A"
+      ],
+      "chipfab:materialLot": [
+        "LOT-001"
+      ]
+    },
+    {
+      "@id": "chipfab:agv1",
+      "@type": [
+        "chipfab:AGV"
+      ],
+      "chipfab:transports": [
+        {
+          "@id": "chipfab:waferLotA"
+        }
+      ],
+      "chipfab:locatedIn": [
+        {
+          "@id": "chipfab:mainCleanroom"
+        }
+      ],
+      "chipfab:serialNumber": [
+        "AGV-01"
+      ]
+    },
+    {
+      "@id": "chipfab:photoresistA",
+      "@type": [
+        "chipfab:Photoresist"
+      ],
+      "chipfab:chemicalName": [
+        "PR-193NM"
+      ],
+      "chipfab:materialLot": [
+        "CHEM-PR-001"
+      ]
+    },
+    {
+      "@id": "chipfab:etchantB",
+      "@type": [
+        "chipfab:Etchant"
+      ],
+      "chipfab:chemicalName": [
+        "HF"
+      ],
+      "chipfab:materialLot": [
+        "CHEM-ET-002"
+      ]
+    },
+    {
+      "@id": "chipfab:mask1",
+      "@type": [
+        "chipfab:Mask"
+      ],
+      "chipfab:materialLot": [
+        "MASK-01"
+      ]
+    },
+    {
+      "@id": "chipfab:exposure1",
+      "@type": [
+        "chipfab:Exposure"
+      ],
+      "chipfab:performedBy": [
+        {
+          "@id": "chipfab:bobSmith"
+        }
+      ],
+      "chipfab:performedOn": [
+        {
+          "@id": "chipfab:waferLotA"
+        }
+      ],
+      "chipfab:involvesEquipment": [
+        {
+          "@id": "chipfab:stepperA1"
+        }
+      ],
+      "chipfab:usesMaterial": [
+        {
+          "@id": "chipfab:photoresistA"
+        }
+      ],
+      "chipfab:eventTimestamp": [
+        "2024-06-01T09:00:00"
+      ],
+      "chipfab:processStepName": [
+        "Exposure Step 1"
+      ]
+    },
+    {
+      "@id": "chipfab:dryEtch1",
+      "@type": [
+        "chipfab:DryEtchStep"
+      ],
+      "chipfab:performedBy": [
+        {
+          "@id": "chipfab:bobSmith"
+        }
+      ],
+      "chipfab:performedOn": [
+        {
+          "@id": "chipfab:waferLotA"
+        }
+      ],
+      "chipfab:involvesEquipment": [
+        {
+          "@id": "chipfab:sem1"
+        }
+      ],
+      "chipfab:usesMaterial": [
+        {
+          "@id": "chipfab:etchantB"
+        }
+      ],
+      "chipfab:eventTimestamp": [
+        "2024-06-01T10:00:00"
+      ],
+      "chipfab:processStepName": [
+        "Dry Etch Step 1"
+      ]
+    },
+    {
+      "@id": "chipfab:mesSystem1",
+      "@type": [
+        "chipfab:MESystem"
+      ],
+      "chipfab:softwareVersion": [
+        "MES-5.2.1"
+      ]
+    },
+    {
+      "@id": "chipfab:scheduledMaint1",
+      "@type": [
+        "chipfab:ScheduledMaintenance"
+      ],
+      "chipfab:eventTimestamp": [
+        "2024-06-01T07:00:00"
+      ],
+      "chipfab:processStepName": [
+        "Stepper Preventive Maintenance"
+      ]
+    },
+    {
+      "@id": "chipfab:waferTransport1",
+      "@type": [
+        "chipfab:WaferTransport"
+      ],
+      "chipfab:eventTimestamp": [
+        "2024-06-01T08:30:00"
+      ],
+      "chipfab:processStepName": [
+        "Wafer Move to Stepper"
+      ]
+    }
+  ]
+}

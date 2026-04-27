@@ -1,0 +1,370 @@
+@prefix retail: <https://example.org/retail/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/retail> a owl:Ontology .
+
+retail:Thing a owl:Class ;
+    rdfs:comment "The root class for all entities." .
+
+retail:Agent a owl:Class ;
+    rdfs:subClassOf retail:Thing ;
+    owl:disjointWith retail:Asset ;
+    owl:disjointWith retail:Event ;
+    owl:disjointWith retail:Location ;
+    owl:disjointWith retail:Product ;
+    rdfs:comment "An entity capable of action in the retail domain." .
+
+retail:Person a owl:Class ;
+    rdfs:subClassOf retail:Agent ;
+    owl:disjointWith retail:Organization ;
+    rdfs:comment "A human agent." .
+
+retail:Organization a owl:Class ;
+    rdfs:subClassOf retail:Agent ;
+    owl:disjointWith retail:Person ;
+    rdfs:comment "A company or supplier." .
+
+retail:Customer a owl:Class ;
+    rdfs:subClassOf retail:Person ;
+    owl:disjointWith retail:Staff ;
+    rdfs:comment "A person who purchases products." .
+
+retail:Staff a owl:Class ;
+    rdfs:subClassOf retail:Person ;
+    owl:disjointWith retail:Customer ;
+    rdfs:comment "A person employed by the retailer." .
+
+retail:SalesStaff a owl:Class ;
+    rdfs:subClassOf retail:Staff ;
+    owl:disjointWith retail:InventoryStaff ;
+    owl:disjointWith retail:Manager ;
+    rdfs:comment "Staff responsible for sales." .
+
+retail:InventoryStaff a owl:Class ;
+    rdfs:subClassOf retail:Staff ;
+    owl:disjointWith retail:Manager ;
+    owl:disjointWith retail:SalesStaff ;
+    rdfs:comment "Staff responsible for inventory management." .
+
+retail:Manager a owl:Class ;
+    rdfs:subClassOf retail:Staff ;
+    owl:disjointWith retail:InventoryStaff ;
+    owl:disjointWith retail:SalesStaff ;
+    rdfs:comment "Staff responsible for managing store operations." .
+
+retail:Supplier a owl:Class ;
+    rdfs:subClassOf retail:Organization ;
+    owl:disjointWith retail:Retailer ;
+    rdfs:comment "An organization that supplies products." .
+
+retail:Retailer a owl:Class ;
+    rdfs:subClassOf retail:Organization ;
+    owl:disjointWith retail:Supplier ;
+    rdfs:comment "The organization operating the retail store." .
+
+retail:Product a owl:Class ;
+    rdfs:subClassOf retail:Thing ;
+    owl:disjointWith retail:Agent ;
+    owl:disjointWith retail:Asset ;
+    owl:disjointWith retail:Event ;
+    owl:disjointWith retail:Location ;
+    rdfs:comment "An item for sale." .
+
+retail:ProductCategory a owl:Class ;
+    rdfs:subClassOf retail:Thing ;
+    rdfs:comment "A category of products." .
+
+retail:Electronics a owl:Class ;
+    rdfs:subClassOf retail:ProductCategory ;
+    owl:disjointWith retail:Clothing ;
+    owl:disjointWith retail:Grocery ;
+    rdfs:comment "Category for electronic products." .
+
+retail:Clothing a owl:Class ;
+    rdfs:subClassOf retail:ProductCategory ;
+    owl:disjointWith retail:Electronics ;
+    owl:disjointWith retail:Grocery ;
+    rdfs:comment "Category for clothing products." .
+
+retail:Grocery a owl:Class ;
+    rdfs:subClassOf retail:ProductCategory ;
+    owl:disjointWith retail:Clothing ;
+    owl:disjointWith retail:Electronics ;
+    rdfs:comment "Category for grocery products." .
+
+retail:MobilePhone a owl:Class ;
+    rdfs:subClassOf retail:Electronics ;
+    rdfs:comment "Mobile phones." .
+
+retail:Laptop a owl:Class ;
+    rdfs:subClassOf retail:Electronics ;
+    rdfs:comment "Laptops." .
+
+retail:Shirt a owl:Class ;
+    rdfs:subClassOf retail:Clothing ;
+    rdfs:comment "Shirts." .
+
+retail:Pants a owl:Class ;
+    rdfs:subClassOf retail:Clothing ;
+    rdfs:comment "Pants." .
+
+retail:Fruit a owl:Class ;
+    rdfs:subClassOf retail:Grocery ;
+    rdfs:comment "Fruits." .
+
+retail:Vegetable a owl:Class ;
+    rdfs:subClassOf retail:Grocery ;
+    rdfs:comment "Vegetables." .
+
+retail:Asset a owl:Class ;
+    rdfs:subClassOf retail:Thing ;
+    owl:disjointWith retail:Agent ;
+    owl:disjointWith retail:Event ;
+    owl:disjointWith retail:Location ;
+    owl:disjointWith retail:Product ;
+    rdfs:comment "Physical or digital assets in the store." .
+
+retail:Shelf a owl:Class ;
+    rdfs:subClassOf retail:Asset ;
+    owl:disjointWith retail:POSDevice ;
+    rdfs:comment "A shelf for storing products." .
+
+retail:POSDevice a owl:Class ;
+    rdfs:subClassOf retail:Asset ;
+    owl:disjointWith retail:Shelf ;
+    rdfs:comment "Point-of-sale device." .
+
+retail:Location a owl:Class ;
+    rdfs:subClassOf retail:Thing ;
+    owl:disjointWith retail:Agent ;
+    owl:disjointWith retail:Asset ;
+    owl:disjointWith retail:Event ;
+    owl:disjointWith retail:Product ;
+    rdfs:comment "A physical or logical place." .
+
+retail:Store a owl:Class ;
+    rdfs:subClassOf retail:Location ;
+    owl:disjointWith retail:Aisle ;
+    owl:disjointWith retail:Warehouse ;
+    rdfs:comment "A retail store." .
+
+retail:Warehouse a owl:Class ;
+    rdfs:subClassOf retail:Location ;
+    owl:disjointWith retail:Aisle ;
+    owl:disjointWith retail:Store ;
+    rdfs:comment "A warehouse for inventory." .
+
+retail:Aisle a owl:Class ;
+    rdfs:subClassOf retail:Location ;
+    owl:disjointWith retail:Store ;
+    owl:disjointWith retail:Warehouse ;
+    rdfs:comment "An aisle within a store." .
+
+retail:Event a owl:Class ;
+    rdfs:subClassOf retail:Thing ;
+    owl:disjointWith retail:Agent ;
+    owl:disjointWith retail:Asset ;
+    owl:disjointWith retail:Location ;
+    owl:disjointWith retail:Product ;
+    rdfs:comment "An occurrence in the retail domain." .
+
+retail:Transaction a owl:Class ;
+    rdfs:subClassOf retail:Event ;
+    owl:disjointWith retail:InventoryEvent ;
+    rdfs:comment "A purchase transaction." .
+
+retail:InventoryEvent a owl:Class ;
+    rdfs:subClassOf retail:Event ;
+    owl:disjointWith retail:Transaction ;
+    rdfs:comment "An event affecting inventory." .
+
+retail:RestockEvent a owl:Class ;
+    rdfs:subClassOf retail:InventoryEvent ;
+    owl:disjointWith retail:StockRemovalEvent ;
+    rdfs:comment "A restocking event." .
+
+retail:StockRemovalEvent a owl:Class ;
+    rdfs:subClassOf retail:InventoryEvent ;
+    owl:disjointWith retail:RestockEvent ;
+    rdfs:comment "An event where stock is removed." .
+
+retail:hasProduct a owl:ObjectProperty ;
+    rdfs:domain retail:Transaction ;
+    rdfs:range  retail:Product .
+
+retail:purchasedBy a owl:ObjectProperty ;
+    rdfs:domain retail:Transaction ;
+    rdfs:range  retail:Customer .
+
+retail:handledBy a owl:ObjectProperty ;
+    rdfs:domain retail:Transaction ;
+    rdfs:range  retail:SalesStaff .
+
+retail:occursAt a owl:ObjectProperty ;
+    rdfs:domain retail:Event ;
+    rdfs:range  retail:Location .
+
+retail:manages a owl:ObjectProperty ;
+    rdfs:domain retail:Manager ;
+    rdfs:range  retail:Store ;
+    owl:inverseOf retail:managedBy .
+
+retail:managedBy a owl:ObjectProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  retail:Manager ;
+    owl:inverseOf retail:manages .
+
+retail:employedBy a owl:ObjectProperty ;
+    rdfs:domain retail:Staff ;
+    rdfs:range  retail:Retailer ;
+    owl:inverseOf retail:employs .
+
+retail:employs a owl:ObjectProperty ;
+    rdfs:domain retail:Retailer ;
+    rdfs:range  retail:Staff ;
+    owl:inverseOf retail:employedBy .
+
+retail:supplies a owl:ObjectProperty ;
+    rdfs:domain retail:Supplier ;
+    rdfs:range  retail:Product ;
+    owl:inverseOf retail:suppliedBy .
+
+retail:suppliedBy a owl:ObjectProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  retail:Supplier ;
+    owl:inverseOf retail:supplies .
+
+retail:storedIn a owl:ObjectProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  retail:Location .
+
+retail:partOf a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:domain retail:Aisle ;
+    rdfs:range  retail:Store .
+
+retail:contains a owl:ObjectProperty ;
+    rdfs:domain retail:Shelf ;
+    rdfs:range  retail:Product .
+
+retail:productName a owl:DatatypeProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  xsd:string .
+
+retail:sku a owl:DatatypeProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  xsd:string .
+
+retail:price a owl:DatatypeProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  xsd:double .
+
+retail:categoryName a owl:DatatypeProperty ;
+    rdfs:domain retail:ProductCategory ;
+    rdfs:range  xsd:string .
+
+retail:eventDate a owl:DatatypeProperty ;
+    rdfs:domain retail:Event ;
+    rdfs:range  xsd:dateTime .
+
+retail:quantity a owl:DatatypeProperty ;
+    rdfs:domain retail:InventoryEvent ;
+    rdfs:range  xsd:integer .
+
+retail:locationName a owl:DatatypeProperty ;
+    rdfs:domain retail:Location ;
+    rdfs:range  xsd:string .
+
+retail:personName a owl:DatatypeProperty ;
+    rdfs:domain retail:Person ;
+    rdfs:range  xsd:string .
+
+retail:employeeId a owl:DatatypeProperty ;
+    rdfs:domain retail:Staff ;
+    rdfs:range  xsd:string .
+
+retail:organizationName a owl:DatatypeProperty ;
+    rdfs:domain retail:Organization ;
+    rdfs:range  xsd:string .
+
+retail:transactionId a owl:DatatypeProperty ;
+    rdfs:domain retail:Transaction ;
+    rdfs:range  xsd:string .
+
+retail:store1 a retail:Store ;
+    retail:managedBy retail:manager1 ;
+    retail:locationName "Downtown Store" .
+
+retail:warehouse1 a retail:Warehouse ;
+    retail:locationName "Central Warehouse" .
+
+retail:aisleA a retail:Aisle ;
+    retail:partOf retail:store1 ;
+    retail:locationName "Aisle A" .
+
+retail:shelf1 a retail:Shelf .
+
+retail:retailer1 a retail:Retailer ;
+    retail:employs retail:inventory1, retail:manager1, retail:sales1 ;
+    retail:organizationName "SuperMart" .
+
+retail:supplier1 a retail:Supplier ;
+    retail:organizationName "ElectroSupply Inc." .
+
+retail:customer1 a retail:Customer ;
+    retail:personName "Alice Smith" .
+
+retail:sales1 a retail:SalesStaff ;
+    retail:employedBy retail:retailer1 ;
+    retail:personName "Bob Jones" ;
+    retail:employeeId "E123" .
+
+retail:manager1 a retail:Manager ;
+    retail:employedBy retail:retailer1 ;
+    retail:manages retail:store1 ;
+    retail:personName "Carol Lee" ;
+    retail:employeeId "M001" .
+
+retail:product1 a retail:MobilePhone ;
+    retail:productName "SmartPhone X" ;
+    retail:sku "MPX-100" ;
+    retail:price "699.99" .
+
+retail:product2 a retail:Shirt ;
+    retail:productName "Blue Shirt" ;
+    retail:sku "SHRT-200" ;
+    retail:price "29.99" .
+
+retail:product3 a retail:Fruit ;
+    retail:productName "Apple" ;
+    retail:sku "FRT-001" ;
+    retail:price "0.99" .
+
+retail:transaction1 a retail:Transaction ;
+    retail:purchasedBy retail:customer1 ;
+    retail:handledBy retail:sales1 ;
+    retail:occursAt retail:store1 ;
+    retail:transactionId "T0001" ;
+    retail:eventDate "2024-06-01T10:15:00" .
+
+retail:restock1 a retail:RestockEvent ;
+    retail:occursAt retail:warehouse1 ;
+    retail:eventDate "2024-05-30T08:00:00" ;
+    retail:quantity "100" .
+
+retail:stockremoval1 a retail:StockRemovalEvent ;
+    retail:occursAt retail:store1 ;
+    retail:eventDate "2024-06-01T09:00:00" ;
+    retail:quantity "5" .
+
+retail:laptop1 a retail:Laptop ;
+    retail:productName "Laptop Pro" ;
+    retail:sku "LTP-500" ;
+    retail:price "1299.99" .
+
+retail:inventory1 a retail:InventoryStaff ;
+    retail:employedBy retail:retailer1 ;
+    retail:personName "David Kim" ;
+    retail:employeeId "I456" .

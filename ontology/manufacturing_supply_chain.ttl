@@ -1,0 +1,245 @@
+@prefix mscm: <https://example.org/manufacturing-scm/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/manufacturing-scm> a owl:Ontology .
+
+mscm:Agent a owl:Class ;
+    rdfs:comment "A general actor in the supply chain, such as a company or person." .
+
+mscm:Supplier a owl:Class ;
+    rdfs:subClassOf mscm:Agent ;
+    owl:disjointWith mscm:Customer ;
+    owl:disjointWith mscm:Manufacturer ;
+    rdfs:comment "An entity that supplies raw materials or components." .
+
+mscm:Manufacturer a owl:Class ;
+    rdfs:subClassOf mscm:Agent ;
+    owl:disjointWith mscm:Customer ;
+    owl:disjointWith mscm:Supplier ;
+    rdfs:comment "An entity that manufactures products from materials." .
+
+mscm:Customer a owl:Class ;
+    rdfs:subClassOf mscm:Agent ;
+    owl:disjointWith mscm:Manufacturer ;
+    owl:disjointWith mscm:Supplier ;
+    rdfs:comment "An entity that receives finished products." .
+
+mscm:Product a owl:Class ;
+    rdfs:comment "A manufactured or supplied item." .
+
+mscm:RawMaterial a owl:Class ;
+    rdfs:subClassOf mscm:Product ;
+    owl:disjointWith mscm:FinishedProduct ;
+    rdfs:comment "A basic material supplied for manufacturing." .
+
+mscm:Component a owl:Class ;
+    rdfs:subClassOf mscm:Product ;
+    rdfs:comment "A part used in the assembly of finished products." .
+
+mscm:FinishedProduct a owl:Class ;
+    rdfs:subClassOf mscm:Product ;
+    owl:disjointWith mscm:RawMaterial ;
+    rdfs:comment "A product ready for delivery to customers." .
+
+mscm:Order a owl:Class ;
+    rdfs:comment "A request for products or materials." .
+
+mscm:PurchaseOrder a owl:Class ;
+    rdfs:subClassOf mscm:Order ;
+    owl:disjointWith mscm:SalesOrder ;
+    rdfs:comment "An order placed by a manufacturer or customer to a supplier." .
+
+mscm:SalesOrder a owl:Class ;
+    rdfs:subClassOf mscm:Order ;
+    owl:disjointWith mscm:PurchaseOrder ;
+    rdfs:comment "An order received by a manufacturer from a customer." .
+
+mscm:Shipment a owl:Class ;
+    rdfs:comment "A consignment of products being transported." .
+
+mscm:LogisticsProvider a owl:Class ;
+    rdfs:subClassOf mscm:Agent ;
+    rdfs:comment "An entity responsible for transporting shipments." .
+
+mscm:Warehouse a owl:Class ;
+    rdfs:comment "A facility for storing products." .
+
+mscm:Location a owl:Class ;
+    rdfs:comment "A geographical place relevant to the supply chain." .
+
+mscm:supplies a owl:ObjectProperty ;
+    rdfs:domain mscm:Supplier ;
+    rdfs:range  mscm:Product ;
+    owl:inverseOf mscm:suppliedBy .
+
+mscm:suppliedBy a owl:ObjectProperty ;
+    rdfs:domain mscm:Product ;
+    rdfs:range  mscm:Supplier ;
+    owl:inverseOf mscm:supplies .
+
+mscm:manufactures a owl:ObjectProperty ;
+    rdfs:domain mscm:Manufacturer ;
+    rdfs:range  mscm:FinishedProduct ;
+    owl:inverseOf mscm:manufacturedBy .
+
+mscm:manufacturedBy a owl:ObjectProperty ;
+    rdfs:domain mscm:FinishedProduct ;
+    rdfs:range  mscm:Manufacturer ;
+    owl:inverseOf mscm:manufactures .
+
+mscm:orderedBy a owl:ObjectProperty ;
+    rdfs:domain mscm:Order ;
+    rdfs:range  mscm:Agent ;
+    owl:inverseOf mscm:placesOrder .
+
+mscm:placesOrder a owl:ObjectProperty ;
+    rdfs:domain mscm:Agent ;
+    rdfs:range  mscm:Order ;
+    owl:inverseOf mscm:orderedBy .
+
+mscm:delivers a owl:ObjectProperty ;
+    rdfs:domain mscm:LogisticsProvider ;
+    rdfs:range  mscm:Shipment ;
+    owl:inverseOf mscm:deliveredBy .
+
+mscm:deliveredBy a owl:ObjectProperty ;
+    rdfs:domain mscm:Shipment ;
+    rdfs:range  mscm:LogisticsProvider ;
+    owl:inverseOf mscm:delivers .
+
+mscm:containsProduct a owl:ObjectProperty ;
+    rdfs:domain mscm:Shipment ;
+    rdfs:range  mscm:Product ;
+    owl:inverseOf mscm:includedInShipment .
+
+mscm:includedInShipment a owl:ObjectProperty ;
+    rdfs:domain mscm:Product ;
+    rdfs:range  mscm:Shipment ;
+    owl:inverseOf mscm:containsProduct .
+
+mscm:storedIn a owl:ObjectProperty ;
+    rdfs:domain mscm:Product ;
+    rdfs:range  mscm:Warehouse ;
+    owl:inverseOf mscm:stores .
+
+mscm:stores a owl:ObjectProperty ;
+    rdfs:domain mscm:Warehouse ;
+    rdfs:range  mscm:Product ;
+    owl:inverseOf mscm:storedIn .
+
+mscm:locatedAt a owl:ObjectProperty ;
+    rdfs:domain mscm:Agent ;
+    rdfs:range  mscm:Location ;
+    owl:inverseOf mscm:locationOf .
+
+mscm:locationOf a owl:ObjectProperty ;
+    rdfs:domain mscm:Location ;
+    rdfs:range  mscm:Agent ;
+    owl:inverseOf mscm:locatedAt .
+
+mscm:productName a owl:DatatypeProperty ;
+    rdfs:domain mscm:Product ;
+    rdfs:range  xsd:string .
+
+mscm:productCode a owl:DatatypeProperty ;
+    rdfs:domain mscm:Product ;
+    rdfs:range  xsd:string .
+
+mscm:orderNumber a owl:DatatypeProperty ;
+    rdfs:domain mscm:Order ;
+    rdfs:range  xsd:string .
+
+mscm:orderDate a owl:DatatypeProperty ;
+    rdfs:domain mscm:Order ;
+    rdfs:range  xsd:dateTime .
+
+mscm:shipmentNumber a owl:DatatypeProperty ;
+    rdfs:domain mscm:Shipment ;
+    rdfs:range  xsd:string .
+
+mscm:shipmentDate a owl:DatatypeProperty ;
+    rdfs:domain mscm:Shipment ;
+    rdfs:range  xsd:dateTime .
+
+mscm:warehouseName a owl:DatatypeProperty ;
+    rdfs:domain mscm:Warehouse ;
+    rdfs:range  xsd:string .
+
+mscm:locationName a owl:DatatypeProperty ;
+    rdfs:domain mscm:Location ;
+    rdfs:range  xsd:string .
+
+mscm:agentName a owl:DatatypeProperty ;
+    rdfs:domain mscm:Agent ;
+    rdfs:range  xsd:string .
+
+mscm:acmeSupplier a mscm:Supplier ;
+    mscm:locatedAt mscm:cityA ;
+    mscm:supplies mscm:steelRod, mscm:widgetComponent ;
+    mscm:agentName "ACME Raw Materials Ltd." .
+
+mscm:bestManufacturer a mscm:Manufacturer ;
+    mscm:locatedAt mscm:cityB ;
+    mscm:manufactures mscm:superWidget ;
+    mscm:placesOrder mscm:order123 ;
+    mscm:agentName "Best Manufacturing Inc." .
+
+mscm:johnCustomer a mscm:Customer ;
+    mscm:locatedAt mscm:cityC ;
+    mscm:placesOrder mscm:order456 ;
+    mscm:agentName "John's Retail" .
+
+mscm:steelRod a mscm:RawMaterial ;
+    mscm:suppliedBy mscm:acmeSupplier ;
+    mscm:productName "Steel Rod" ;
+    mscm:productCode "RM-001" .
+
+mscm:widgetComponent a mscm:Component ;
+    mscm:suppliedBy mscm:acmeSupplier ;
+    mscm:productName "Widget Component" ;
+    mscm:productCode "CP-100" .
+
+mscm:superWidget a mscm:FinishedProduct ;
+    mscm:manufacturedBy mscm:bestManufacturer ;
+    mscm:includedInShipment mscm:shipment789 ;
+    mscm:productName "Super Widget" ;
+    mscm:productCode "FP-900" .
+
+mscm:order123 a mscm:PurchaseOrder ;
+    mscm:orderedBy mscm:bestManufacturer ;
+    mscm:orderNumber "PO-123" ;
+    mscm:orderDate "2024-06-01T10:00:00" .
+
+mscm:order456 a mscm:SalesOrder ;
+    mscm:orderedBy mscm:johnCustomer ;
+    mscm:orderNumber "SO-456" ;
+    mscm:orderDate "2024-06-02T15:30:00" .
+
+mscm:mainWarehouse a mscm:Warehouse ;
+    mscm:warehouseName "Main Warehouse" .
+
+mscm:cityA a mscm:Location ;
+    mscm:locationOf mscm:acmeSupplier ;
+    mscm:locationName "City A" .
+
+mscm:cityB a mscm:Location ;
+    mscm:locationOf mscm:bestManufacturer, mscm:fastLogistics ;
+    mscm:locationName "City B" .
+
+mscm:cityC a mscm:Location ;
+    mscm:locationOf mscm:johnCustomer ;
+    mscm:locationName "City C" .
+
+mscm:fastLogistics a mscm:LogisticsProvider ;
+    mscm:locatedAt mscm:cityB ;
+    mscm:delivers mscm:shipment789 ;
+    mscm:agentName "Fast Logistics Co." .
+
+mscm:shipment789 a mscm:Shipment ;
+    mscm:deliveredBy mscm:fastLogistics ;
+    mscm:containsProduct mscm:superWidget ;
+    mscm:shipmentNumber "SH-789" ;
+    mscm:shipmentDate "2024-06-03T08:00:00" .

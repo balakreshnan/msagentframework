@@ -1,0 +1,271 @@
+@prefix retail: <https://example.org/retail/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/retail> a owl:Ontology .
+
+retail:Entity a owl:Class ;
+    rdfs:comment "Top-level class for all entities in the retail domain." .
+
+retail:Person a owl:Class ;
+    rdfs:subClassOf retail:Entity ;
+    rdfs:comment "A human involved in the retail domain." .
+
+retail:Customer a owl:Class ;
+    rdfs:subClassOf retail:Person ;
+    owl:disjointWith retail:Employee ;
+    rdfs:comment "A person who purchases products." .
+
+retail:Employee a owl:Class ;
+    rdfs:subClassOf retail:Person ;
+    owl:disjointWith retail:Customer ;
+    rdfs:comment "A person who works at a store." .
+
+retail:Cashier a owl:Class ;
+    rdfs:subClassOf retail:Employee ;
+    rdfs:comment "An employee who handles sales transactions." .
+
+retail:Manager a owl:Class ;
+    rdfs:subClassOf retail:Employee ;
+    rdfs:comment "An employee who manages a store." .
+
+retail:Store a owl:Class ;
+    rdfs:subClassOf retail:Entity ;
+    rdfs:comment "A physical or online location where products are sold." .
+
+retail:Product a owl:Class ;
+    rdfs:subClassOf retail:Entity ;
+    rdfs:comment "An item available for sale." .
+
+retail:Category a owl:Class ;
+    rdfs:subClassOf retail:Entity ;
+    rdfs:comment "A classification for products." .
+
+retail:InventoryItem a owl:Class ;
+    rdfs:subClassOf retail:Entity ;
+    rdfs:comment "A specific stock of a product in a store." .
+
+retail:Sale a owl:Class ;
+    rdfs:subClassOf retail:Entity ;
+    rdfs:comment "A transaction where a customer purchases products." .
+
+retail:Payment a owl:Class ;
+    rdfs:subClassOf retail:Entity ;
+    rdfs:comment "A payment made for a sale." .
+
+retail:purchasedBy a owl:ObjectProperty ;
+    rdfs:domain retail:Sale ;
+    rdfs:range  retail:Customer ;
+    owl:inverseOf retail:madePurchase .
+
+retail:madePurchase a owl:ObjectProperty ;
+    rdfs:domain retail:Customer ;
+    rdfs:range  retail:Sale ;
+    owl:inverseOf retail:purchasedBy .
+
+retail:soldBy a owl:ObjectProperty ;
+    rdfs:domain retail:Sale ;
+    rdfs:range  retail:Cashier ;
+    owl:inverseOf retail:handledSale .
+
+retail:handledSale a owl:ObjectProperty ;
+    rdfs:domain retail:Cashier ;
+    rdfs:range  retail:Sale ;
+    owl:inverseOf retail:soldBy .
+
+retail:occursAt a owl:ObjectProperty ;
+    rdfs:domain retail:Sale ;
+    rdfs:range  retail:Store ;
+    owl:inverseOf retail:hasSale .
+
+retail:hasSale a owl:ObjectProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  retail:Sale ;
+    owl:inverseOf retail:occursAt .
+
+retail:manages a owl:ObjectProperty ;
+    rdfs:domain retail:Manager ;
+    rdfs:range  retail:Store ;
+    owl:inverseOf retail:managedBy .
+
+retail:managedBy a owl:ObjectProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  retail:Manager ;
+    owl:inverseOf retail:manages .
+
+retail:employedAt a owl:ObjectProperty ;
+    rdfs:domain retail:Employee ;
+    rdfs:range  retail:Store ;
+    owl:inverseOf retail:hasEmployee .
+
+retail:hasEmployee a owl:ObjectProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  retail:Employee ;
+    owl:inverseOf retail:employedAt .
+
+retail:hasInventoryItem a owl:ObjectProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  retail:InventoryItem ;
+    owl:inverseOf retail:inStore .
+
+retail:inStore a owl:ObjectProperty ;
+    rdfs:domain retail:InventoryItem ;
+    rdfs:range  retail:Store ;
+    owl:inverseOf retail:hasInventoryItem .
+
+retail:ofProduct a owl:ObjectProperty ;
+    rdfs:domain retail:InventoryItem ;
+    rdfs:range  retail:Product ;
+    owl:inverseOf retail:hasInventoryItemOf .
+
+retail:hasInventoryItemOf a owl:ObjectProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  retail:InventoryItem ;
+    owl:inverseOf retail:ofProduct .
+
+retail:belongsToCategory a owl:ObjectProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  retail:Category ;
+    owl:inverseOf retail:hasProduct .
+
+retail:hasProduct a owl:ObjectProperty ;
+    rdfs:domain retail:Category ;
+    rdfs:range  retail:Product ;
+    owl:inverseOf retail:belongsToCategory .
+
+retail:includesProduct a owl:ObjectProperty ;
+    rdfs:domain retail:Sale ;
+    rdfs:range  retail:Product .
+
+retail:hasPayment a owl:ObjectProperty ;
+    rdfs:domain retail:Sale ;
+    rdfs:range  retail:Payment ;
+    owl:inverseOf retail:paymentFor .
+
+retail:paymentFor a owl:ObjectProperty ;
+    rdfs:domain retail:Payment ;
+    rdfs:range  retail:Sale ;
+    owl:inverseOf retail:hasPayment .
+
+retail:productName a owl:DatatypeProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  xsd:string .
+
+retail:sku a owl:DatatypeProperty ;
+    rdfs:domain retail:Product ;
+    rdfs:range  xsd:string .
+
+retail:categoryName a owl:DatatypeProperty ;
+    rdfs:domain retail:Category ;
+    rdfs:range  xsd:string .
+
+retail:storeName a owl:DatatypeProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  xsd:string .
+
+retail:storeLocation a owl:DatatypeProperty ;
+    rdfs:domain retail:Store ;
+    rdfs:range  xsd:string .
+
+retail:personName a owl:DatatypeProperty ;
+    rdfs:domain retail:Person ;
+    rdfs:range  xsd:string .
+
+retail:employeeId a owl:DatatypeProperty ;
+    rdfs:domain retail:Employee ;
+    rdfs:range  xsd:string .
+
+retail:customerId a owl:DatatypeProperty ;
+    rdfs:domain retail:Customer ;
+    rdfs:range  xsd:string .
+
+retail:quantity a owl:DatatypeProperty ;
+    rdfs:domain retail:InventoryItem ;
+    rdfs:range  xsd:integer .
+
+retail:saleDate a owl:DatatypeProperty ;
+    rdfs:domain retail:Sale ;
+    rdfs:range  xsd:dateTime .
+
+retail:saleTotal a owl:DatatypeProperty ;
+    rdfs:domain retail:Sale ;
+    rdfs:range  xsd:double .
+
+retail:paymentAmount a owl:DatatypeProperty ;
+    rdfs:domain retail:Payment ;
+    rdfs:range  xsd:double .
+
+retail:paymentMethod a owl:DatatypeProperty ;
+    rdfs:domain retail:Payment ;
+    rdfs:range  xsd:string .
+
+retail:storeMainStreet a retail:Store ;
+    retail:hasInventoryItem retail:invAppleMain, retail:invLaptopMain ;
+    retail:hasEmployee retail:empBob, retail:empCarol ;
+    retail:managedBy retail:empCarol ;
+    retail:hasSale retail:sale001 ;
+    retail:storeName "Main Street Store" ;
+    retail:storeLocation "123 Main St" .
+
+retail:catElectronics a retail:Category ;
+    retail:hasProduct retail:prodLaptop ;
+    retail:categoryName "Electronics" .
+
+retail:catGroceries a retail:Category ;
+    retail:hasProduct retail:prodApple ;
+    retail:categoryName "Groceries" .
+
+retail:prodLaptop a retail:Product ;
+    retail:belongsToCategory retail:catElectronics ;
+    retail:hasInventoryItemOf retail:invLaptopMain ;
+    retail:productName "Laptop" ;
+    retail:sku "ELEC123" .
+
+retail:prodApple a retail:Product ;
+    retail:belongsToCategory retail:catGroceries ;
+    retail:hasInventoryItemOf retail:invAppleMain ;
+    retail:productName "Apple" ;
+    retail:sku "GROC456" .
+
+retail:invLaptopMain a retail:InventoryItem ;
+    retail:ofProduct retail:prodLaptop ;
+    retail:inStore retail:storeMainStreet ;
+    retail:quantity "10" .
+
+retail:invAppleMain a retail:InventoryItem ;
+    retail:ofProduct retail:prodApple ;
+    retail:inStore retail:storeMainStreet ;
+    retail:quantity "50" .
+
+retail:custAlice a retail:Customer ;
+    retail:madePurchase retail:sale001 ;
+    retail:personName "Alice Smith" ;
+    retail:customerId "CUST001" .
+
+retail:empBob a retail:Cashier ;
+    retail:employedAt retail:storeMainStreet ;
+    retail:handledSale retail:sale001 ;
+    retail:personName "Bob Jones" ;
+    retail:employeeId "EMP100" .
+
+retail:empCarol a retail:Manager ;
+    retail:employedAt retail:storeMainStreet ;
+    retail:manages retail:storeMainStreet ;
+    retail:personName "Carol Lee" ;
+    retail:employeeId "EMP200" .
+
+retail:sale001 a retail:Sale ;
+    retail:purchasedBy retail:custAlice ;
+    retail:soldBy retail:empBob ;
+    retail:occursAt retail:storeMainStreet ;
+    retail:includesProduct retail:prodApple, retail:prodLaptop ;
+    retail:hasPayment retail:pay001 ;
+    retail:saleDate "2024-06-01T10:30:00" ;
+    retail:saleTotal "1200.50" .
+
+retail:pay001 a retail:Payment ;
+    retail:paymentFor retail:sale001 ;
+    retail:paymentAmount "1200.50" ;
+    retail:paymentMethod "Credit Card" .

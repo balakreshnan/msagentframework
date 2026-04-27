@@ -1,0 +1,570 @@
+{
+  "@context": {
+    "retail": "https://example.org/retail/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "retail:Thing",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "retail:Agent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Person",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Organization",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Customer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Person"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Staff",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Person"
+        }
+      ]
+    },
+    {
+      "@id": "retail:SalesStaff",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Staff"
+        }
+      ]
+    },
+    {
+      "@id": "retail:InventoryStaff",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Staff"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Manager",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Staff"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Supplier",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Organization"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Retailer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Organization"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Product",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "retail:ProductCategory",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Electronics",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:ProductCategory"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Clothing",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:ProductCategory"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Grocery",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:ProductCategory"
+        }
+      ]
+    },
+    {
+      "@id": "retail:MobilePhone",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Electronics"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Laptop",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Electronics"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Shirt",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Clothing"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Pants",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Clothing"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Fruit",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Grocery"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Vegetable",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Grocery"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Asset",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Shelf",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Asset"
+        }
+      ]
+    },
+    {
+      "@id": "retail:POSDevice",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Asset"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Location",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Store",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Location"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Warehouse",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Location"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Aisle",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Location"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Event",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "retail:Transaction",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Event"
+        }
+      ]
+    },
+    {
+      "@id": "retail:InventoryEvent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:Event"
+        }
+      ]
+    },
+    {
+      "@id": "retail:RestockEvent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:InventoryEvent"
+        }
+      ]
+    },
+    {
+      "@id": "retail:StockRemovalEvent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "retail:InventoryEvent"
+        }
+      ]
+    },
+    {
+      "@id": "retail:store1",
+      "@type": [
+        "retail:Store"
+      ],
+      "retail:managedBy": [
+        {
+          "@id": "retail:manager1"
+        }
+      ],
+      "retail:locationName": [
+        "Downtown Store"
+      ]
+    },
+    {
+      "@id": "retail:warehouse1",
+      "@type": [
+        "retail:Warehouse"
+      ],
+      "retail:locationName": [
+        "Central Warehouse"
+      ]
+    },
+    {
+      "@id": "retail:aisleA",
+      "@type": [
+        "retail:Aisle"
+      ],
+      "retail:partOf": [
+        {
+          "@id": "retail:store1"
+        }
+      ],
+      "retail:locationName": [
+        "Aisle A"
+      ]
+    },
+    {
+      "@id": "retail:shelf1",
+      "@type": [
+        "retail:Shelf"
+      ]
+    },
+    {
+      "@id": "retail:retailer1",
+      "@type": [
+        "retail:Retailer"
+      ],
+      "retail:employs": [
+        {
+          "@id": "retail:inventory1"
+        },
+        {
+          "@id": "retail:manager1"
+        },
+        {
+          "@id": "retail:sales1"
+        }
+      ],
+      "retail:organizationName": [
+        "SuperMart"
+      ]
+    },
+    {
+      "@id": "retail:supplier1",
+      "@type": [
+        "retail:Supplier"
+      ],
+      "retail:organizationName": [
+        "ElectroSupply Inc."
+      ]
+    },
+    {
+      "@id": "retail:customer1",
+      "@type": [
+        "retail:Customer"
+      ],
+      "retail:personName": [
+        "Alice Smith"
+      ]
+    },
+    {
+      "@id": "retail:sales1",
+      "@type": [
+        "retail:SalesStaff"
+      ],
+      "retail:employedBy": [
+        {
+          "@id": "retail:retailer1"
+        }
+      ],
+      "retail:personName": [
+        "Bob Jones"
+      ],
+      "retail:employeeId": [
+        "E123"
+      ]
+    },
+    {
+      "@id": "retail:manager1",
+      "@type": [
+        "retail:Manager"
+      ],
+      "retail:employedBy": [
+        {
+          "@id": "retail:retailer1"
+        }
+      ],
+      "retail:manages": [
+        {
+          "@id": "retail:store1"
+        }
+      ],
+      "retail:personName": [
+        "Carol Lee"
+      ],
+      "retail:employeeId": [
+        "M001"
+      ]
+    },
+    {
+      "@id": "retail:product1",
+      "@type": [
+        "retail:MobilePhone"
+      ],
+      "retail:productName": [
+        "SmartPhone X"
+      ],
+      "retail:sku": [
+        "MPX-100"
+      ],
+      "retail:price": [
+        "699.99"
+      ]
+    },
+    {
+      "@id": "retail:product2",
+      "@type": [
+        "retail:Shirt"
+      ],
+      "retail:productName": [
+        "Blue Shirt"
+      ],
+      "retail:sku": [
+        "SHRT-200"
+      ],
+      "retail:price": [
+        "29.99"
+      ]
+    },
+    {
+      "@id": "retail:product3",
+      "@type": [
+        "retail:Fruit"
+      ],
+      "retail:productName": [
+        "Apple"
+      ],
+      "retail:sku": [
+        "FRT-001"
+      ],
+      "retail:price": [
+        "0.99"
+      ]
+    },
+    {
+      "@id": "retail:transaction1",
+      "@type": [
+        "retail:Transaction"
+      ],
+      "retail:purchasedBy": [
+        {
+          "@id": "retail:customer1"
+        }
+      ],
+      "retail:handledBy": [
+        {
+          "@id": "retail:sales1"
+        }
+      ],
+      "retail:occursAt": [
+        {
+          "@id": "retail:store1"
+        }
+      ],
+      "retail:transactionId": [
+        "T0001"
+      ],
+      "retail:eventDate": [
+        "2024-06-01T10:15:00"
+      ]
+    },
+    {
+      "@id": "retail:restock1",
+      "@type": [
+        "retail:RestockEvent"
+      ],
+      "retail:occursAt": [
+        {
+          "@id": "retail:warehouse1"
+        }
+      ],
+      "retail:eventDate": [
+        "2024-05-30T08:00:00"
+      ],
+      "retail:quantity": [
+        "100"
+      ]
+    },
+    {
+      "@id": "retail:stockremoval1",
+      "@type": [
+        "retail:StockRemovalEvent"
+      ],
+      "retail:occursAt": [
+        {
+          "@id": "retail:store1"
+        }
+      ],
+      "retail:eventDate": [
+        "2024-06-01T09:00:00"
+      ],
+      "retail:quantity": [
+        "5"
+      ]
+    },
+    {
+      "@id": "retail:laptop1",
+      "@type": [
+        "retail:Laptop"
+      ],
+      "retail:productName": [
+        "Laptop Pro"
+      ],
+      "retail:sku": [
+        "LTP-500"
+      ],
+      "retail:price": [
+        "1299.99"
+      ]
+    },
+    {
+      "@id": "retail:inventory1",
+      "@type": [
+        "retail:InventoryStaff"
+      ],
+      "retail:employedBy": [
+        {
+          "@id": "retail:retailer1"
+        }
+      ],
+      "retail:personName": [
+        "David Kim"
+      ],
+      "retail:employeeId": [
+        "I456"
+      ]
+    }
+  ]
+}

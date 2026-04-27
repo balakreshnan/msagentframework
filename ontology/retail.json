@@ -1,0 +1,825 @@
+{
+  "iri": "https://example.org/retail/",
+  "classes": {
+    "Thing": {
+      "name": "Thing",
+      "parents": [],
+      "comment": "The root class for all entities.",
+      "disjoint_with": []
+    },
+    "Agent": {
+      "name": "Agent",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "An entity capable of action in the retail domain.",
+      "disjoint_with": [
+        "Asset",
+        "Event",
+        "Location",
+        "Product"
+      ]
+    },
+    "Person": {
+      "name": "Person",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "A human agent.",
+      "disjoint_with": [
+        "Organization"
+      ]
+    },
+    "Organization": {
+      "name": "Organization",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "A company or supplier.",
+      "disjoint_with": [
+        "Person"
+      ]
+    },
+    "Customer": {
+      "name": "Customer",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person who purchases products.",
+      "disjoint_with": [
+        "Staff"
+      ]
+    },
+    "Staff": {
+      "name": "Staff",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person employed by the retailer.",
+      "disjoint_with": [
+        "Customer"
+      ]
+    },
+    "SalesStaff": {
+      "name": "SalesStaff",
+      "parents": [
+        "Staff"
+      ],
+      "comment": "Staff responsible for sales.",
+      "disjoint_with": [
+        "InventoryStaff",
+        "Manager"
+      ]
+    },
+    "InventoryStaff": {
+      "name": "InventoryStaff",
+      "parents": [
+        "Staff"
+      ],
+      "comment": "Staff responsible for inventory management.",
+      "disjoint_with": [
+        "Manager",
+        "SalesStaff"
+      ]
+    },
+    "Manager": {
+      "name": "Manager",
+      "parents": [
+        "Staff"
+      ],
+      "comment": "Staff responsible for managing store operations.",
+      "disjoint_with": [
+        "InventoryStaff",
+        "SalesStaff"
+      ]
+    },
+    "Supplier": {
+      "name": "Supplier",
+      "parents": [
+        "Organization"
+      ],
+      "comment": "An organization that supplies products.",
+      "disjoint_with": [
+        "Retailer"
+      ]
+    },
+    "Retailer": {
+      "name": "Retailer",
+      "parents": [
+        "Organization"
+      ],
+      "comment": "The organization operating the retail store.",
+      "disjoint_with": [
+        "Supplier"
+      ]
+    },
+    "Product": {
+      "name": "Product",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "An item for sale.",
+      "disjoint_with": [
+        "Agent",
+        "Asset",
+        "Event",
+        "Location"
+      ]
+    },
+    "ProductCategory": {
+      "name": "ProductCategory",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "A category of products.",
+      "disjoint_with": []
+    },
+    "Electronics": {
+      "name": "Electronics",
+      "parents": [
+        "ProductCategory"
+      ],
+      "comment": "Category for electronic products.",
+      "disjoint_with": [
+        "Clothing",
+        "Grocery"
+      ]
+    },
+    "Clothing": {
+      "name": "Clothing",
+      "parents": [
+        "ProductCategory"
+      ],
+      "comment": "Category for clothing products.",
+      "disjoint_with": [
+        "Electronics",
+        "Grocery"
+      ]
+    },
+    "Grocery": {
+      "name": "Grocery",
+      "parents": [
+        "ProductCategory"
+      ],
+      "comment": "Category for grocery products.",
+      "disjoint_with": [
+        "Clothing",
+        "Electronics"
+      ]
+    },
+    "MobilePhone": {
+      "name": "MobilePhone",
+      "parents": [
+        "Electronics"
+      ],
+      "comment": "Mobile phones.",
+      "disjoint_with": []
+    },
+    "Laptop": {
+      "name": "Laptop",
+      "parents": [
+        "Electronics"
+      ],
+      "comment": "Laptops.",
+      "disjoint_with": []
+    },
+    "Shirt": {
+      "name": "Shirt",
+      "parents": [
+        "Clothing"
+      ],
+      "comment": "Shirts.",
+      "disjoint_with": []
+    },
+    "Pants": {
+      "name": "Pants",
+      "parents": [
+        "Clothing"
+      ],
+      "comment": "Pants.",
+      "disjoint_with": []
+    },
+    "Fruit": {
+      "name": "Fruit",
+      "parents": [
+        "Grocery"
+      ],
+      "comment": "Fruits.",
+      "disjoint_with": []
+    },
+    "Vegetable": {
+      "name": "Vegetable",
+      "parents": [
+        "Grocery"
+      ],
+      "comment": "Vegetables.",
+      "disjoint_with": []
+    },
+    "Asset": {
+      "name": "Asset",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "Physical or digital assets in the store.",
+      "disjoint_with": [
+        "Agent",
+        "Event",
+        "Location",
+        "Product"
+      ]
+    },
+    "Shelf": {
+      "name": "Shelf",
+      "parents": [
+        "Asset"
+      ],
+      "comment": "A shelf for storing products.",
+      "disjoint_with": [
+        "POSDevice"
+      ]
+    },
+    "POSDevice": {
+      "name": "POSDevice",
+      "parents": [
+        "Asset"
+      ],
+      "comment": "Point-of-sale device.",
+      "disjoint_with": [
+        "Shelf"
+      ]
+    },
+    "Location": {
+      "name": "Location",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "A physical or logical place.",
+      "disjoint_with": [
+        "Agent",
+        "Asset",
+        "Event",
+        "Product"
+      ]
+    },
+    "Store": {
+      "name": "Store",
+      "parents": [
+        "Location"
+      ],
+      "comment": "A retail store.",
+      "disjoint_with": [
+        "Aisle",
+        "Warehouse"
+      ]
+    },
+    "Warehouse": {
+      "name": "Warehouse",
+      "parents": [
+        "Location"
+      ],
+      "comment": "A warehouse for inventory.",
+      "disjoint_with": [
+        "Aisle",
+        "Store"
+      ]
+    },
+    "Aisle": {
+      "name": "Aisle",
+      "parents": [
+        "Location"
+      ],
+      "comment": "An aisle within a store.",
+      "disjoint_with": [
+        "Store",
+        "Warehouse"
+      ]
+    },
+    "Event": {
+      "name": "Event",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "An occurrence in the retail domain.",
+      "disjoint_with": [
+        "Agent",
+        "Asset",
+        "Location",
+        "Product"
+      ]
+    },
+    "Transaction": {
+      "name": "Transaction",
+      "parents": [
+        "Event"
+      ],
+      "comment": "A purchase transaction.",
+      "disjoint_with": [
+        "InventoryEvent"
+      ]
+    },
+    "InventoryEvent": {
+      "name": "InventoryEvent",
+      "parents": [
+        "Event"
+      ],
+      "comment": "An event affecting inventory.",
+      "disjoint_with": [
+        "Transaction"
+      ]
+    },
+    "RestockEvent": {
+      "name": "RestockEvent",
+      "parents": [
+        "InventoryEvent"
+      ],
+      "comment": "A restocking event.",
+      "disjoint_with": [
+        "StockRemovalEvent"
+      ]
+    },
+    "StockRemovalEvent": {
+      "name": "StockRemovalEvent",
+      "parents": [
+        "InventoryEvent"
+      ],
+      "comment": "An event where stock is removed.",
+      "disjoint_with": [
+        "RestockEvent"
+      ]
+    }
+  },
+  "object_properties": {
+    "hasProduct": {
+      "name": "hasProduct",
+      "domain": "Transaction",
+      "range_": "Product",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a transaction to products involved."
+    },
+    "purchasedBy": {
+      "name": "purchasedBy",
+      "domain": "Transaction",
+      "range_": "Customer",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a transaction to the customer."
+    },
+    "handledBy": {
+      "name": "handledBy",
+      "domain": "Transaction",
+      "range_": "SalesStaff",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a transaction to the sales staff member."
+    },
+    "occursAt": {
+      "name": "occursAt",
+      "domain": "Event",
+      "range_": "Location",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an event to a location."
+    },
+    "manages": {
+      "name": "manages",
+      "domain": "Manager",
+      "range_": "Store",
+      "inverse_of": "managedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Manager manages a store."
+    },
+    "managedBy": {
+      "name": "managedBy",
+      "domain": "Store",
+      "range_": "Manager",
+      "inverse_of": "manages",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Store is managed by a manager."
+    },
+    "employedBy": {
+      "name": "employedBy",
+      "domain": "Staff",
+      "range_": "Retailer",
+      "inverse_of": "employs",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Staff employed by retailer."
+    },
+    "employs": {
+      "name": "employs",
+      "domain": "Retailer",
+      "range_": "Staff",
+      "inverse_of": "employedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Retailer employs staff."
+    },
+    "supplies": {
+      "name": "supplies",
+      "domain": "Supplier",
+      "range_": "Product",
+      "inverse_of": "suppliedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Supplier supplies products."
+    },
+    "suppliedBy": {
+      "name": "suppliedBy",
+      "domain": "Product",
+      "range_": "Supplier",
+      "inverse_of": "supplies",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Product supplied by supplier."
+    },
+    "storedIn": {
+      "name": "storedIn",
+      "domain": "Product",
+      "range_": "Location",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Product stored in a location."
+    },
+    "partOf": {
+      "name": "partOf",
+      "domain": "Aisle",
+      "range_": "Store",
+      "inverse_of": null,
+      "transitive": true,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Aisle is part of a store."
+    },
+    "contains": {
+      "name": "contains",
+      "domain": "Shelf",
+      "range_": "Product",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Shelf contains products."
+    }
+  },
+  "data_properties": {
+    "productName": {
+      "name": "productName",
+      "domain": "Product",
+      "datatype": "xsd:string",
+      "comment": "Name of the product."
+    },
+    "sku": {
+      "name": "sku",
+      "domain": "Product",
+      "datatype": "xsd:string",
+      "comment": "Stock keeping unit identifier."
+    },
+    "price": {
+      "name": "price",
+      "domain": "Product",
+      "datatype": "xsd:double",
+      "comment": "Product price."
+    },
+    "categoryName": {
+      "name": "categoryName",
+      "domain": "ProductCategory",
+      "datatype": "xsd:string",
+      "comment": "Name of the product category."
+    },
+    "eventDate": {
+      "name": "eventDate",
+      "domain": "Event",
+      "datatype": "xsd:dateTime",
+      "comment": "Date and time of the event."
+    },
+    "quantity": {
+      "name": "quantity",
+      "domain": "InventoryEvent",
+      "datatype": "xsd:integer",
+      "comment": "Quantity involved in inventory event."
+    },
+    "locationName": {
+      "name": "locationName",
+      "domain": "Location",
+      "datatype": "xsd:string",
+      "comment": "Name of the location."
+    },
+    "personName": {
+      "name": "personName",
+      "domain": "Person",
+      "datatype": "xsd:string",
+      "comment": "Name of the person."
+    },
+    "employeeId": {
+      "name": "employeeId",
+      "domain": "Staff",
+      "datatype": "xsd:string",
+      "comment": "Employee identifier."
+    },
+    "organizationName": {
+      "name": "organizationName",
+      "domain": "Organization",
+      "datatype": "xsd:string",
+      "comment": "Name of the organization."
+    },
+    "transactionId": {
+      "name": "transactionId",
+      "domain": "Transaction",
+      "datatype": "xsd:string",
+      "comment": "Identifier for the transaction."
+    }
+  },
+  "individuals": {
+    "store1": {
+      "types": [
+        "Store"
+      ],
+      "object_props": {
+        "managedBy": [
+          "manager1"
+        ]
+      },
+      "data_props": {
+        "locationName": [
+          "Downtown Store"
+        ]
+      }
+    },
+    "warehouse1": {
+      "types": [
+        "Warehouse"
+      ],
+      "object_props": {},
+      "data_props": {
+        "locationName": [
+          "Central Warehouse"
+        ]
+      }
+    },
+    "aisleA": {
+      "types": [
+        "Aisle"
+      ],
+      "object_props": {
+        "partOf": [
+          "store1"
+        ]
+      },
+      "data_props": {
+        "locationName": [
+          "Aisle A"
+        ]
+      }
+    },
+    "shelf1": {
+      "types": [
+        "Shelf"
+      ],
+      "object_props": {},
+      "data_props": {}
+    },
+    "retailer1": {
+      "types": [
+        "Retailer"
+      ],
+      "object_props": {
+        "employs": [
+          "inventory1",
+          "manager1",
+          "sales1"
+        ]
+      },
+      "data_props": {
+        "organizationName": [
+          "SuperMart"
+        ]
+      }
+    },
+    "supplier1": {
+      "types": [
+        "Supplier"
+      ],
+      "object_props": {},
+      "data_props": {
+        "organizationName": [
+          "ElectroSupply Inc."
+        ]
+      }
+    },
+    "customer1": {
+      "types": [
+        "Customer"
+      ],
+      "object_props": {},
+      "data_props": {
+        "personName": [
+          "Alice Smith"
+        ]
+      }
+    },
+    "sales1": {
+      "types": [
+        "SalesStaff"
+      ],
+      "object_props": {
+        "employedBy": [
+          "retailer1"
+        ]
+      },
+      "data_props": {
+        "personName": [
+          "Bob Jones"
+        ],
+        "employeeId": [
+          "E123"
+        ]
+      }
+    },
+    "manager1": {
+      "types": [
+        "Manager"
+      ],
+      "object_props": {
+        "employedBy": [
+          "retailer1"
+        ],
+        "manages": [
+          "store1"
+        ]
+      },
+      "data_props": {
+        "personName": [
+          "Carol Lee"
+        ],
+        "employeeId": [
+          "M001"
+        ]
+      }
+    },
+    "product1": {
+      "types": [
+        "MobilePhone"
+      ],
+      "object_props": {},
+      "data_props": {
+        "productName": [
+          "SmartPhone X"
+        ],
+        "sku": [
+          "MPX-100"
+        ],
+        "price": [
+          "699.99"
+        ]
+      }
+    },
+    "product2": {
+      "types": [
+        "Shirt"
+      ],
+      "object_props": {},
+      "data_props": {
+        "productName": [
+          "Blue Shirt"
+        ],
+        "sku": [
+          "SHRT-200"
+        ],
+        "price": [
+          "29.99"
+        ]
+      }
+    },
+    "product3": {
+      "types": [
+        "Fruit"
+      ],
+      "object_props": {},
+      "data_props": {
+        "productName": [
+          "Apple"
+        ],
+        "sku": [
+          "FRT-001"
+        ],
+        "price": [
+          "0.99"
+        ]
+      }
+    },
+    "transaction1": {
+      "types": [
+        "Transaction"
+      ],
+      "object_props": {
+        "purchasedBy": [
+          "customer1"
+        ],
+        "handledBy": [
+          "sales1"
+        ],
+        "occursAt": [
+          "store1"
+        ]
+      },
+      "data_props": {
+        "transactionId": [
+          "T0001"
+        ],
+        "eventDate": [
+          "2024-06-01T10:15:00"
+        ]
+      }
+    },
+    "restock1": {
+      "types": [
+        "RestockEvent"
+      ],
+      "object_props": {
+        "occursAt": [
+          "warehouse1"
+        ]
+      },
+      "data_props": {
+        "eventDate": [
+          "2024-05-30T08:00:00"
+        ],
+        "quantity": [
+          "100"
+        ]
+      }
+    },
+    "stockremoval1": {
+      "types": [
+        "StockRemovalEvent"
+      ],
+      "object_props": {
+        "occursAt": [
+          "store1"
+        ]
+      },
+      "data_props": {
+        "eventDate": [
+          "2024-06-01T09:00:00"
+        ],
+        "quantity": [
+          "5"
+        ]
+      }
+    },
+    "laptop1": {
+      "types": [
+        "Laptop"
+      ],
+      "object_props": {},
+      "data_props": {
+        "productName": [
+          "Laptop Pro"
+        ],
+        "sku": [
+          "LTP-500"
+        ],
+        "price": [
+          "1299.99"
+        ]
+      }
+    },
+    "inventory1": {
+      "types": [
+        "InventoryStaff"
+      ],
+      "object_props": {
+        "employedBy": [
+          "retailer1"
+        ]
+      },
+      "data_props": {
+        "personName": [
+          "David Kim"
+        ],
+        "employeeId": [
+          "I456"
+        ]
+      }
+    }
+  }
+}
