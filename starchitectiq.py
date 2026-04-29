@@ -469,15 +469,58 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         ag["total_token_count"] += tot
 
     def _update_summary():
-        """Show a waiting note while agents work; final summary is set after completion."""
-        if ui_hooks and ui_hooks.get("summary_ph"):
-            agent_count = len([ab for ab in result["agent_outputs"] if not ab.get("_streaming")])
-            if agent_count:
-                ui_hooks["summary_ph"].caption(
-                    f"⏳ {agent_count} agent(s) have responded so far — see individual outputs on the right →"
+        """Show a live progress card while agents work; final summary is set after completion."""
+        if not (ui_hooks and ui_hooks.get("summary_ph")):
+            return
+
+        TOTAL_AGENTS = 6  # ideaagent, BusinessOwner, BusinessArchitect, SolutionArchitect, RAI, Summarizer
+        completed = [ab for ab in result["agent_outputs"] if not ab.get("_streaming")]
+        streaming = [ab for ab in result["agent_outputs"] if ab.get("_streaming")]
+        done_count = len(completed)
+        active_name = streaming[0]["agent"] if streaming else (
+            current_agent_name if current_agent_name and not completed else ""
+        )
+
+        # Latest plan / ledger snippets
+        plans = [p for p in result["planner_updates"] if p.get("kind", "plan") == "plan"]
+        ledgers = [p for p in result["planner_updates"] if p.get("kind") == "ledger"]
+        latest_plan_text = (plans[-1].get("text", "") if plans else "").strip()
+        latest_ledger = ledgers[-1].get("ledger", {}) if ledgers else {}
+        next_speaker = _ledger_field(latest_ledger.get("next_speaker")) if latest_ledger else ""
+        progress_note = _ledger_field(latest_ledger.get("progress")) if latest_ledger else ""
+
+        pct = min(100, int((done_count / TOTAL_AGENTS) * 100))
+
+        with ui_hooks["summary_ph"].container():
+            st.markdown(
+                f"<div class='md3-label'>⚙️ LIVE WORKFLOW PROGRESS</div>",
+                unsafe_allow_html=True,
+            )
+            st.progress(pct, text=f"{done_count} / {TOTAL_AGENTS} agents completed")
+
+            cols = st.columns(2)
+            cols[0].metric("✅ Completed", f"{done_count}")
+            cols[1].metric("🟡 Active", active_name or "—")
+
+            if completed:
+                chips = " ".join(
+                    f"<span class='md3-chip'>✅ {ab['agent']}</span>" for ab in completed
                 )
-            else:
-                ui_hooks["summary_ph"].caption("⏳ Waiting for agents to respond… see progress on the right →")
+                st.markdown(
+                    f"<div style='display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;'>{chips}</div>",
+                    unsafe_allow_html=True,
+                )
+
+            if next_speaker:
+                st.caption(f"➡️ Next speaker: `{next_speaker}`")
+            if progress_note:
+                st.caption(f"📒 {str(progress_note)[:240]}")
+            if latest_plan_text:
+                with st.expander(f"📝 Current Plan (#{len(plans)})", expanded=False):
+                    st.markdown(latest_plan_text)
+
+            if not completed and not active_name:
+                st.caption("⏳ Waiting for agents to start…")
 
     def _show_final_summary():
         """Render the final composed summary into the left placeholder."""
@@ -620,15 +663,12 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
             if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
                 response_id = event.data.response_id
                 if response_id != last_response_id:
-                    # Flush previous agent block (mark done)
-                    if current_agent_name and current_agent_text.strip():
-                        # Remove _streaming flag from the last block
-                        for ab in result["agent_outputs"]:
+                    # Finalize previous agent block: just clear the _streaming flag
+                    # on any existing entries (their text was already accumulated live).
+                    for ab in result["agent_outputs"]:
+                        if ab.get("_streaming"):
+                            ab["text"] = (ab.get("text") or "").strip()
                             ab.pop("_streaming", None)
-                        result["agent_outputs"].append({
-                            "agent": current_agent_name,
-                            "text": current_agent_text.strip(),
-                        })
                     current_agent_name = event.executor_id or "Agent"
                     current_agent_text = ""
                     last_response_id = response_id
@@ -983,9 +1023,10 @@ def main():
         with st.spinner("Agents are collaborating…", show_time=True):
             result = analyze_with_agent(user_input, ui_hooks=ui_hooks)
 
-        # Clear streaming placeholders (final data goes to session state)
-        summary_stream_ph.empty()
-        agent_stream_ph.empty()
+        # Note: do NOT call .empty() on the streaming placeholders here.
+        # st.rerun() below rebuilds the UI from session_state, and clearing
+        # the placeholders first causes a visible "blank" flash where the
+        # final summary / agent outputs appear to disappear.
 
         # Check if workflow returned an error
         if result.get("error"):
