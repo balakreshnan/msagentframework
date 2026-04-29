@@ -445,17 +445,48 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         return val
 
     def _accumulate_usage(agent_name: str, usage):
-        """Accumulate token usage from an AgentResponseUpdate.usage_details entry."""
+        """Accumulate token usage from an AgentResponseUpdate.usage_details entry.
+
+        `usage` may be:
+          - a UsageDetails object with attributes (input_token_count, output_token_count, total_token_count)
+          - a dict with the same keys
+          - an OpenAI-style dict (prompt_tokens / completion_tokens / total_tokens)
+          - None
+        """
         if not usage:
             return
+
+        def _read(src, *names, default=0):
+            for n in names:
+                # attribute access
+                if hasattr(src, n):
+                    v = getattr(src, n)
+                    if v is not None:
+                        try:
+                            return int(v)
+                        except Exception:
+                            pass
+                # dict access
+                if isinstance(src, dict) and n in src and src[n] is not None:
+                    try:
+                        return int(src[n])
+                    except Exception:
+                        pass
+            return default
+
         try:
-            inp = int(usage.get("input_token_count", 0) or 0)
-            outp = int(usage.get("output_token_count", 0) or 0)
-            tot = int(usage.get("total_token_count", 0) or (inp + outp))
-        except Exception:
+            inp = _read(usage, "input_token_count", "prompt_tokens", "input_tokens")
+            outp = _read(usage, "output_token_count", "completion_tokens", "output_tokens")
+            tot = _read(usage, "total_token_count", "total_tokens", default=0)
+            if tot == 0:
+                tot = inp + outp
+        except Exception as e:
+            result["debug_logs"].append(f"[token usage] parse error: {e}")
             return
+
         if inp == 0 and outp == 0 and tot == 0:
             return
+
         tu = result["token_usage"]
         tu["events"] += 1
         tu["total"]["input_token_count"] += inp
@@ -467,6 +498,58 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         ag["input_token_count"] += inp
         ag["output_token_count"] += outp
         ag["total_token_count"] += tot
+
+    def _harvest_usage(agent_name: str, obj):
+        """Best-effort hunt for token usage on Foundry / agent-framework objects.
+
+        Foundry hosted agents often surface token usage only on the underlying
+        thread-run step (exposed via `raw_representation` / `raw_response`),
+        not on the streaming AgentResponseUpdate or final Message. We probe a
+        handful of well-known attribute paths.
+        """
+        if obj is None:
+            return
+        seen = set()
+
+        def _try(node, depth=0):
+            if node is None or depth > 4:
+                return
+            nid = id(node)
+            if nid in seen:
+                return
+            seen.add(nid)
+
+            # 1. direct usage-like attr/dict on this node
+            for key in ("usage_details", "usage", "token_usage", "usageDetails"):
+                val = None
+                if hasattr(node, key):
+                    val = getattr(node, key, None)
+                elif isinstance(node, dict) and key in node:
+                    val = node.get(key)
+                if val is not None:
+                    _accumulate_usage(agent_name, val)
+
+            # 2. recurse into common containers that may wrap a run/step
+            for key in (
+                "raw_representation", "raw_response", "response", "run",
+                "run_step", "step", "step_details", "contents", "content",
+                "messages", "choices", "data",
+            ):
+                child = None
+                if hasattr(node, key):
+                    child = getattr(node, key, None)
+                elif isinstance(node, dict) and key in node:
+                    child = node.get(key)
+                if isinstance(child, (list, tuple)):
+                    for c in child:
+                        _try(c, depth + 1)
+                elif child is not None:
+                    _try(child, depth + 1)
+
+        try:
+            _try(obj)
+        except Exception as e:
+            result["debug_logs"].append(f"[token usage] harvest error: {e}")
 
     def _update_summary():
         """Show a live progress card while agents work; final summary is set after completion."""
@@ -634,6 +717,12 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         - At the end use the architecture summarizer agent to summarize the final architecture and reasoning in a clear and concise manner.
         You are a routing manager.
         You must invoke each participant exactly once, in the given order.
+        Ideation is the first step in the workflow where the ideaagent generates initial concepts and proposals for the task at hand.
+        The business owner agent then validates the ideas generated by the ideaagent against business goals and constraints, ensuring alignment with organizational priorities before passing them along to the business architect agent for further refinement.
+        The business architect agent takes the validated ideas and translates them into a structured business architecture, defining processes, capabilities, and organizational structures that support the proposed concepts, which are then handed off to the solution architect agent for technical design and implementation planning.
+        The solution architect agent then takes the business architecture and designs the technical solution, mapping business requirements to system components, defining integration points, and planning implementation details, before passing the design to the RAIAgent for risk, assumptions, issues, and dependencies analysis.
+        The RAIAgent evaluates the proposed architecture for potential risks, assumptions, issues, and dependencies that could impact successful implementation, surfacing any concerns that need to be addressed before the architecture is finalized.
+        Finally, the architecture summarizer agent consolidates the outputs from all previous agents into a coherent summary that captures the final architecture, the rationale behind design decisions, and any identified risks or considerations.
         Do not re-invoke any agent.
         Do not request revisions or follow-ups.
         Terminate immediately after the final agent completes.
@@ -677,8 +766,15 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
 
                 current_agent_text += str(event.data)
 
-                # Accumulate token usage if reported
+                # Accumulate token usage if reported (try several locations)
+                before = result["token_usage"]["total"]["total_token_count"]
                 _accumulate_usage(current_agent_name, getattr(event.data, "usage_details", None))
+                _harvest_usage(current_agent_name, event.data)
+                after = result["token_usage"]["total"]["total_token_count"]
+                if after > before:
+                    result["debug_logs"].append(
+                        f"[token usage] +{after - before} tokens from {current_agent_name} (stream)"
+                    )
 
                 # Live-update: append/overwrite current streaming agent block
                 existing = [ab for ab in result["agent_outputs"] if ab.get("_streaming")]
@@ -758,6 +854,22 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         for message in outputs:
             author = message.author_name or message.role
             result["summary"] += f"**{author}:**\n{message.text}\n\n"
+            # Fallback token accounting: many runtimes only attach usage_details
+            # to the final per-agent Message (or to the underlying run on
+            # raw_representation), not the streaming AgentResponseUpdate chunks.
+            before = result["token_usage"]["total"]["total_token_count"]
+            _accumulate_usage(str(author), getattr(message, "usage_details", None))
+            _harvest_usage(str(author), message)
+            after = result["token_usage"]["total"]["total_token_count"]
+            if after > before:
+                result["debug_logs"].append(
+                    f"[token usage] +{after - before} tokens from {author} (final message)"
+                )
+
+    if result["token_usage"]["total"]["total_token_count"] == 0:
+        result["debug_logs"].append(
+            "[token usage] No usage reported by Foundry agents — hosted agents may not surface token counts via streaming."
+        )
 
     _show_final_summary()
     _update_agents()
