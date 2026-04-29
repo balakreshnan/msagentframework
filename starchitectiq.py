@@ -1,4 +1,4 @@
-# Copyright (c) Microsoft. All rights reserved.
+﻿# Copyright (c) Microsoft. All rights reserved.
 
 import asyncio
 import base64
@@ -52,6 +52,25 @@ html, body, [class*="css"] {
 #MainMenu, footer, header {visibility: hidden;}
 .stDeployButton {display: none;}
 
+/* ---- Single-viewport compact layout ---- */
+.block-container {
+    padding-top: 0.4rem !important;
+    padding-bottom: 0.4rem !important;
+    max-width: 100% !important;
+}
+[data-testid="stVerticalBlock"] { gap: 0.35rem !important; }
+section.main > div { padding-top: 0 !important; }
+.stExpander { margin-bottom: 0.2rem !important; }
+.stExpander details summary {
+    padding: 0.3rem 0.55rem !important;
+    font-size: 0.82rem !important;
+}
+.stTabs [data-baseweb="tab-list"] { gap: 4px !important; margin-bottom: 4px !important; }
+.stTabs [data-baseweb="tab"] { padding: 4px 10px !important; font-size: 0.78rem !important; }
+[data-testid="stMetricValue"] { font-size: 1.1rem !important; }
+[data-testid="stMetricLabel"] { font-size: 0.7rem !important; }
+[data-testid="stCaptionContainer"] { font-size: 0.75rem !important; line-height: 1.25 !important; }
+
 :root {
     --md-primary: #1B5E20;
     --md-on-primary: #FFFFFF;
@@ -68,18 +87,18 @@ html, body, [class*="css"] {
 
 .md3-top-bar {
     background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%);
-    color: white; padding: 20px 32px;
-    border-radius: 0 0 28px 28px;
-    margin: -1rem -1rem 1.5rem -1rem;
-    box-shadow: 0 4px 16px rgba(27,94,32,0.25);
+    color: white; padding: 6px 18px;
+    border-radius: 0 0 14px 14px;
+    margin: -0.4rem -1rem 0.4rem -1rem;
+    box-shadow: 0 2px 8px rgba(27,94,32,0.22);
 }
-.md3-top-bar h1 { margin: 0; font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; }
-.md3-top-bar p  { margin: 4px 0 0 0; font-size: 0.85rem; opacity: 0.85; font-weight: 300; }
+.md3-top-bar h1 { margin: 0; font-size: 1.0rem; font-weight: 600; letter-spacing: -0.02em; }
+.md3-top-bar p  { margin: 1px 0 0 0; font-size: 0.68rem; opacity: 0.85; font-weight: 300; }
 
 .md3-label {
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    font-size: 0.62rem; font-weight: 600; text-transform: uppercase;
     letter-spacing: 0.1em; color: var(--md-secondary);
-    margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    margin: 2px 0 3px 0; display: flex; align-items: center; gap: 6px;
 }
 
 .chat-bubble-user {
@@ -412,7 +431,42 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         "agent_outputs": [],
         "debug_logs": [],
         "planner_updates": [],
+        "token_usage": {
+            "total": {"input_token_count": 0, "output_token_count": 0, "total_token_count": 0},
+            "by_agent": {},
+            "events": 0,
+        },
     }
+
+    def _ledger_field(val):
+        """Extract a printable value from a MagenticProgressLedgerItem-shaped dict."""
+        if isinstance(val, dict):
+            return val.get("answer", val)
+        return val
+
+    def _accumulate_usage(agent_name: str, usage):
+        """Accumulate token usage from an AgentResponseUpdate.usage_details entry."""
+        if not usage:
+            return
+        try:
+            inp = int(usage.get("input_token_count", 0) or 0)
+            outp = int(usage.get("output_token_count", 0) or 0)
+            tot = int(usage.get("total_token_count", 0) or (inp + outp))
+        except Exception:
+            return
+        if inp == 0 and outp == 0 and tot == 0:
+            return
+        tu = result["token_usage"]
+        tu["events"] += 1
+        tu["total"]["input_token_count"] += inp
+        tu["total"]["output_token_count"] += outp
+        tu["total"]["total_token_count"] += tot
+        ag = tu["by_agent"].setdefault(agent_name, {
+            "input_token_count": 0, "output_token_count": 0, "total_token_count": 0
+        })
+        ag["input_token_count"] += inp
+        ag["output_token_count"] += outp
+        ag["total_token_count"] += tot
 
     def _update_summary():
         """Show a waiting note while agents work; final summary is set after completion."""
@@ -440,31 +494,70 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
                     with st.expander(f"{icon} {ab['agent']}", expanded=is_last):
                         st.markdown(ab["text"])
 
+    def _render_plan_entry(plan_entry: dict, idx: int, is_latest: bool):
+        icon = "🔵" if is_latest else "⚪"
+        kind = plan_entry.get("kind", "plan")
+        label = "Plan" if kind == "plan" else "Ledger"
+        with st.expander(f"{icon} {label} #{idx + 1}", expanded=is_latest):
+            if kind == "plan":
+                st.markdown(plan_entry.get("text", "") or "_(empty)_")
+            else:
+                ledger = plan_entry.get("ledger", {}) or {}
+                task_v = _ledger_field(ledger.get("task"))
+                prog_v = _ledger_field(ledger.get("progress"))
+                next_v = _ledger_field(ledger.get("next_speaker"))
+                inst_v = _ledger_field(ledger.get("instruction_or_question"))
+                done_v = _ledger_field(ledger.get("is_request_satisfied"))
+                if task_v: st.markdown(f"**Task:** {task_v}")
+                if prog_v: st.markdown(f"**Progress:** {prog_v}")
+                if next_v: st.markdown(f"**Next Speaker:** `{next_v}`")
+                if inst_v: st.markdown(f"**Instruction:** {inst_v}")
+                if done_v is not None: st.markdown(f"**Request Satisfied:** {done_v}")
+                with st.popover("📄 Raw JSON"):
+                    st.json(ledger)
+
+    def _render_token_usage(tu: dict):
+        total = tu.get("total", {})
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Input", f"{total.get('input_token_count', 0):,}")
+        c2.metric("Output", f"{total.get('output_token_count', 0):,}")
+        c3.metric("Total", f"{total.get('total_token_count', 0):,}")
+        by_agent = tu.get("by_agent", {})
+        if by_agent:
+            rows = [
+                {"Agent": a, "Input": v["input_token_count"],
+                 "Output": v["output_token_count"], "Total": v["total_token_count"]}
+                for a, v in by_agent.items()
+            ]
+            st.dataframe(rows, hide_index=True, use_container_width=True)
+        else:
+            st.caption("No token usage reported yet.")
+
     def _update_plan():
         if ui_hooks and ui_hooks.get("plan_container"):
             ui_hooks["plan_container"].empty()
             with ui_hooks["plan_container"].container():
-                if result["planner_updates"]:
-                    for idx, plan_entry in enumerate(result["planner_updates"]):
-                        is_latest = (idx == len(result["planner_updates"]) - 1)
-                        icon = "🔵" if is_latest else "⚪"
-                        with st.expander(f"{icon} Plan Update #{idx + 1}", expanded=is_latest):
-                            ledger = plan_entry.get("ledger", {})
-                            if ledger.get("task"):
-                                st.markdown(f"**Task:** {ledger['task']}")
-                            if ledger.get("progress"):
-                                st.markdown(f"**Progress:** {ledger['progress']}")
-                            if ledger.get("next_speaker"):
-                                st.markdown(f"**Next Speaker:** `{ledger['next_speaker']}`")
-                            if ledger.get("instruction_or_question"):
-                                st.markdown(f"**Instruction:** {ledger['instruction_or_question']}")
-                            if ledger.get("is_request_satisfied"):
-                                st.markdown(f"**Request Satisfied:** {ledger['is_request_satisfied']}")
-                            # Show full JSON in a collapsed section
-                            with st.popover("📄 Raw JSON"):
-                                st.json(ledger)
-                else:
-                    st.caption("Waiting for planner updates…")
+                plans = [p for p in result["planner_updates"] if p.get("kind", "plan") == "plan"]
+                ledgers = [p for p in result["planner_updates"] if p.get("kind") == "ledger"]
+                tab_plan, tab_ledger, tab_tokens = st.tabs([
+                    f"📝 Plan ({len(plans)})",
+                    f"📒 Ledger ({len(ledgers)})",
+                    f"🪙 Tokens ({result['token_usage']['total']['total_token_count']:,})",
+                ])
+                with tab_plan:
+                    if plans:
+                        for i, p in enumerate(plans):
+                            _render_plan_entry(p, i, i == len(plans) - 1)
+                    else:
+                        st.caption("Waiting for planner updates…")
+                with tab_ledger:
+                    if ledgers:
+                        for i, l in enumerate(ledgers):
+                            _render_plan_entry(l, i, i == len(ledgers) - 1)
+                    else:
+                        st.caption("Waiting for progress ledger updates…")
+                with tab_tokens:
+                    _render_token_usage(result["token_usage"])
 
     def _update_debug():
         if ui_hooks and ui_hooks.get("debug_ph"):
@@ -544,6 +637,9 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
 
                 current_agent_text += str(event.data)
 
+                # Accumulate token usage if reported
+                _accumulate_usage(current_agent_name, getattr(event.data, "usage_details", None))
+
                 # Live-update: append/overwrite current streaming agent block
                 existing = [ab for ab in result["agent_outputs"] if ab.get("_streaming")]
                 if existing:
@@ -560,10 +656,17 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
             elif event.type == "magentic_orchestrator":
                 evt_name = event.data.event_type.name
                 if isinstance(event.data.content, Message):
-                    result["debug_logs"].append(f"[Orchestrator {evt_name}] {event.data.content.text[:200]}")
+                    plan_text = event.data.content.text
+                    result["planner_updates"].append({
+                        "event": evt_name, "kind": "plan", "text": plan_text,
+                    })
+                    _update_plan()
+                    result["debug_logs"].append(f"[Orchestrator {evt_name}] {plan_text[:200]}")
                 elif isinstance(event.data.content, MagenticProgressLedger):
                     ledger_dict = event.data.content.to_dict()
-                    result["planner_updates"].append({"event": evt_name, "ledger": ledger_dict})
+                    result["planner_updates"].append({
+                        "event": evt_name, "kind": "ledger", "ledger": ledger_dict,
+                    })
                     _update_plan()
                     result["debug_logs"].append(
                         f"[Orchestrator {evt_name}] Progress:\n{json.dumps(ledger_dict, indent=2)}"
@@ -658,6 +761,11 @@ def main():
         "agent_outputs": [],
         "debug_logs": [],
         "planner_updates": [],
+        "token_usage": {
+            "total": {"input_token_count": 0, "output_token_count": 0, "total_token_count": 0},
+            "by_agent": {},
+            "events": 0,
+        },
         "error_log": None,
         "total_queries": 0,
         "telemetry_initialized": False,
@@ -680,7 +788,7 @@ def main():
     with col_left:
         st.markdown('<div class="md3-label">💬 CONVERSATION &amp; SUMMARY</div>', unsafe_allow_html=True)
 
-        chat_container = st.container(height=500, border=True)
+        chat_container = st.container(height=380, border=True)
         with chat_container:
             if not st.session_state.messages:
                 st.markdown("""
@@ -755,34 +863,76 @@ def main():
     with col_right:
         # ── Planner / Plan expander (collapsible, expanded by default) ──
         with st.expander("📋 MAGENTIC PLANNER", expanded=True):
-            plan_inner = st.container(height=250)
+            plan_inner = st.container(height=240)
             with plan_inner:
-                if not st.session_state.planner_updates:
-                    st.caption("The orchestrator's plan will appear here once agents start collaborating.")
-                else:
-                    for idx, plan_entry in enumerate(st.session_state.planner_updates):
-                        is_latest = (idx == len(st.session_state.planner_updates) - 1)
-                        icon = "🔵" if is_latest else "⚪"
-                        with st.expander(f"{icon} Plan Update #{idx + 1}", expanded=is_latest):
-                            ledger = plan_entry.get("ledger", {})
-                            if ledger.get("task"):
-                                st.markdown(f"**Task:** {ledger['task']}")
-                            if ledger.get("progress"):
-                                st.markdown(f"**Progress:** {ledger['progress']}")
-                            if ledger.get("next_speaker"):
-                                st.markdown(f"**Next Speaker:** `{ledger['next_speaker']}`")
-                            if ledger.get("instruction_or_question"):
-                                st.markdown(f"**Instruction:** {ledger['instruction_or_question']}")
-                            if ledger.get("is_request_satisfied"):
-                                st.markdown(f"**Request Satisfied:** {ledger['is_request_satisfied']}")
-                            with st.popover("📄 Raw JSON"):
-                                st.json(ledger)
-                # Live-streaming placeholder for plan updates
+                # Single placeholder — rendered once from session state, overwritten live by _update_plan
                 plan_stream_ph = st.empty()
+                with plan_stream_ph.container():
+                    ss_updates = st.session_state.get("planner_updates", []) or []
+                    ss_plans = [p for p in ss_updates if p.get("kind", "plan") == "plan"]
+                    ss_ledgers = [p for p in ss_updates if p.get("kind") == "ledger"]
+                    ss_tu = st.session_state.get("token_usage") or {
+                        "total": {"input_token_count": 0, "output_token_count": 0, "total_token_count": 0},
+                        "by_agent": {},
+                    }
+                    ss_total = ss_tu.get("total", {}).get("total_token_count", 0)
+                    tab_plan, tab_ledger, tab_tokens = st.tabs([
+                        f"📝 Plan ({len(ss_plans)})",
+                        f"📒 Ledger ({len(ss_ledgers)})",
+                        f"🪙 Tokens ({ss_total:,})",
+                    ])
+                    with tab_plan:
+                        if not ss_plans:
+                            st.caption("The orchestrator's plan will appear here once agents start collaborating.")
+                        else:
+                            for idx, p in enumerate(ss_plans):
+                                is_latest = (idx == len(ss_plans) - 1)
+                                icon = "🔵" if is_latest else "⚪"
+                                with st.expander(f"{icon} Plan #{idx + 1}", expanded=is_latest):
+                                    st.markdown(p.get("text", "") or "_(empty)_")
+                    with tab_ledger:
+                        if not ss_ledgers:
+                            st.caption("Progress ledger entries will appear here as the orchestrator iterates.")
+                        else:
+                            for idx, l in enumerate(ss_ledgers):
+                                is_latest = (idx == len(ss_ledgers) - 1)
+                                icon = "🔵" if is_latest else "⚪"
+                                ledger = l.get("ledger", {}) or {}
+                                def _f(v):
+                                    return v.get("answer", v) if isinstance(v, dict) else v
+                                with st.expander(f"{icon} Ledger #{idx + 1}", expanded=is_latest):
+                                    task_v = _f(ledger.get("task"))
+                                    prog_v = _f(ledger.get("progress"))
+                                    next_v = _f(ledger.get("next_speaker"))
+                                    inst_v = _f(ledger.get("instruction_or_question"))
+                                    done_v = _f(ledger.get("is_request_satisfied"))
+                                    if task_v: st.markdown(f"**Task:** {task_v}")
+                                    if prog_v: st.markdown(f"**Progress:** {prog_v}")
+                                    if next_v: st.markdown(f"**Next Speaker:** `{next_v}`")
+                                    if inst_v: st.markdown(f"**Instruction:** {inst_v}")
+                                    if done_v is not None: st.markdown(f"**Request Satisfied:** {done_v}")
+                                    with st.popover("📄 Raw JSON"):
+                                        st.json(ledger)
+                    with tab_tokens:
+                        total = ss_tu.get("total", {})
+                        c1, c2, c3 = st.columns(3)
+                        c1.metric("Input", f"{total.get('input_token_count', 0):,}")
+                        c2.metric("Output", f"{total.get('output_token_count', 0):,}")
+                        c3.metric("Total", f"{total.get('total_token_count', 0):,}")
+                        by_agent = ss_tu.get("by_agent", {})
+                        if by_agent:
+                            rows = [
+                                {"Agent": a, "Input": v["input_token_count"],
+                                 "Output": v["output_token_count"], "Total": v["total_token_count"]}
+                                for a, v in by_agent.items()
+                            ]
+                            st.dataframe(rows, hide_index=True, use_container_width=True)
+                        else:
+                            st.caption("No token usage reported yet.")
 
         st.markdown('<div class="md3-label">🤖 INDIVIDUAL AGENT OUTPUTS</div>', unsafe_allow_html=True)
 
-        agent_outer = st.container(height=500, border=True)
+        agent_outer = st.container(height=340, border=True)
         with agent_outer:
             if not st.session_state.agent_outputs:
                 st.caption("Each agent's output will appear here after your first query.")
@@ -856,6 +1006,7 @@ def main():
         st.session_state.agent_outputs = result["agent_outputs"]
         st.session_state.debug_logs = result["debug_logs"]
         st.session_state.planner_updates = result.get("planner_updates", [])
+        st.session_state.token_usage = result.get("token_usage", st.session_state.get("token_usage"))
         st.session_state.total_queries += 1
         st.session_state.tts_audio_bytes = None
         st.session_state.tts_clean_text = None
