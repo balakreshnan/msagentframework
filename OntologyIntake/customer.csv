@@ -1,0 +1,11 @@
+customer_id,external_id,full_name,email,phone_e164,segment,registration_date,lifetime_value,consent_marketing,created_at
+1001,CRM-A1001,Aria Patel,aria.patel@example.com,+14155550101,Gold,2021-03-14,18420.55,True,2021-03-14T10:14:00Z
+1002,CRM-A1002,Liam Chen,liam.chen@example.com,+14155550102,Platinum,2019-07-22,64210.1,True,2019-07-22T08:33:00Z
+1003,CRM-A1003,Sofia Rivera,sofia.rivera@example.com,+442075550111,Silver,2022-11-05,4210.0,False,2022-11-05T16:01:00Z
+1004,CRM-A1004,Noah Müller,noah.mueller@example.com,+493055550110,Gold,2020-02-18,22980.4,True,2020-02-18T09:48:00Z
+1005,CRM-A1005,Maya Tanaka,maya.tanaka@example.com,+819055551122,Bronze,2023-08-30,720.0,True,2023-08-30T22:09:00Z
+1006,CRM-A1006,Ethan Brooks,ethan.brooks@example.com,+14155550106,Silver,2022-04-19,3580.2,False,2022-04-19T11:55:00Z
+1007,CRM-A1007,Zara Khan,zara.khan@example.com,+919955550199,Gold,2021-12-01,14990.75,True,2021-12-01T07:22:00Z
+1008,CRM-A1008,Hugo Laurent,hugo.laurent@example.com,+33155550118,Bronze,2024-01-09,312.45,True,2024-01-09T19:40:00Z
+1009,CRM-A1009,Priya Iyer,priya.iyer@example.com,+14155550109,Platinum,2018-05-30,88110.9,True,2018-05-30T14:02:00Z
+1010,CRM-A1010,Mateo Álvarez,mateo.alvarez@example.com,+34910550150,Silver,2023-02-14,5260.3,False,2023-02-14T13:18:00Z

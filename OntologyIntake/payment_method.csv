@@ -1,0 +1,11 @@
+payment_id,customer_id,type,last4,expiry,is_default
+4001,1001,card,4242,07/2027,True
+4002,1002,card,1881,11/2028,True
+4003,1002,wallet,,,False
+4004,1003,card,0099,03/2026,True
+4005,1004,card,5410,08/2027,True
+4006,1005,bnpl,,,True
+4007,1006,card,7733,01/2026,True
+4008,1007,wallet,,,True
+4009,1008,card,3300,06/2028,True
+4010,1009,card,9000,09/2029,True

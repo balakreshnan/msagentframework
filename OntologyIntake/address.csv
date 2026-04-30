@@ -1,0 +1,16 @@
+address_id,customer_id,type,line1,city,region,postal,country
+3001,1001,billing,742 Evergreen Terrace,San Francisco,CA,94110,US
+3002,1001,shipping,742 Evergreen Terrace,San Francisco,CA,94110,US
+3003,1002,billing,1 Infinite Loop,Cupertino,CA,95014,US
+3004,1002,shipping,500 Howard St,San Francisco,CA,94105,US
+3005,1003,billing,221B Baker St,London,,NW1 6XE,GB
+3006,1003,shipping,221B Baker St,London,,NW1 6XE,GB
+3007,1004,billing,Unter den Linden 5,Berlin,,10117,DE
+3008,1004,shipping,Unter den Linden 5,Berlin,,10117,DE
+3009,1005,shipping,1-1 Chiyoda,Tokyo,,100-0001,JP
+3010,1006,shipping,55 Market St,Oakland,CA,94607,US
+3011,1007,shipping,10 MG Road,Bengaluru,KA,560001,IN
+3012,1008,shipping,12 Rue de Rivoli,Paris,,75004,FR
+3013,1009,billing,350 5th Ave,New York,NY,10118,US
+3014,1009,shipping,350 5th Ave,New York,NY,10118,US
+3015,1010,shipping,Calle Mayor 1,Madrid,,28013,ES

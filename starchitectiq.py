@@ -557,11 +557,19 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
             return
 
         TOTAL_AGENTS = 6  # ideaagent, BusinessOwner, BusinessArchitect, SolutionArchitect, RAI, Summarizer
-        completed = [ab for ab in result["agent_outputs"] if not ab.get("_streaming")]
+
+        # Deduplicate by agent name to avoid inflated counts when an agent
+        # participates in multiple rounds.
+        seen_completed = {}
+        for ab in result["agent_outputs"]:
+            if not ab.get("_streaming") and (ab.get("text") or "").strip():
+                seen_completed[ab["agent"]] = ab
+        unique_completed = list(seen_completed.values())
+
         streaming = [ab for ab in result["agent_outputs"] if ab.get("_streaming")]
-        done_count = len(completed)
+        done_count = len(unique_completed)
         active_name = streaming[0]["agent"] if streaming else (
-            current_agent_name if current_agent_name and not completed else ""
+            current_agent_name if current_agent_name and not unique_completed else ""
         )
 
         # Latest plan / ledger snippets
@@ -585,9 +593,9 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
             cols[0].metric("✅ Completed", f"{done_count}")
             cols[1].metric("🟡 Active", active_name or "—")
 
-            if completed:
+            if unique_completed:
                 chips = " ".join(
-                    f"<span class='md3-chip'>✅ {ab['agent']}</span>" for ab in completed
+                    f"<span class='md3-chip'>✅ {ab['agent']}</span>" for ab in unique_completed
                 )
                 st.markdown(
                     f"<div style='display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;'>{chips}</div>",
@@ -602,7 +610,7 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
                 with st.expander(f"📝 Current Plan (#{len(plans)})", expanded=False):
                     st.markdown(latest_plan_text)
 
-            if not completed and not active_name:
+            if not unique_completed and not active_name:
                 st.caption("⏳ Waiting for agents to start…")
 
     def _show_final_summary():
@@ -614,8 +622,14 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         if ui_hooks and ui_hooks.get("agent_container"):
             ui_hooks["agent_container"].empty()
             with ui_hooks["agent_container"].container():
-                for i, ab in enumerate(result["agent_outputs"]):
-                    is_last = (i == len(result["agent_outputs"]) - 1)
+                # Deduplicate by agent name (keep last) and skip empty text
+                seen = {}
+                for ab in result["agent_outputs"]:
+                    if (ab.get("text") or "").strip() or ab.get("_streaming"):
+                        seen[ab["agent"]] = ab
+                visible = list(seen.values())
+                for i, ab in enumerate(visible):
+                    is_last = (i == len(visible) - 1)
                     icon = "🟡" if is_last and ab.get("_streaming") else "🟢"
                     with st.expander(f"{icon} {ab['agent']}", expanded=is_last):
                         st.markdown(ab["text"])
@@ -655,7 +669,7 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
                  "Output": v["output_token_count"], "Total": v["total_token_count"]}
                 for a, v in by_agent.items()
             ]
-            st.dataframe(rows, hide_index=True, use_container_width=True)
+            st.dataframe(rows, hide_index=True, width='content')
         else:
             st.caption("No token usage reported yet.")
 
@@ -701,59 +715,64 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         credential=DefaultAzureCredential(),
         project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
     )
-    ideaagent = FoundryAgent(agent_name="ideaagent", name="ideaagent", **_foundry_kwargs)
-    business_owner_agent = FoundryAgent(agent_name="BusinessOwnerAgent", name="BusinessOwnerAgent", **_foundry_kwargs)
-    business_architect_agent = FoundryAgent(agent_name="BusinessArchitectAgent", name="BusinessArchitectAgent", **_foundry_kwargs)
-    solution_architect_agent = FoundryAgent(agent_name="SolutionArchitectAgent", name="SolutionArchitectAgent", **_foundry_kwargs)
-    raia_agent = FoundryAgent(agent_name="RAIAgent", name="RAIAgent", **_foundry_kwargs)
-    architecture_summarizer_agent = FoundryAgent(agent_name="ArchitectureSummarizerAgent", name="ArchitectureSummarizerAgent", **_foundry_kwargs)
+    ideaagent = FoundryAgent(agent_name="ideaagent", name="ideaagent", description="Generates initial ideas for the architecture based on the task description.", **_foundry_kwargs)
+    BusinessOwnerAgent = FoundryAgent(agent_name="BusinessOwnerAgent", description="Represents the business owner and provides business context, requirements, and priorities for the architecture task.", name="BusinessOwnerAgent", **_foundry_kwargs)
+    BusinessArchitectAgent = FoundryAgent(agent_name="BusinessArchitectAgent", description="Translates validated ideas into a structured business architecture, defining processes, capabilities, and organizational structures that support the proposed concepts.", name="BusinessArchitectAgent", **_foundry_kwargs)
+    SolutionArchitectAgent = FoundryAgent(agent_name="SolutionArchitectAgent", name="SolutionArchitectAgent", description="Designs the technical solution based on the business architecture, mapping business requirements to system components, defining integration points, and planning implementation details.", **_foundry_kwargs)
+    RAIAgent = FoundryAgent(agent_name="RAIAgent", name="RAIAgent", description="Evaluates the proposed architecture for potential risks, assumptions, issues, and dependencies that could impact successful implementation, surfacing any concerns that need to be addressed before the architecture is finalized.", **_foundry_kwargs)
+    ArchitectureSummarizerAgent = FoundryAgent(agent_name="ArchitectureSummarizerAgent", description="Consolidates the outputs from all previous agents into a coherent summary that captures the final architecture, the rationale behind design decisions, and any identified risks or considerations.", name="ArchitectureSummarizerAgent", **_foundry_kwargs)
 
     manager_agent = Agent(
         name="MagenticManager",
-        description="Orchestrator that coordinates the idea agent, business owner agent, business architect agent, solution architect agent, RAIAgent, and architecture summarizer agent to complete the task efficiently.",
-        instructions="""You coordinate a team to complete complex tasks efficiently.
-        - You have access to the following agents: ideaagent, business owner agent, business architect agent, solution architect agent, RAIAgent.
-        - Pick the right agent(s) for each step of the task, and coordinate handoffs between agents.
-        - At the end use the architecture summarizer agent to summarize the final architecture and reasoning in a clear and concise manner.
-        You are a routing manager.
-        You must invoke each participant exactly once, in the given order.
-        Ideation is the first step in the workflow where the ideaagent generates initial concepts and proposals for the task at hand.
-        The business owner agent then validates the ideas generated by the ideaagent against business goals and constraints, ensuring alignment with organizational priorities before passing them along to the business architect agent for further refinement.
-        The business architect agent takes the validated ideas and translates them into a structured business architecture, defining processes, capabilities, and organizational structures that support the proposed concepts, which are then handed off to the solution architect agent for technical design and implementation planning.
-        The solution architect agent then takes the business architecture and designs the technical solution, mapping business requirements to system components, defining integration points, and planning implementation details, before passing the design to the RAIAgent for risk, assumptions, issues, and dependencies analysis.
-        The RAIAgent evaluates the proposed architecture for potential risks, assumptions, issues, and dependencies that could impact successful implementation, surfacing any concerns that need to be addressed before the architecture is finalized.
-        Finally, the architecture summarizer agent consolidates the outputs from all previous agents into a coherent summary that captures the final architecture, the rationale behind design decisions, and any identified risks or considerations.
-        Do not re-invoke any agent.
-        Do not request revisions or follow-ups.
-        Terminate immediately after the final agent completes.
+        description="Orchestrator that coordinates ideaagent, BusinessOwnerAgent, BusinessArchitectAgent, SolutionArchitectAgent, RAIAgent, and ArchitectureSummarizerAgent to complete the task efficiently.",
+        instructions="""You are the Magentic Manager. Your ONLY job is to route messages to agents in a fixed sequence. Do NOT generate content yourself.
+
+        SEQUENCE (call each agent EXACTLY ONCE in this order):
+        1. ideaagent → Generate ideas
+        2. BusinessOwnerAgent → Validate business fit
+        3. BusinessArchitectAgent → Define business architecture
+        4. SolutionArchitectAgent → Design technical solution
+        5. RAIAgent → Assess risks and dependencies
+        6. ArchitectureSummarizerAgent → Produce final summary
+
+        RULES:
+        - Use the EXACT agent names listed above when selecting the next speaker.
+        - Call each agent exactly once. Never skip, repeat, or reorder.
+        - Pass accumulated context from all previous agents to the next.
+        - After ArchitectureSummarizerAgent responds, mark the request as satisfied and TERMINATE.
+        - Do NOT ask for revisions, feedback, or additional rounds.
+        - Keep each agent's output under 2000 tokens.
+        - Never generate harmful, illegal, or PII-related content.
+
+        Start now: send the user's task to ideaagent.
         """,
         client=client,
     )
 
     workflow = MagenticBuilder(
         participants=[
-            ideaagent, business_owner_agent, business_architect_agent,
-            solution_architect_agent, raia_agent, architecture_summarizer_agent,
+            ideaagent, BusinessOwnerAgent, BusinessArchitectAgent,
+            SolutionArchitectAgent, RAIAgent, ArchitectureSummarizerAgent,
         ],
         intermediate_outputs=True,
+        enable_plan_review=False,
         manager_agent=manager_agent,
-        max_round_count=6,
-        max_stall_count=0,
-        max_reset_count=6,
+        max_round_count=30,
+        max_stall_count=5,
+        max_reset_count=5,
     ).build()
 
     last_response_id: str | None = None
     output_event: WorkflowEvent | None = None
     current_agent_text = ""
     current_agent_name = ""
+    _agent_transition_count = 0
 
     try:
         async for event in workflow.run(task, stream=True):
             if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
                 response_id = event.data.response_id
                 if response_id != last_response_id:
-                    # Finalize previous agent block: just clear the _streaming flag
-                    # on any existing entries (their text was already accumulated live).
                     for ab in result["agent_outputs"]:
                         if ab.get("_streaming"):
                             ab["text"] = (ab.get("text") or "").strip()
@@ -761,12 +780,14 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
                     current_agent_name = event.executor_id or "Agent"
                     current_agent_text = ""
                     last_response_id = response_id
+                    _agent_transition_count += 1
+                    if _agent_transition_count > 1:
+                        await asyncio.sleep(2)
                     result["debug_logs"].append(f"Agent '{current_agent_name}' started streaming")
                     _update_debug()
 
                 current_agent_text += str(event.data)
 
-                # Accumulate token usage if reported (try several locations)
                 before = result["token_usage"]["total"]["total_token_count"]
                 _accumulate_usage(current_agent_name, getattr(event.data, "usage_details", None))
                 _harvest_usage(current_agent_name, event.data)
@@ -776,34 +797,45 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
                         f"[token usage] +{after - before} tokens from {current_agent_name} (stream)"
                     )
 
-                # Live-update: append/overwrite current streaming agent block
-                existing = [ab for ab in result["agent_outputs"] if ab.get("_streaming")]
-                if existing:
-                    existing[0]["text"] = current_agent_text
+                existing_streaming = [ab for ab in result["agent_outputs"] if ab.get("_streaming")]
+                if existing_streaming:
+                    existing_streaming[0]["text"] = current_agent_text
+                    existing_streaming[0]["agent"] = current_agent_name
                 else:
-                    result["agent_outputs"].append({
-                        "agent": current_agent_name,
-                        "text": current_agent_text,
-                        "_streaming": True,
-                    })
+                    existing_same_agent = [ab for ab in result["agent_outputs"] if ab["agent"] == current_agent_name and not ab.get("_streaming")]
+                    if existing_same_agent:
+                        prev = existing_same_agent[-1]
+                        prev["text"] = (prev["text"] or "").rstrip() + "\n\n---\n\n" + current_agent_text
+                        prev["_streaming"] = True
+                    else:
+                        result["agent_outputs"].append({
+                            "agent": current_agent_name,
+                            "text": current_agent_text,
+                            "_streaming": True,
+                        })
                 _update_agents()
-                _update_summary()
 
             elif event.type == "magentic_orchestrator":
                 evt_name = event.data.event_type.name
                 if isinstance(event.data.content, Message):
                     plan_text = event.data.content.text
-                    result["planner_updates"].append({
-                        "event": evt_name, "kind": "plan", "text": plan_text,
-                    })
-                    _update_plan()
+                    existing_plans = [p for p in result["planner_updates"] if p.get("kind", "plan") == "plan"]
+                    last_plan_text = (existing_plans[-1].get("text", "") if existing_plans else "").strip()
+                    if plan_text.strip() != last_plan_text:
+                        result["planner_updates"].append({
+                            "event": evt_name, "kind": "plan", "text": plan_text,
+                        })
+                        _update_plan()
                     result["debug_logs"].append(f"[Orchestrator {evt_name}] {plan_text[:200]}")
                 elif isinstance(event.data.content, MagenticProgressLedger):
                     ledger_dict = event.data.content.to_dict()
-                    result["planner_updates"].append({
-                        "event": evt_name, "kind": "ledger", "ledger": ledger_dict,
-                    })
-                    _update_plan()
+                    existing_ledgers = [p for p in result["planner_updates"] if p.get("kind") == "ledger"]
+                    last_ledger = existing_ledgers[-1].get("ledger", {}) if existing_ledgers else {}
+                    if ledger_dict != last_ledger:
+                        result["planner_updates"].append({
+                            "event": evt_name, "kind": "ledger", "ledger": ledger_dict,
+                        })
+                        _update_plan()
                     result["debug_logs"].append(
                         f"[Orchestrator {evt_name}] Progress:\n{json.dumps(ledger_dict, indent=2)}"
                     )
@@ -827,6 +859,42 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
         result["error"] = f"{err_msg}\n\n```\n{tb_str}```"
         result["debug_logs"].append(f"[ERROR @ {elapsed_total:.1f}s] {err_msg}")
         _update_debug()
+
+        # Flush any in-progress streaming block so partial output is preserved
+        for ab in result["agent_outputs"]:
+            ab.pop("_streaming", None)
+        if current_agent_name and current_agent_text.strip():
+            found = False
+            for ab in result["agent_outputs"]:
+                if ab["agent"] == current_agent_name:
+                    ab["text"] = current_agent_text.strip()
+                    found = True
+                    break
+            if not found:
+                result["agent_outputs"].append({
+                    "agent": current_agent_name,
+                    "text": current_agent_text.strip(),
+                })
+
+        # Deduplicate and remove empty outputs
+        seen_err = {}
+        for ab in result["agent_outputs"]:
+            if (ab.get("text") or "").strip():
+                seen_err[ab["agent"]] = ab
+        result["agent_outputs"] = list(seen_err.values())
+
+        # Build a partial summary from whatever agents completed before the error
+        if result["agent_outputs"]:
+            partial = "\n\n".join(
+                f"**{ab['agent']}:**\n{ab['text']}" for ab in result["agent_outputs"]
+            )
+            result["summary"] = (
+                f"⚠️ **Workflow interrupted** after {elapsed_total:.1f}s. "
+                f"Partial results from {len(result['agent_outputs'])} agent(s):\n\n{partial}"
+            )
+        else:
+            result["summary"] = f"⚠️ **Workflow failed** after {elapsed_total:.1f}s with no agent output."
+
         result["elapsed_seconds"] = round(elapsed_total, 2)
         return result
 
@@ -846,6 +914,13 @@ async def run_architecture_workflow(task: str, ui_hooks: dict = None) -> dict:
                 "agent": current_agent_name,
                 "text": current_agent_text.strip(),
             })
+
+    # Deduplicate by agent name (keep last entry) and remove empty outputs
+    seen = {}
+    for ab in result["agent_outputs"]:
+        if (ab.get("text") or "").strip():
+            seen[ab["agent"]] = ab
+    result["agent_outputs"] = list(seen.values())
 
     # Build final summary from the output event (list of Messages)
     if output_event:
@@ -940,7 +1015,7 @@ def main():
     with col_left:
         st.markdown('<div class="md3-label">💬 CONVERSATION &amp; SUMMARY</div>', unsafe_allow_html=True)
 
-        chat_container = st.container(height=380, border=True)
+        chat_container = st.container(height=580, border=True)
         with chat_container:
             if not st.session_state.messages:
                 st.markdown("""
@@ -998,7 +1073,7 @@ def main():
                     st.session_state.tts_voice = selected_voice
                 with btn_col:
                     st.markdown("<br>", unsafe_allow_html=True)
-                    speak_clicked = st.button("🗣️ Speak", use_container_width=True)
+                    speak_clicked = st.button("🗣️ Speak", width='content')
 
                 if speak_clicked:
                     with st.spinner("Generating speech…"):
@@ -1078,21 +1153,27 @@ def main():
                                  "Output": v["output_token_count"], "Total": v["total_token_count"]}
                                 for a, v in by_agent.items()
                             ]
-                            st.dataframe(rows, hide_index=True, use_container_width=True)
+                            st.dataframe(rows, hide_index=True, width='content')
                         else:
                             st.caption("No token usage reported yet.")
 
         st.markdown('<div class="md3-label">🤖 INDIVIDUAL AGENT OUTPUTS</div>', unsafe_allow_html=True)
 
-        agent_outer = st.container(height=340, border=True)
+        agent_outer = st.container(height=440, border=True)
         with agent_outer:
-            if not st.session_state.agent_outputs:
+            # Deduplicate by agent name (keep last) and skip empty text
+            seen = {}
+            for ab in (st.session_state.agent_outputs or []):
+                if (ab.get("text") or "").strip():
+                    seen[ab["agent"]] = ab
+            visible_agents = list(seen.values())
+            if not visible_agents:
                 st.caption("Each agent's output will appear here after your first query.")
             else:
-                for i, agent_block in enumerate(st.session_state.agent_outputs):
+                for i, agent_block in enumerate(visible_agents):
                     with st.expander(
                         f"🟢 {agent_block['agent']}",
-                        expanded=(i == len(st.session_state.agent_outputs) - 1),
+                        expanded=(i == len(visible_agents) - 1),
                     ):
                         st.markdown(agent_block["text"])
 
@@ -1145,7 +1226,7 @@ def main():
             st.session_state.error_log = result["error"]
             st.session_state.messages.append({
                 "role": "assistant",
-                "content": "⚠️ The workflow encountered an error. Check the **Error Details** panel on the right for more information.",
+                "content": result.get("summary", "⚠️ The workflow encountered an error. Check the **Error Details** panel on the right for more information."),
                 "timestamp": datetime.now().strftime("%I:%M %p"),
             })
         else:

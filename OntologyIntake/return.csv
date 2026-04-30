@@ -1,0 +1,6 @@
+return_id,order_id,reason_code,refund_amount,status,requested_date
+90001,70001,WRG,19.99,completed,2026-04-10
+90002,70003,DMG,64.0,approved,2026-03-25
+90003,70006,NDS,129.0,rejected,2026-04-02
+90004,70010,DEF,149.0,approved,2026-04-22
+90005,70013,CXL,32.0,completed,2026-01-25

@@ -1,0 +1,16 @@
+sku,name,category,brand,unit_price,currency,weight_kg,hazardous_flag
+SKU-APP-001,Slim-Fit Cotton Tee,Apparel,Northwind,19.99,USD,0.18,False
+SKU-APP-002,Performance Running Jacket,Apparel,TrailMark,89.0,USD,0.42,False
+SKU-ELC-101,Wireless Noise-Cancelling Buds,Electronics,Soundwave,149.0,USD,0.06,False
+SKU-ELC-102,"27"" 4K Monitor",Electronics,Pixelcraft,379.0,USD,5.8,False
+SKU-ELC-103,Lithium Power Bank 20000mAh,Electronics,Voltcore,59.0,USD,0.38,True
+SKU-HOM-201,Ceramic Pour-Over Kettle,Home,Hearth,45.0,USD,1.1,False
+SKU-HOM-202,Eucalyptus Linen Sheet Set,Home,Boreal,129.0,USD,1.7,False
+SKU-OUT-301,Camping Stove (LPG),Outdoors,TrailMark,89.0,USD,1.35,True
+SKU-OUT-302,Insulated Hydration Pack,Outdoors,TrailMark,64.0,USD,0.5,False
+SKU-BTY-401,Aerosol Hairspray 250ml,Beauty,Lustre,14.5,USD,0.26,True
+SKU-BTY-402,Vitamin C Serum 30ml,Beauty,Lustre,32.0,USD,0.08,False
+SKU-GRO-501,Single-Origin Coffee 340g,Grocery,Hearth,16.0,USD,0.36,False
+SKU-TOY-601,Wooden Train Set,Toys,Acorn,54.0,USD,1.25,False
+SKU-OFF-701,Mechanical Keyboard (TKL),Electronics,Pixelcraft,119.0,USD,0.9,False
+SKU-SPT-801,Yoga Mat 6mm,Sports,TrailMark,39.0,USD,1.1,False
