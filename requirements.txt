@@ -16,3 +16,5 @@ agent-framework-azure-ai-search --pre
 azure-monitor-opentelemetry==1.8.6
 pysmartthings
 matplotlib
+pdfplumber
+python-docx

@@ -29,6 +29,12 @@ from llm_ontology_generator import (
     spec_to_ontology,
 )
 from ontology_builder import Ontology
+from ontology_intake_processor import (
+    build_intake_context,
+    build_uploaded_context,
+    scan_intake_folder,
+    INTAKE_SYSTEM_PROMPT_ADDENDUM,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -208,6 +214,12 @@ if "dataset_text" not in st.session_state:
     st.session_state.dataset_text = None
 if "dataset_label" not in st.session_state:
     st.session_state.dataset_label = None
+if "intake_context" not in st.session_state:
+    st.session_state.intake_context = None   # combined text from intake files
+if "intake_label" not in st.session_state:
+    st.session_state.intake_label = None     # summary label for loaded intake
+if "intake_files_summary" not in st.session_state:
+    st.session_state.intake_files_summary = None  # list of loaded file names
 
 
 # ---------------------------------------------------------------------------
@@ -219,36 +231,101 @@ with hdr_l:
     st.markdown('<div class="m3-headline">🧬 Ontology Studio</div>',
                 unsafe_allow_html=True)
     st.markdown(
-        '<div class="m3-subhead">Describe a domain in chat — get an OWL '
-        'ontology (Turtle / JSON-LD / JSON) powered by Azure OpenAI in '
-        'Microsoft Foundry.</div>',
+        '<div class="m3-subhead">Upload CSVs, PDFs (data model), and DOCX '
+        '(data dictionary) — or load the OntologyIntake folder — then chat '
+        'to generate an OWL ontology powered by Azure OpenAI.</div>',
         unsafe_allow_html=True,
     )
 
 with hdr_r:
-    c1, c2, c3 = st.columns([0.34, 0.33, 0.33])
+    c1, c2 = st.columns([0.5, 0.5])
     with c1:
         st.toggle("Dry run", key="dry_run",
                   help="Skip Azure call; use a built-in mock spec.")
     with c2:
-        up = st.file_uploader("CSV", type=["csv"], label_visibility="collapsed")
-        if up is not None:
-            tmp = Path(".") / f".upload_{up.name}"
-            tmp.write_bytes(up.getvalue())
-            try:
-                st.session_state.dataset_text = sample_csv(str(tmp))
-                st.session_state.dataset_label = up.name
-            finally:
-                try:
-                    tmp.unlink()
-                except OSError:
-                    pass
-    with c3:
         if st.button("Reset", use_container_width=True):
             for k in ("spec", "ont", "name", "messages",
-                      "dataset_text", "dataset_label"):
+                      "dataset_text", "dataset_label",
+                      "intake_context", "intake_label",
+                      "intake_files_summary"):
                 st.session_state[k] = [] if k == "messages" else None
             st.rerun()
+
+# ---------------------------------------------------------------------------
+# Data intake panel — file upload + OntologyIntake folder loader
+# ---------------------------------------------------------------------------
+
+INTAKE_FOLDER = Path("OntologyIntake")
+
+with st.expander("📂 **Data Intake** — Upload files or load OntologyIntake folder",
+                 expanded=st.session_state.intake_context is None):
+    intake_c1, intake_c2 = st.columns([0.55, 0.45])
+
+    with intake_c1:
+        uploaded_files = st.file_uploader(
+            "Upload data files",
+            type=["csv", "pdf", "docx", "doc"],
+            accept_multiple_files=True,
+            help="Upload CSV (data), PDF (data model/ERD), "
+                 "DOCX (data dictionary) files.",
+        )
+        if uploaded_files:
+            ctx = build_uploaded_context(uploaded_files)
+            if ctx.strip():
+                st.session_state.intake_context = ctx
+                names = [f.name for f in uploaded_files]
+                st.session_state.intake_label = f"{len(names)} uploaded file(s)"
+                st.session_state.intake_files_summary = names
+                # Also set legacy dataset_text for backward compat
+                st.session_state.dataset_text = ctx
+                st.session_state.dataset_label = ", ".join(names)
+
+    with intake_c2:
+        if INTAKE_FOLDER.is_dir():
+            files_info = scan_intake_folder(INTAKE_FOLDER)
+            csv_count = len(files_info["csv"])
+            pdf_count = len(files_info["pdf"])
+            docx_count = len(files_info["docx"])
+            st.markdown(
+                f"**OntologyIntake folder** detected:  \n"
+                f"📊 {csv_count} CSV · 📄 {pdf_count} PDF · "
+                f"📝 {docx_count} DOCX"
+            )
+            if st.button("📥 Load OntologyIntake folder",
+                         use_container_width=True):
+                ctx = build_intake_context(INTAKE_FOLDER)
+                if ctx.strip():
+                    st.session_state.intake_context = ctx
+                    all_names = (
+                        [f.name for f in files_info["csv"]]
+                        + [f.name for f in files_info["pdf"]]
+                        + [f.name for f in files_info["docx"]]
+                    )
+                    st.session_state.intake_label = (
+                        f"OntologyIntake ({len(all_names)} files)"
+                    )
+                    st.session_state.intake_files_summary = all_names
+                    st.session_state.dataset_text = ctx
+                    st.session_state.dataset_label = "OntologyIntake folder"
+                    st.success(
+                        f"Loaded {len(all_names)} files from OntologyIntake."
+                    )
+                    st.rerun()
+                else:
+                    st.warning("No extractable content found in folder.")
+        else:
+            st.info("No OntologyIntake folder found in the project root.")
+
+    # Show loaded files summary
+    if st.session_state.intake_files_summary:
+        file_chips = " ".join(
+            f'<span class="m3-chip">{n}</span>'
+            for n in st.session_state.intake_files_summary
+        )
+        st.markdown(
+            f'<div style="margin-top:6px;">✅ <b>Loaded:</b> {file_chips}</div>',
+            unsafe_allow_html=True,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -256,6 +333,7 @@ with hdr_r:
 # ---------------------------------------------------------------------------
 
 ont = st.session_state.ont
+intake_lbl = st.session_state.intake_label or st.session_state.dataset_label or "—"
 chips_html = (
     f'<div class="m3-card" style="margin:6px 0 10px 0;">'
     f'<span class="m3-chip">Classes <span class="v">{len(ont.classes) if ont else 0}</span></span>'
@@ -263,7 +341,7 @@ chips_html = (
     f'<span class="m3-chip">Data props <span class="v">{len(ont.data_properties) if ont else 0}</span></span>'
     f'<span class="m3-chip">Individuals <span class="v">{len(ont.individuals) if ont else 0}</span></span>'
     f'<span class="m3-chip">Mode <span class="v">{"Dry run" if st.session_state.dry_run else "Live"}</span></span>'
-    f'<span class="m3-chip">Dataset <span class="v">{st.session_state.dataset_label or "—"}</span></span>'
+    f'<span class="m3-chip">Intake <span class="v">{intake_lbl}</span></span>'
     f'</div>'
 )
 st.markdown(chips_html, unsafe_allow_html=True)
@@ -381,12 +459,23 @@ PANEL_HEIGHT = 340  # keeps the page within one viewport on most laptops
 
 with tab_overview:
     if not ont:
-        st.markdown(
-            '<div class="m3-card-tonal">👋 Start by describing a domain in '
-            'the chat at the bottom — e.g. <i>"Model a hospital with '
-            'patients, doctors, appointments and prescriptions"</i>.</div>',
-            unsafe_allow_html=True,
-        )
+        if st.session_state.intake_context:
+            st.markdown(
+                '<div class="m3-card-tonal">📂 Data loaded! Now use the chat '
+                'below to generate your ontology — e.g. <i>"Create an ontology '
+                'from the uploaded Order Management data model and data '
+                'dictionary"</i>.</div>',
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                '<div class="m3-card-tonal">👋 Start by uploading files '
+                '(CSV + PDF + DOCX) or loading the OntologyIntake folder above, '
+                'then describe the domain in the chat below — e.g. <i>"Model a '
+                'hospital with patients, doctors, appointments and '
+                'prescriptions"</i>.</div>',
+                unsafe_allow_html=True,
+            )
     else:
         spec = st.session_state.spec or {}
         col1, col2 = st.columns([0.5, 0.5])
@@ -717,20 +806,28 @@ with tab_artifacts:
 # Chat input (pinned at the bottom by Streamlit)
 # ---------------------------------------------------------------------------
 
-prompt = st.chat_input("Describe a domain to model… e.g. "
-                       "'Retail orders with customers, products, shipments'")
+prompt = st.chat_input("Describe a domain or ask to create an ontology from uploaded data… "
+                       "e.g. 'Create an ontology from the uploaded Order Management data'")
 
 if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    user_prompt = build_user_prompt(prompt, st.session_state.dataset_text)
+    # Use intake context (multi-file) if available, fallback to single CSV
+    combined_context = (st.session_state.intake_context
+                        or st.session_state.dataset_text)
+    # Use enriched system prompt when intake data is loaded
+    system_prompt = SYSTEM_PROMPT
+    if st.session_state.intake_context:
+        system_prompt = SYSTEM_PROMPT + INTAKE_SYSTEM_PROMPT_ADDENDUM
+
+    user_prompt = build_user_prompt(prompt, combined_context)
 
     try:
         with st.spinner("Designing ontology…"):
             if st.session_state.dry_run:
                 spec = MOCK_SPEC
             else:
-                spec = call_azure_openai(SYSTEM_PROMPT, user_prompt)
+                spec = call_azure_openai(system_prompt, user_prompt)
 
             ont_obj = spec_to_ontology(spec)
             name = slugify(spec.get("ontology_name") or prompt[:32])
@@ -777,14 +874,19 @@ if prompt:
 
 
 # ---------------------------------------------------------------------------
-# Last assistant reply (compact, above chat input – no full history scroll)
+# Chat history (shows last few messages for context)
 # ---------------------------------------------------------------------------
 
 if st.session_state.messages:
-    last = st.session_state.messages[-1]
-    if last["role"] == "assistant":
-        st.markdown(
-            f'<div class="m3-card-tonal" style="margin-top:8px;">'
-            f'<b>Assistant:</b> {last["content"]}</div>',
-            unsafe_allow_html=True,
-        )
+    with st.container():
+        # Show up to 6 most recent messages
+        recent = st.session_state.messages[-6:]
+        for msg in recent:
+            role = msg["role"]
+            icon = "👤" if role == "user" else "🤖"
+            bg = "var(--md-surface-container)" if role == "user" else "var(--md-primary-container)"
+            st.markdown(
+                f'<div class="m3-card" style="background:{bg};margin:4px 0;">'
+                f'<b>{icon} {role.title()}:</b> {msg["content"]}</div>',
+                unsafe_allow_html=True,
+            )

@@ -1,0 +1,786 @@
+{
+  "iri": "https://example.org/order-management/",
+  "classes": {
+    "Entity": {
+      "name": "Entity",
+      "parents": [],
+      "comment": "Top-level root for all order management concepts.",
+      "disjoint_with": []
+    },
+    "Party": {
+      "name": "Party",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "An entity that participates in business interactions.",
+      "disjoint_with": []
+    },
+    "Organization": {
+      "name": "Organization",
+      "parents": [
+        "Party"
+      ],
+      "comment": "A legal or operational organization.",
+      "disjoint_with": [
+        "Person"
+      ]
+    },
+    "Person": {
+      "name": "Person",
+      "parents": [
+        "Party"
+      ],
+      "comment": "A human participant in the order management domain.",
+      "disjoint_with": [
+        "Organization"
+      ]
+    },
+    "Customer": {
+      "name": "Customer",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person who places orders.",
+      "disjoint_with": [
+        "Employee"
+      ]
+    },
+    "Employee": {
+      "name": "Employee",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person employed by the business.",
+      "disjoint_with": [
+        "Customer"
+      ]
+    },
+    "SalesRepresentative": {
+      "name": "SalesRepresentative",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who manages customer orders.",
+      "disjoint_with": []
+    },
+    "WarehouseWorker": {
+      "name": "WarehouseWorker",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who handles warehouse operations.",
+      "disjoint_with": []
+    },
+    "SupportAgent": {
+      "name": "SupportAgent",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who handles customer support cases.",
+      "disjoint_with": []
+    },
+    "Supplier": {
+      "name": "Supplier",
+      "parents": [
+        "Organization"
+      ],
+      "comment": "An organization that supplies products.",
+      "disjoint_with": []
+    },
+    "Carrier": {
+      "name": "Carrier",
+      "parents": [
+        "Organization"
+      ],
+      "comment": "An organization that transports shipments.",
+      "disjoint_with": []
+    },
+    "Location": {
+      "name": "Location",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A physical or logical place.",
+      "disjoint_with": []
+    },
+    "Facility": {
+      "name": "Facility",
+      "parents": [
+        "Location"
+      ],
+      "comment": "A managed operational site.",
+      "disjoint_with": []
+    },
+    "Warehouse": {
+      "name": "Warehouse",
+      "parents": [
+        "Facility"
+      ],
+      "comment": "A facility used to store inventory.",
+      "disjoint_with": []
+    },
+    "Store": {
+      "name": "Store",
+      "parents": [
+        "Facility"
+      ],
+      "comment": "A retail or pickup facility.",
+      "disjoint_with": []
+    },
+    "OrderArtifact": {
+      "name": "OrderArtifact",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "An artifact used in order processing.",
+      "disjoint_with": []
+    },
+    "Product": {
+      "name": "Product",
+      "parents": [
+        "OrderArtifact"
+      ],
+      "comment": "A sellable item.",
+      "disjoint_with": []
+    },
+    "ProductCategory": {
+      "name": "ProductCategory",
+      "parents": [
+        "OrderArtifact"
+      ],
+      "comment": "A grouping of products.",
+      "disjoint_with": []
+    },
+    "OrderDocument": {
+      "name": "OrderDocument",
+      "parents": [
+        "OrderArtifact"
+      ],
+      "comment": "A document related to order processing.",
+      "disjoint_with": []
+    },
+    "Order": {
+      "name": "Order",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A customer purchase order.",
+      "disjoint_with": []
+    },
+    "SalesOrder": {
+      "name": "SalesOrder",
+      "parents": [
+        "Order"
+      ],
+      "comment": "An order created for sale to a customer.",
+      "disjoint_with": []
+    },
+    "PurchaseOrder": {
+      "name": "PurchaseOrder",
+      "parents": [
+        "Order"
+      ],
+      "comment": "An order created to procure goods from a supplier.",
+      "disjoint_with": []
+    },
+    "OrderLine": {
+      "name": "OrderLine",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A line item within an order.",
+      "disjoint_with": []
+    },
+    "FulfillmentArtifact": {
+      "name": "FulfillmentArtifact",
+      "parents": [
+        "OrderArtifact"
+      ],
+      "comment": "An artifact used to fulfill orders.",
+      "disjoint_with": []
+    },
+    "InventoryRecord": {
+      "name": "InventoryRecord",
+      "parents": [
+        "FulfillmentArtifact"
+      ],
+      "comment": "A record of stock for a product at a location.",
+      "disjoint_with": []
+    },
+    "Shipment": {
+      "name": "Shipment",
+      "parents": [
+        "FulfillmentArtifact"
+      ],
+      "comment": "A shipment that transports ordered goods.",
+      "disjoint_with": []
+    },
+    "ShipmentPackage": {
+      "name": "ShipmentPackage",
+      "parents": [
+        "FulfillmentArtifact"
+      ],
+      "comment": "A package included in a shipment.",
+      "disjoint_with": []
+    },
+    "Invoice": {
+      "name": "Invoice",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A billing document issued for an order.",
+      "disjoint_with": []
+    },
+    "Payment": {
+      "name": "Payment",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A payment made against an invoice or order.",
+      "disjoint_with": []
+    },
+    "SupportCase": {
+      "name": "SupportCase",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A customer support case related to an order.",
+      "disjoint_with": []
+    },
+    "CaseNote": {
+      "name": "CaseNote",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A note recorded on a support case.",
+      "disjoint_with": []
+    }
+  },
+  "object_properties": {
+    "placesOrder": {
+      "name": "placesOrder",
+      "domain": "Customer",
+      "range_": "Order",
+      "inverse_of": "placedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a customer to an order they place."
+    },
+    "placedBy": {
+      "name": "placedBy",
+      "domain": "Order",
+      "range_": "Customer",
+      "inverse_of": "placesOrder",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an order to the customer who placed it."
+    },
+    "containsLine": {
+      "name": "containsLine",
+      "domain": "Order",
+      "range_": "OrderLine",
+      "inverse_of": "lineOfOrder",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an order to its line items."
+    },
+    "lineOfOrder": {
+      "name": "lineOfOrder",
+      "domain": "OrderLine",
+      "range_": "Order",
+      "inverse_of": "containsLine",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a line item to its parent order."
+    },
+    "referencesProduct": {
+      "name": "referencesProduct",
+      "domain": "OrderLine",
+      "range_": "Product",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Identifies the product referenced by an order line."
+    },
+    "managedBy": {
+      "name": "managedBy",
+      "domain": "Order",
+      "range_": "SalesRepresentative",
+      "inverse_of": "managesOrder",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an order to the sales representative managing it."
+    },
+    "managesOrder": {
+      "name": "managesOrder",
+      "domain": "SalesRepresentative",
+      "range_": "Order",
+      "inverse_of": "managedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a sales representative to an order they manage."
+    },
+    "fulfilledFrom": {
+      "name": "fulfilledFrom",
+      "domain": "Order",
+      "range_": "Warehouse",
+      "inverse_of": "fulfillsOrder",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an order to the warehouse fulfilling it."
+    },
+    "fulfillsOrder": {
+      "name": "fulfillsOrder",
+      "domain": "Warehouse",
+      "range_": "Order",
+      "inverse_of": "fulfilledFrom",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a warehouse to an order it fulfills."
+    },
+    "storedAt": {
+      "name": "storedAt",
+      "domain": "InventoryRecord",
+      "range_": "Warehouse",
+      "inverse_of": "hasInventoryRecord",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an inventory record to the warehouse where stock is held."
+    },
+    "hasInventoryRecord": {
+      "name": "hasInventoryRecord",
+      "domain": "Warehouse",
+      "range_": "InventoryRecord",
+      "inverse_of": "storedAt",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a warehouse to an inventory record."
+    },
+    "forProduct": {
+      "name": "forProduct",
+      "domain": "InventoryRecord",
+      "range_": "Product",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Identifies the product tracked by an inventory record."
+    },
+    "shippedVia": {
+      "name": "shippedVia",
+      "domain": "Shipment",
+      "range_": "Carrier",
+      "inverse_of": "transportsShipment",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a shipment to the carrier transporting it."
+    },
+    "transportsShipment": {
+      "name": "transportsShipment",
+      "domain": "Carrier",
+      "range_": "Shipment",
+      "inverse_of": "shippedVia",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a carrier to a shipment it transports."
+    },
+    "deliveredTo": {
+      "name": "deliveredTo",
+      "domain": "Shipment",
+      "range_": "Location",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a shipment to its delivery destination."
+    }
+  },
+  "data_properties": {
+    "customerId": {
+      "name": "customerId",
+      "domain": "Customer",
+      "datatype": "xsd:string",
+      "comment": "Unique identifier for a customer."
+    },
+    "employeeId": {
+      "name": "employeeId",
+      "domain": "Employee",
+      "datatype": "xsd:string",
+      "comment": "Unique identifier for an employee."
+    },
+    "orderNumber": {
+      "name": "orderNumber",
+      "domain": "Order",
+      "datatype": "xsd:string",
+      "comment": "Business identifier for an order."
+    },
+    "orderDate": {
+      "name": "orderDate",
+      "domain": "Order",
+      "datatype": "xsd:dateTime",
+      "comment": "Date and time when the order was created."
+    },
+    "quantity": {
+      "name": "quantity",
+      "domain": "OrderLine",
+      "datatype": "xsd:integer",
+      "comment": "Quantity of product units on an order line."
+    },
+    "unitPrice": {
+      "name": "unitPrice",
+      "domain": "OrderLine",
+      "datatype": "xsd:double",
+      "comment": "Unit price for the product on an order line."
+    },
+    "sku": {
+      "name": "sku",
+      "domain": "Product",
+      "datatype": "xsd:string",
+      "comment": "Stock keeping unit for a product."
+    },
+    "stockLevel": {
+      "name": "stockLevel",
+      "domain": "InventoryRecord",
+      "datatype": "xsd:integer",
+      "comment": "Current available stock quantity."
+    },
+    "trackingNumber": {
+      "name": "trackingNumber",
+      "domain": "Shipment",
+      "datatype": "xsd:string",
+      "comment": "Carrier tracking number for a shipment."
+    },
+    "invoiceNumber": {
+      "name": "invoiceNumber",
+      "domain": "Invoice",
+      "datatype": "xsd:string",
+      "comment": "Business identifier for an invoice."
+    },
+    "paymentAmount": {
+      "name": "paymentAmount",
+      "domain": "Payment",
+      "datatype": "xsd:double",
+      "comment": "Amount paid."
+    },
+    "caseStatus": {
+      "name": "caseStatus",
+      "domain": "SupportCase",
+      "datatype": "xsd:string",
+      "comment": "Current status of a support case."
+    }
+  },
+  "individuals": {
+    "custAva": {
+      "types": [
+        "Customer"
+      ],
+      "object_props": {
+        "placesOrder": [
+          "order1001"
+        ]
+      },
+      "data_props": {
+        "customerId": [
+          "CUST-001"
+        ]
+      }
+    },
+    "custNoah": {
+      "types": [
+        "Customer"
+      ],
+      "object_props": {
+        "placesOrder": [
+          "order1002"
+        ]
+      },
+      "data_props": {
+        "customerId": [
+          "CUST-002"
+        ]
+      }
+    },
+    "salesMia": {
+      "types": [
+        "SalesRepresentative"
+      ],
+      "object_props": {
+        "managesOrder": [
+          "order1001",
+          "order1002"
+        ]
+      },
+      "data_props": {
+        "employeeId": [
+          "EMP-101"
+        ]
+      }
+    },
+    "workerLeo": {
+      "types": [
+        "WarehouseWorker"
+      ],
+      "object_props": {},
+      "data_props": {
+        "employeeId": [
+          "EMP-202"
+        ]
+      }
+    },
+    "supportZoe": {
+      "types": [
+        "SupportAgent"
+      ],
+      "object_props": {},
+      "data_props": {
+        "employeeId": [
+          "EMP-303"
+        ]
+      }
+    },
+    "supplierNorth": {
+      "types": [
+        "Supplier"
+      ],
+      "object_props": {},
+      "data_props": {}
+    },
+    "carrierFastShip": {
+      "types": [
+        "Carrier"
+      ],
+      "object_props": {
+        "transportsShipment": [
+          "ship5001"
+        ]
+      },
+      "data_props": {}
+    },
+    "whCentral": {
+      "types": [
+        "Warehouse"
+      ],
+      "object_props": {
+        "hasInventoryRecord": [
+          "invRec1",
+          "invRec2"
+        ],
+        "fulfillsOrder": [
+          "order1001"
+        ]
+      },
+      "data_props": {}
+    },
+    "storeDowntown": {
+      "types": [
+        "Store"
+      ],
+      "object_props": {},
+      "data_props": {}
+    },
+    "prodLaptop": {
+      "types": [
+        "Product"
+      ],
+      "object_props": {},
+      "data_props": {
+        "sku": [
+          "LAP-9001"
+        ]
+      }
+    },
+    "prodMouse": {
+      "types": [
+        "Product"
+      ],
+      "object_props": {},
+      "data_props": {
+        "sku": [
+          "MOU-1200"
+        ]
+      }
+    },
+    "order1001": {
+      "types": [
+        "SalesOrder"
+      ],
+      "object_props": {
+        "placedBy": [
+          "custAva"
+        ],
+        "managedBy": [
+          "salesMia"
+        ],
+        "fulfilledFrom": [
+          "whCentral"
+        ],
+        "containsLine": [
+          "line1",
+          "line2"
+        ]
+      },
+      "data_props": {
+        "orderNumber": [
+          "SO-1001"
+        ],
+        "orderDate": [
+          "2026-04-30T10:15:00"
+        ]
+      }
+    },
+    "order1002": {
+      "types": [
+        "PurchaseOrder"
+      ],
+      "object_props": {
+        "placedBy": [
+          "custNoah"
+        ],
+        "managedBy": [
+          "salesMia"
+        ],
+        "containsLine": [
+          "line3"
+        ]
+      },
+      "data_props": {
+        "orderNumber": [
+          "PO-2002"
+        ],
+        "orderDate": [
+          "2026-04-30T11:00:00"
+        ]
+      }
+    },
+    "line1": {
+      "types": [
+        "OrderLine"
+      ],
+      "object_props": {
+        "lineOfOrder": [
+          "order1001"
+        ],
+        "referencesProduct": [
+          "prodLaptop"
+        ]
+      },
+      "data_props": {
+        "quantity": [
+          "1"
+        ],
+        "unitPrice": [
+          "1299.99"
+        ]
+      }
+    },
+    "line2": {
+      "types": [
+        "OrderLine"
+      ],
+      "object_props": {
+        "lineOfOrder": [
+          "order1001"
+        ],
+        "referencesProduct": [
+          "prodMouse"
+        ]
+      },
+      "data_props": {
+        "quantity": [
+          "2"
+        ],
+        "unitPrice": [
+          "25.5"
+        ]
+      }
+    },
+    "line3": {
+      "types": [
+        "OrderLine"
+      ],
+      "object_props": {
+        "lineOfOrder": [
+          "order1002"
+        ],
+        "referencesProduct": [
+          "prodMouse"
+        ]
+      },
+      "data_props": {
+        "quantity": [
+          "10"
+        ],
+        "unitPrice": [
+          "20.0"
+        ]
+      }
+    },
+    "invRec1": {
+      "types": [
+        "InventoryRecord"
+      ],
+      "object_props": {
+        "storedAt": [
+          "whCentral"
+        ],
+        "forProduct": [
+          "prodLaptop"
+        ]
+      },
+      "data_props": {
+        "stockLevel": [
+          "12"
+        ]
+      }
+    },
+    "invRec2": {
+      "types": [
+        "InventoryRecord"
+      ],
+      "object_props": {
+        "storedAt": [
+          "whCentral"
+        ],
+        "forProduct": [
+          "prodMouse"
+        ]
+      },
+      "data_props": {
+        "stockLevel": [
+          "250"
+        ]
+      }
+    },
+    "ship5001": {
+      "types": [
+        "Shipment"
+      ],
+      "object_props": {
+        "shippedVia": [
+          "carrierFastShip"
+        ],
+        "deliveredTo": [
+          "storeDowntown"
+        ]
+      },
+      "data_props": {
+        "trackingNumber": [
+          "TRK-5001"
+        ]
+      }
+    }
+  }
+}

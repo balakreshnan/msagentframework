@@ -1,0 +1,781 @@
+{
+  "ontology_name": "order_management",
+  "iri_base": "https://example.org/order-management/",
+  "prefix": "ord",
+  "description": "Ontology for order management covering customers, orders, fulfillment, inventory, shipping, billing, and support workflows.",
+  "classes": [
+    {
+      "name": "Entity",
+      "parents": [],
+      "comment": "Top-level root for all order management concepts."
+    },
+    {
+      "name": "Party",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "An entity that participates in business interactions."
+    },
+    {
+      "name": "Organization",
+      "parents": [
+        "Party"
+      ],
+      "comment": "A legal or operational organization.",
+      "disjoint_with": [
+        "Person"
+      ]
+    },
+    {
+      "name": "Person",
+      "parents": [
+        "Party"
+      ],
+      "comment": "A human participant in the order management domain.",
+      "disjoint_with": [
+        "Organization"
+      ]
+    },
+    {
+      "name": "Customer",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person who places orders.",
+      "disjoint_with": [
+        "Employee"
+      ]
+    },
+    {
+      "name": "Employee",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person employed by the business.",
+      "disjoint_with": [
+        "Customer"
+      ]
+    },
+    {
+      "name": "SalesRepresentative",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who manages customer orders."
+    },
+    {
+      "name": "WarehouseWorker",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who handles warehouse operations."
+    },
+    {
+      "name": "SupportAgent",
+      "parents": [
+        "Employee"
+      ],
+      "comment": "An employee who handles customer support cases."
+    },
+    {
+      "name": "Supplier",
+      "parents": [
+        "Organization"
+      ],
+      "comment": "An organization that supplies products."
+    },
+    {
+      "name": "Carrier",
+      "parents": [
+        "Organization"
+      ],
+      "comment": "An organization that transports shipments."
+    },
+    {
+      "name": "Location",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A physical or logical place."
+    },
+    {
+      "name": "Facility",
+      "parents": [
+        "Location"
+      ],
+      "comment": "A managed operational site."
+    },
+    {
+      "name": "Warehouse",
+      "parents": [
+        "Facility"
+      ],
+      "comment": "A facility used to store inventory."
+    },
+    {
+      "name": "Store",
+      "parents": [
+        "Facility"
+      ],
+      "comment": "A retail or pickup facility."
+    },
+    {
+      "name": "OrderArtifact",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "An artifact used in order processing."
+    },
+    {
+      "name": "Product",
+      "parents": [
+        "OrderArtifact"
+      ],
+      "comment": "A sellable item."
+    },
+    {
+      "name": "ProductCategory",
+      "parents": [
+        "OrderArtifact"
+      ],
+      "comment": "A grouping of products."
+    },
+    {
+      "name": "OrderDocument",
+      "parents": [
+        "OrderArtifact"
+      ],
+      "comment": "A document related to order processing."
+    },
+    {
+      "name": "Order",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A customer purchase order."
+    },
+    {
+      "name": "SalesOrder",
+      "parents": [
+        "Order"
+      ],
+      "comment": "An order created for sale to a customer."
+    },
+    {
+      "name": "PurchaseOrder",
+      "parents": [
+        "Order"
+      ],
+      "comment": "An order created to procure goods from a supplier."
+    },
+    {
+      "name": "OrderLine",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A line item within an order."
+    },
+    {
+      "name": "FulfillmentArtifact",
+      "parents": [
+        "OrderArtifact"
+      ],
+      "comment": "An artifact used to fulfill orders."
+    },
+    {
+      "name": "InventoryRecord",
+      "parents": [
+        "FulfillmentArtifact"
+      ],
+      "comment": "A record of stock for a product at a location."
+    },
+    {
+      "name": "Shipment",
+      "parents": [
+        "FulfillmentArtifact"
+      ],
+      "comment": "A shipment that transports ordered goods."
+    },
+    {
+      "name": "ShipmentPackage",
+      "parents": [
+        "FulfillmentArtifact"
+      ],
+      "comment": "A package included in a shipment."
+    },
+    {
+      "name": "Invoice",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A billing document issued for an order."
+    },
+    {
+      "name": "Payment",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A payment made against an invoice or order."
+    },
+    {
+      "name": "SupportCase",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A customer support case related to an order."
+    },
+    {
+      "name": "CaseNote",
+      "parents": [
+        "OrderDocument"
+      ],
+      "comment": "A note recorded on a support case."
+    }
+  ],
+  "object_properties": [
+    {
+      "name": "placesOrder",
+      "domain": "Customer",
+      "range": "Order",
+      "inverse_of": "placedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a customer to an order they place."
+    },
+    {
+      "name": "placedBy",
+      "domain": "Order",
+      "range": "Customer",
+      "inverse_of": "placesOrder",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an order to the customer who placed it."
+    },
+    {
+      "name": "containsLine",
+      "domain": "Order",
+      "range": "OrderLine",
+      "inverse_of": "lineOfOrder",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an order to its line items."
+    },
+    {
+      "name": "lineOfOrder",
+      "domain": "OrderLine",
+      "range": "Order",
+      "inverse_of": "containsLine",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a line item to its parent order."
+    },
+    {
+      "name": "referencesProduct",
+      "domain": "OrderLine",
+      "range": "Product",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Identifies the product referenced by an order line."
+    },
+    {
+      "name": "managedBy",
+      "domain": "Order",
+      "range": "SalesRepresentative",
+      "inverse_of": "managesOrder",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an order to the sales representative managing it."
+    },
+    {
+      "name": "managesOrder",
+      "domain": "SalesRepresentative",
+      "range": "Order",
+      "inverse_of": "managedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a sales representative to an order they manage."
+    },
+    {
+      "name": "fulfilledFrom",
+      "domain": "Order",
+      "range": "Warehouse",
+      "inverse_of": "fulfillsOrder",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an order to the warehouse fulfilling it."
+    },
+    {
+      "name": "fulfillsOrder",
+      "domain": "Warehouse",
+      "range": "Order",
+      "inverse_of": "fulfilledFrom",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a warehouse to an order it fulfills."
+    },
+    {
+      "name": "storedAt",
+      "domain": "InventoryRecord",
+      "range": "Warehouse",
+      "inverse_of": "hasInventoryRecord",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links an inventory record to the warehouse where stock is held."
+    },
+    {
+      "name": "hasInventoryRecord",
+      "domain": "Warehouse",
+      "range": "InventoryRecord",
+      "inverse_of": "storedAt",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a warehouse to an inventory record."
+    },
+    {
+      "name": "forProduct",
+      "domain": "InventoryRecord",
+      "range": "Product",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Identifies the product tracked by an inventory record."
+    },
+    {
+      "name": "shippedVia",
+      "domain": "Shipment",
+      "range": "Carrier",
+      "inverse_of": "transportsShipment",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a shipment to the carrier transporting it."
+    },
+    {
+      "name": "transportsShipment",
+      "domain": "Carrier",
+      "range": "Shipment",
+      "inverse_of": "shippedVia",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a carrier to a shipment it transports."
+    },
+    {
+      "name": "deliveredTo",
+      "domain": "Shipment",
+      "range": "Location",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a shipment to its delivery destination."
+    }
+  ],
+  "data_properties": [
+    {
+      "name": "customerId",
+      "domain": "Customer",
+      "datatype": "xsd:string",
+      "comment": "Unique identifier for a customer."
+    },
+    {
+      "name": "employeeId",
+      "domain": "Employee",
+      "datatype": "xsd:string",
+      "comment": "Unique identifier for an employee."
+    },
+    {
+      "name": "orderNumber",
+      "domain": "Order",
+      "datatype": "xsd:string",
+      "comment": "Business identifier for an order."
+    },
+    {
+      "name": "orderDate",
+      "domain": "Order",
+      "datatype": "xsd:dateTime",
+      "comment": "Date and time when the order was created."
+    },
+    {
+      "name": "quantity",
+      "domain": "OrderLine",
+      "datatype": "xsd:integer",
+      "comment": "Quantity of product units on an order line."
+    },
+    {
+      "name": "unitPrice",
+      "domain": "OrderLine",
+      "datatype": "xsd:double",
+      "comment": "Unit price for the product on an order line."
+    },
+    {
+      "name": "sku",
+      "domain": "Product",
+      "datatype": "xsd:string",
+      "comment": "Stock keeping unit for a product."
+    },
+    {
+      "name": "stockLevel",
+      "domain": "InventoryRecord",
+      "datatype": "xsd:integer",
+      "comment": "Current available stock quantity."
+    },
+    {
+      "name": "trackingNumber",
+      "domain": "Shipment",
+      "datatype": "xsd:string",
+      "comment": "Carrier tracking number for a shipment."
+    },
+    {
+      "name": "invoiceNumber",
+      "domain": "Invoice",
+      "datatype": "xsd:string",
+      "comment": "Business identifier for an invoice."
+    },
+    {
+      "name": "paymentAmount",
+      "domain": "Payment",
+      "datatype": "xsd:double",
+      "comment": "Amount paid."
+    },
+    {
+      "name": "caseStatus",
+      "domain": "SupportCase",
+      "datatype": "xsd:string",
+      "comment": "Current status of a support case."
+    }
+  ],
+  "individuals": [
+    {
+      "name": "custAva",
+      "types": [
+        "Customer"
+      ],
+      "object_props": {
+        "placesOrder": [
+          "order1001"
+        ]
+      },
+      "data_props": {
+        "customerId": [
+          "CUST-001"
+        ]
+      }
+    },
+    {
+      "name": "custNoah",
+      "types": [
+        "Customer"
+      ],
+      "object_props": {
+        "placesOrder": [
+          "order1002"
+        ]
+      },
+      "data_props": {
+        "customerId": [
+          "CUST-002"
+        ]
+      }
+    },
+    {
+      "name": "salesMia",
+      "types": [
+        "SalesRepresentative"
+      ],
+      "object_props": {
+        "managesOrder": [
+          "order1001",
+          "order1002"
+        ]
+      },
+      "data_props": {
+        "employeeId": [
+          "EMP-101"
+        ]
+      }
+    },
+    {
+      "name": "workerLeo",
+      "types": [
+        "WarehouseWorker"
+      ],
+      "object_props": {},
+      "data_props": {
+        "employeeId": [
+          "EMP-202"
+        ]
+      }
+    },
+    {
+      "name": "supportZoe",
+      "types": [
+        "SupportAgent"
+      ],
+      "object_props": {},
+      "data_props": {
+        "employeeId": [
+          "EMP-303"
+        ]
+      }
+    },
+    {
+      "name": "supplierNorth",
+      "types": [
+        "Supplier"
+      ],
+      "object_props": {},
+      "data_props": {}
+    },
+    {
+      "name": "carrierFastShip",
+      "types": [
+        "Carrier"
+      ],
+      "object_props": {
+        "transportsShipment": [
+          "ship5001"
+        ]
+      },
+      "data_props": {}
+    },
+    {
+      "name": "whCentral",
+      "types": [
+        "Warehouse"
+      ],
+      "object_props": {
+        "hasInventoryRecord": [
+          "invRec1",
+          "invRec2"
+        ],
+        "fulfillsOrder": [
+          "order1001"
+        ]
+      },
+      "data_props": {}
+    },
+    {
+      "name": "storeDowntown",
+      "types": [
+        "Store"
+      ],
+      "object_props": {},
+      "data_props": {}
+    },
+    {
+      "name": "prodLaptop",
+      "types": [
+        "Product"
+      ],
+      "object_props": {},
+      "data_props": {
+        "sku": [
+          "LAP-9001"
+        ]
+      }
+    },
+    {
+      "name": "prodMouse",
+      "types": [
+        "Product"
+      ],
+      "object_props": {},
+      "data_props": {
+        "sku": [
+          "MOU-1200"
+        ]
+      }
+    },
+    {
+      "name": "order1001",
+      "types": [
+        "SalesOrder"
+      ],
+      "object_props": {
+        "placedBy": [
+          "custAva"
+        ],
+        "containsLine": [
+          "line1",
+          "line2"
+        ],
+        "managedBy": [
+          "salesMia"
+        ],
+        "fulfilledFrom": [
+          "whCentral"
+        ]
+      },
+      "data_props": {
+        "orderNumber": [
+          "SO-1001"
+        ],
+        "orderDate": [
+          "2026-04-30T10:15:00"
+        ]
+      }
+    },
+    {
+      "name": "order1002",
+      "types": [
+        "PurchaseOrder"
+      ],
+      "object_props": {
+        "placedBy": [
+          "custNoah"
+        ],
+        "containsLine": [
+          "line3"
+        ],
+        "managedBy": [
+          "salesMia"
+        ]
+      },
+      "data_props": {
+        "orderNumber": [
+          "PO-2002"
+        ],
+        "orderDate": [
+          "2026-04-30T11:00:00"
+        ]
+      }
+    },
+    {
+      "name": "line1",
+      "types": [
+        "OrderLine"
+      ],
+      "object_props": {
+        "lineOfOrder": [
+          "order1001"
+        ],
+        "referencesProduct": [
+          "prodLaptop"
+        ]
+      },
+      "data_props": {
+        "quantity": [
+          "1"
+        ],
+        "unitPrice": [
+          "1299.99"
+        ]
+      }
+    },
+    {
+      "name": "line2",
+      "types": [
+        "OrderLine"
+      ],
+      "object_props": {
+        "lineOfOrder": [
+          "order1001"
+        ],
+        "referencesProduct": [
+          "prodMouse"
+        ]
+      },
+      "data_props": {
+        "quantity": [
+          "2"
+        ],
+        "unitPrice": [
+          "25.5"
+        ]
+      }
+    },
+    {
+      "name": "line3",
+      "types": [
+        "OrderLine"
+      ],
+      "object_props": {
+        "lineOfOrder": [
+          "order1002"
+        ],
+        "referencesProduct": [
+          "prodMouse"
+        ]
+      },
+      "data_props": {
+        "quantity": [
+          "10"
+        ],
+        "unitPrice": [
+          "20.0"
+        ]
+      }
+    },
+    {
+      "name": "invRec1",
+      "types": [
+        "InventoryRecord"
+      ],
+      "object_props": {
+        "storedAt": [
+          "whCentral"
+        ],
+        "forProduct": [
+          "prodLaptop"
+        ]
+      },
+      "data_props": {
+        "stockLevel": [
+          "12"
+        ]
+      }
+    },
+    {
+      "name": "invRec2",
+      "types": [
+        "InventoryRecord"
+      ],
+      "object_props": {
+        "storedAt": [
+          "whCentral"
+        ],
+        "forProduct": [
+          "prodMouse"
+        ]
+      },
+      "data_props": {
+        "stockLevel": [
+          "250"
+        ]
+      }
+    },
+    {
+      "name": "ship5001",
+      "types": [
+        "Shipment"
+      ],
+      "object_props": {
+        "shippedVia": [
+          "carrierFastShip"
+        ],
+        "deliveredTo": [
+          "storeDowntown"
+        ]
+      },
+      "data_props": {
+        "trackingNumber": [
+          "TRK-5001"
+        ]
+      }
+    }
+  ]
+}

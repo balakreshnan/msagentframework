@@ -1,0 +1,593 @@
+{
+  "@context": {
+    "ord": "https://example.org/order-management/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "ord:Entity",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "ord:Party",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Organization",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Party"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Person",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Party"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Customer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Person"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Employee",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Person"
+        }
+      ]
+    },
+    {
+      "@id": "ord:SalesRepresentative",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "ord:WarehouseWorker",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "ord:SupportAgent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Employee"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Supplier",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Organization"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Carrier",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Organization"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Location",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Facility",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Location"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Warehouse",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Facility"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Store",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Facility"
+        }
+      ]
+    },
+    {
+      "@id": "ord:OrderArtifact",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Product",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:OrderArtifact"
+        }
+      ]
+    },
+    {
+      "@id": "ord:ProductCategory",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:OrderArtifact"
+        }
+      ]
+    },
+    {
+      "@id": "ord:OrderDocument",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:OrderArtifact"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Order",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:OrderDocument"
+        }
+      ]
+    },
+    {
+      "@id": "ord:SalesOrder",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Order"
+        }
+      ]
+    },
+    {
+      "@id": "ord:PurchaseOrder",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:Order"
+        }
+      ]
+    },
+    {
+      "@id": "ord:OrderLine",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:OrderDocument"
+        }
+      ]
+    },
+    {
+      "@id": "ord:FulfillmentArtifact",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:OrderArtifact"
+        }
+      ]
+    },
+    {
+      "@id": "ord:InventoryRecord",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:FulfillmentArtifact"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Shipment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:FulfillmentArtifact"
+        }
+      ]
+    },
+    {
+      "@id": "ord:ShipmentPackage",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:FulfillmentArtifact"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Invoice",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:OrderDocument"
+        }
+      ]
+    },
+    {
+      "@id": "ord:Payment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:OrderDocument"
+        }
+      ]
+    },
+    {
+      "@id": "ord:SupportCase",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:OrderDocument"
+        }
+      ]
+    },
+    {
+      "@id": "ord:CaseNote",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ord:OrderDocument"
+        }
+      ]
+    },
+    {
+      "@id": "ord:custAva",
+      "@type": [
+        "ord:Customer"
+      ],
+      "ord:placesOrder": [
+        {
+          "@id": "ord:order1001"
+        }
+      ],
+      "ord:customerId": [
+        "CUST-001"
+      ]
+    },
+    {
+      "@id": "ord:custNoah",
+      "@type": [
+        "ord:Customer"
+      ],
+      "ord:placesOrder": [
+        {
+          "@id": "ord:order1002"
+        }
+      ],
+      "ord:customerId": [
+        "CUST-002"
+      ]
+    },
+    {
+      "@id": "ord:salesMia",
+      "@type": [
+        "ord:SalesRepresentative"
+      ],
+      "ord:managesOrder": [
+        {
+          "@id": "ord:order1001"
+        },
+        {
+          "@id": "ord:order1002"
+        }
+      ],
+      "ord:employeeId": [
+        "EMP-101"
+      ]
+    },
+    {
+      "@id": "ord:workerLeo",
+      "@type": [
+        "ord:WarehouseWorker"
+      ],
+      "ord:employeeId": [
+        "EMP-202"
+      ]
+    },
+    {
+      "@id": "ord:supportZoe",
+      "@type": [
+        "ord:SupportAgent"
+      ],
+      "ord:employeeId": [
+        "EMP-303"
+      ]
+    },
+    {
+      "@id": "ord:supplierNorth",
+      "@type": [
+        "ord:Supplier"
+      ]
+    },
+    {
+      "@id": "ord:carrierFastShip",
+      "@type": [
+        "ord:Carrier"
+      ],
+      "ord:transportsShipment": [
+        {
+          "@id": "ord:ship5001"
+        }
+      ]
+    },
+    {
+      "@id": "ord:whCentral",
+      "@type": [
+        "ord:Warehouse"
+      ],
+      "ord:hasInventoryRecord": [
+        {
+          "@id": "ord:invRec1"
+        },
+        {
+          "@id": "ord:invRec2"
+        }
+      ],
+      "ord:fulfillsOrder": [
+        {
+          "@id": "ord:order1001"
+        }
+      ]
+    },
+    {
+      "@id": "ord:storeDowntown",
+      "@type": [
+        "ord:Store"
+      ]
+    },
+    {
+      "@id": "ord:prodLaptop",
+      "@type": [
+        "ord:Product"
+      ],
+      "ord:sku": [
+        "LAP-9001"
+      ]
+    },
+    {
+      "@id": "ord:prodMouse",
+      "@type": [
+        "ord:Product"
+      ],
+      "ord:sku": [
+        "MOU-1200"
+      ]
+    },
+    {
+      "@id": "ord:order1001",
+      "@type": [
+        "ord:SalesOrder"
+      ],
+      "ord:placedBy": [
+        {
+          "@id": "ord:custAva"
+        }
+      ],
+      "ord:managedBy": [
+        {
+          "@id": "ord:salesMia"
+        }
+      ],
+      "ord:fulfilledFrom": [
+        {
+          "@id": "ord:whCentral"
+        }
+      ],
+      "ord:containsLine": [
+        {
+          "@id": "ord:line1"
+        },
+        {
+          "@id": "ord:line2"
+        }
+      ],
+      "ord:orderNumber": [
+        "SO-1001"
+      ],
+      "ord:orderDate": [
+        "2026-04-30T10:15:00"
+      ]
+    },
+    {
+      "@id": "ord:order1002",
+      "@type": [
+        "ord:PurchaseOrder"
+      ],
+      "ord:placedBy": [
+        {
+          "@id": "ord:custNoah"
+        }
+      ],
+      "ord:managedBy": [
+        {
+          "@id": "ord:salesMia"
+        }
+      ],
+      "ord:containsLine": [
+        {
+          "@id": "ord:line3"
+        }
+      ],
+      "ord:orderNumber": [
+        "PO-2002"
+      ],
+      "ord:orderDate": [
+        "2026-04-30T11:00:00"
+      ]
+    },
+    {
+      "@id": "ord:line1",
+      "@type": [
+        "ord:OrderLine"
+      ],
+      "ord:lineOfOrder": [
+        {
+          "@id": "ord:order1001"
+        }
+      ],
+      "ord:referencesProduct": [
+        {
+          "@id": "ord:prodLaptop"
+        }
+      ],
+      "ord:quantity": [
+        "1"
+      ],
+      "ord:unitPrice": [
+        "1299.99"
+      ]
+    },
+    {
+      "@id": "ord:line2",
+      "@type": [
+        "ord:OrderLine"
+      ],
+      "ord:lineOfOrder": [
+        {
+          "@id": "ord:order1001"
+        }
+      ],
+      "ord:referencesProduct": [
+        {
+          "@id": "ord:prodMouse"
+        }
+      ],
+      "ord:quantity": [
+        "2"
+      ],
+      "ord:unitPrice": [
+        "25.5"
+      ]
+    },
+    {
+      "@id": "ord:line3",
+      "@type": [
+        "ord:OrderLine"
+      ],
+      "ord:lineOfOrder": [
+        {
+          "@id": "ord:order1002"
+        }
+      ],
+      "ord:referencesProduct": [
+        {
+          "@id": "ord:prodMouse"
+        }
+      ],
+      "ord:quantity": [
+        "10"
+      ],
+      "ord:unitPrice": [
+        "20.0"
+      ]
+    },
+    {
+      "@id": "ord:invRec1",
+      "@type": [
+        "ord:InventoryRecord"
+      ],
+      "ord:storedAt": [
+        {
+          "@id": "ord:whCentral"
+        }
+      ],
+      "ord:forProduct": [
+        {
+          "@id": "ord:prodLaptop"
+        }
+      ],
+      "ord:stockLevel": [
+        "12"
+      ]
+    },
+    {
+      "@id": "ord:invRec2",
+      "@type": [
+        "ord:InventoryRecord"
+      ],
+      "ord:storedAt": [
+        {
+          "@id": "ord:whCentral"
+        }
+      ],
+      "ord:forProduct": [
+        {
+          "@id": "ord:prodMouse"
+        }
+      ],
+      "ord:stockLevel": [
+        "250"
+      ]
+    },
+    {
+      "@id": "ord:ship5001",
+      "@type": [
+        "ord:Shipment"
+      ],
+      "ord:shippedVia": [
+        {
+          "@id": "ord:carrierFastShip"
+        }
+      ],
+      "ord:deliveredTo": [
+        {
+          "@id": "ord:storeDowntown"
+        }
+      ],
+      "ord:trackingNumber": [
+        "TRK-5001"
+      ]
+    }
+  ]
+}

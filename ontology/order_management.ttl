@@ -1,0 +1,337 @@
+@prefix ord: <https://example.org/order-management/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/order-management> a owl:Ontology .
+
+ord:Entity a owl:Class ;
+    rdfs:comment "Top-level root for all order management concepts." .
+
+ord:Party a owl:Class ;
+    rdfs:subClassOf ord:Entity ;
+    rdfs:comment "An entity that participates in business interactions." .
+
+ord:Organization a owl:Class ;
+    rdfs:subClassOf ord:Party ;
+    owl:disjointWith ord:Person ;
+    rdfs:comment "A legal or operational organization." .
+
+ord:Person a owl:Class ;
+    rdfs:subClassOf ord:Party ;
+    owl:disjointWith ord:Organization ;
+    rdfs:comment "A human participant in the order management domain." .
+
+ord:Customer a owl:Class ;
+    rdfs:subClassOf ord:Person ;
+    owl:disjointWith ord:Employee ;
+    rdfs:comment "A person who places orders." .
+
+ord:Employee a owl:Class ;
+    rdfs:subClassOf ord:Person ;
+    owl:disjointWith ord:Customer ;
+    rdfs:comment "A person employed by the business." .
+
+ord:SalesRepresentative a owl:Class ;
+    rdfs:subClassOf ord:Employee ;
+    rdfs:comment "An employee who manages customer orders." .
+
+ord:WarehouseWorker a owl:Class ;
+    rdfs:subClassOf ord:Employee ;
+    rdfs:comment "An employee who handles warehouse operations." .
+
+ord:SupportAgent a owl:Class ;
+    rdfs:subClassOf ord:Employee ;
+    rdfs:comment "An employee who handles customer support cases." .
+
+ord:Supplier a owl:Class ;
+    rdfs:subClassOf ord:Organization ;
+    rdfs:comment "An organization that supplies products." .
+
+ord:Carrier a owl:Class ;
+    rdfs:subClassOf ord:Organization ;
+    rdfs:comment "An organization that transports shipments." .
+
+ord:Location a owl:Class ;
+    rdfs:subClassOf ord:Entity ;
+    rdfs:comment "A physical or logical place." .
+
+ord:Facility a owl:Class ;
+    rdfs:subClassOf ord:Location ;
+    rdfs:comment "A managed operational site." .
+
+ord:Warehouse a owl:Class ;
+    rdfs:subClassOf ord:Facility ;
+    rdfs:comment "A facility used to store inventory." .
+
+ord:Store a owl:Class ;
+    rdfs:subClassOf ord:Facility ;
+    rdfs:comment "A retail or pickup facility." .
+
+ord:OrderArtifact a owl:Class ;
+    rdfs:subClassOf ord:Entity ;
+    rdfs:comment "An artifact used in order processing." .
+
+ord:Product a owl:Class ;
+    rdfs:subClassOf ord:OrderArtifact ;
+    rdfs:comment "A sellable item." .
+
+ord:ProductCategory a owl:Class ;
+    rdfs:subClassOf ord:OrderArtifact ;
+    rdfs:comment "A grouping of products." .
+
+ord:OrderDocument a owl:Class ;
+    rdfs:subClassOf ord:OrderArtifact ;
+    rdfs:comment "A document related to order processing." .
+
+ord:Order a owl:Class ;
+    rdfs:subClassOf ord:OrderDocument ;
+    rdfs:comment "A customer purchase order." .
+
+ord:SalesOrder a owl:Class ;
+    rdfs:subClassOf ord:Order ;
+    rdfs:comment "An order created for sale to a customer." .
+
+ord:PurchaseOrder a owl:Class ;
+    rdfs:subClassOf ord:Order ;
+    rdfs:comment "An order created to procure goods from a supplier." .
+
+ord:OrderLine a owl:Class ;
+    rdfs:subClassOf ord:OrderDocument ;
+    rdfs:comment "A line item within an order." .
+
+ord:FulfillmentArtifact a owl:Class ;
+    rdfs:subClassOf ord:OrderArtifact ;
+    rdfs:comment "An artifact used to fulfill orders." .
+
+ord:InventoryRecord a owl:Class ;
+    rdfs:subClassOf ord:FulfillmentArtifact ;
+    rdfs:comment "A record of stock for a product at a location." .
+
+ord:Shipment a owl:Class ;
+    rdfs:subClassOf ord:FulfillmentArtifact ;
+    rdfs:comment "A shipment that transports ordered goods." .
+
+ord:ShipmentPackage a owl:Class ;
+    rdfs:subClassOf ord:FulfillmentArtifact ;
+    rdfs:comment "A package included in a shipment." .
+
+ord:Invoice a owl:Class ;
+    rdfs:subClassOf ord:OrderDocument ;
+    rdfs:comment "A billing document issued for an order." .
+
+ord:Payment a owl:Class ;
+    rdfs:subClassOf ord:OrderDocument ;
+    rdfs:comment "A payment made against an invoice or order." .
+
+ord:SupportCase a owl:Class ;
+    rdfs:subClassOf ord:OrderDocument ;
+    rdfs:comment "A customer support case related to an order." .
+
+ord:CaseNote a owl:Class ;
+    rdfs:subClassOf ord:OrderDocument ;
+    rdfs:comment "A note recorded on a support case." .
+
+ord:placesOrder a owl:ObjectProperty ;
+    rdfs:domain ord:Customer ;
+    rdfs:range  ord:Order ;
+    owl:inverseOf ord:placedBy .
+
+ord:placedBy a owl:ObjectProperty ;
+    rdfs:domain ord:Order ;
+    rdfs:range  ord:Customer ;
+    owl:inverseOf ord:placesOrder .
+
+ord:containsLine a owl:ObjectProperty ;
+    rdfs:domain ord:Order ;
+    rdfs:range  ord:OrderLine ;
+    owl:inverseOf ord:lineOfOrder .
+
+ord:lineOfOrder a owl:ObjectProperty ;
+    rdfs:domain ord:OrderLine ;
+    rdfs:range  ord:Order ;
+    owl:inverseOf ord:containsLine .
+
+ord:referencesProduct a owl:ObjectProperty ;
+    rdfs:domain ord:OrderLine ;
+    rdfs:range  ord:Product .
+
+ord:managedBy a owl:ObjectProperty ;
+    rdfs:domain ord:Order ;
+    rdfs:range  ord:SalesRepresentative ;
+    owl:inverseOf ord:managesOrder .
+
+ord:managesOrder a owl:ObjectProperty ;
+    rdfs:domain ord:SalesRepresentative ;
+    rdfs:range  ord:Order ;
+    owl:inverseOf ord:managedBy .
+
+ord:fulfilledFrom a owl:ObjectProperty ;
+    rdfs:domain ord:Order ;
+    rdfs:range  ord:Warehouse ;
+    owl:inverseOf ord:fulfillsOrder .
+
+ord:fulfillsOrder a owl:ObjectProperty ;
+    rdfs:domain ord:Warehouse ;
+    rdfs:range  ord:Order ;
+    owl:inverseOf ord:fulfilledFrom .
+
+ord:storedAt a owl:ObjectProperty ;
+    rdfs:domain ord:InventoryRecord ;
+    rdfs:range  ord:Warehouse ;
+    owl:inverseOf ord:hasInventoryRecord .
+
+ord:hasInventoryRecord a owl:ObjectProperty ;
+    rdfs:domain ord:Warehouse ;
+    rdfs:range  ord:InventoryRecord ;
+    owl:inverseOf ord:storedAt .
+
+ord:forProduct a owl:ObjectProperty ;
+    rdfs:domain ord:InventoryRecord ;
+    rdfs:range  ord:Product .
+
+ord:shippedVia a owl:ObjectProperty ;
+    rdfs:domain ord:Shipment ;
+    rdfs:range  ord:Carrier ;
+    owl:inverseOf ord:transportsShipment .
+
+ord:transportsShipment a owl:ObjectProperty ;
+    rdfs:domain ord:Carrier ;
+    rdfs:range  ord:Shipment ;
+    owl:inverseOf ord:shippedVia .
+
+ord:deliveredTo a owl:ObjectProperty ;
+    rdfs:domain ord:Shipment ;
+    rdfs:range  ord:Location .
+
+ord:customerId a owl:DatatypeProperty ;
+    rdfs:domain ord:Customer ;
+    rdfs:range  xsd:string .
+
+ord:employeeId a owl:DatatypeProperty ;
+    rdfs:domain ord:Employee ;
+    rdfs:range  xsd:string .
+
+ord:orderNumber a owl:DatatypeProperty ;
+    rdfs:domain ord:Order ;
+    rdfs:range  xsd:string .
+
+ord:orderDate a owl:DatatypeProperty ;
+    rdfs:domain ord:Order ;
+    rdfs:range  xsd:dateTime .
+
+ord:quantity a owl:DatatypeProperty ;
+    rdfs:domain ord:OrderLine ;
+    rdfs:range  xsd:integer .
+
+ord:unitPrice a owl:DatatypeProperty ;
+    rdfs:domain ord:OrderLine ;
+    rdfs:range  xsd:double .
+
+ord:sku a owl:DatatypeProperty ;
+    rdfs:domain ord:Product ;
+    rdfs:range  xsd:string .
+
+ord:stockLevel a owl:DatatypeProperty ;
+    rdfs:domain ord:InventoryRecord ;
+    rdfs:range  xsd:integer .
+
+ord:trackingNumber a owl:DatatypeProperty ;
+    rdfs:domain ord:Shipment ;
+    rdfs:range  xsd:string .
+
+ord:invoiceNumber a owl:DatatypeProperty ;
+    rdfs:domain ord:Invoice ;
+    rdfs:range  xsd:string .
+
+ord:paymentAmount a owl:DatatypeProperty ;
+    rdfs:domain ord:Payment ;
+    rdfs:range  xsd:double .
+
+ord:caseStatus a owl:DatatypeProperty ;
+    rdfs:domain ord:SupportCase ;
+    rdfs:range  xsd:string .
+
+ord:custAva a ord:Customer ;
+    ord:placesOrder ord:order1001 ;
+    ord:customerId "CUST-001" .
+
+ord:custNoah a ord:Customer ;
+    ord:placesOrder ord:order1002 ;
+    ord:customerId "CUST-002" .
+
+ord:salesMia a ord:SalesRepresentative ;
+    ord:managesOrder ord:order1001, ord:order1002 ;
+    ord:employeeId "EMP-101" .
+
+ord:workerLeo a ord:WarehouseWorker ;
+    ord:employeeId "EMP-202" .
+
+ord:supportZoe a ord:SupportAgent ;
+    ord:employeeId "EMP-303" .
+
+ord:supplierNorth a ord:Supplier .
+
+ord:carrierFastShip a ord:Carrier ;
+    ord:transportsShipment ord:ship5001 .
+
+ord:whCentral a ord:Warehouse ;
+    ord:hasInventoryRecord ord:invRec1, ord:invRec2 ;
+    ord:fulfillsOrder ord:order1001 .
+
+ord:storeDowntown a ord:Store .
+
+ord:prodLaptop a ord:Product ;
+    ord:sku "LAP-9001" .
+
+ord:prodMouse a ord:Product ;
+    ord:sku "MOU-1200" .
+
+ord:order1001 a ord:SalesOrder ;
+    ord:placedBy ord:custAva ;
+    ord:managedBy ord:salesMia ;
+    ord:fulfilledFrom ord:whCentral ;
+    ord:containsLine ord:line1, ord:line2 ;
+    ord:orderNumber "SO-1001" ;
+    ord:orderDate "2026-04-30T10:15:00" .
+
+ord:order1002 a ord:PurchaseOrder ;
+    ord:placedBy ord:custNoah ;
+    ord:managedBy ord:salesMia ;
+    ord:containsLine ord:line3 ;
+    ord:orderNumber "PO-2002" ;
+    ord:orderDate "2026-04-30T11:00:00" .
+
+ord:line1 a ord:OrderLine ;
+    ord:lineOfOrder ord:order1001 ;
+    ord:referencesProduct ord:prodLaptop ;
+    ord:quantity "1" ;
+    ord:unitPrice "1299.99" .
+
+ord:line2 a ord:OrderLine ;
+    ord:lineOfOrder ord:order1001 ;
+    ord:referencesProduct ord:prodMouse ;
+    ord:quantity "2" ;
+    ord:unitPrice "25.5" .
+
+ord:line3 a ord:OrderLine ;
+    ord:lineOfOrder ord:order1002 ;
+    ord:referencesProduct ord:prodMouse ;
+    ord:quantity "10" ;
+    ord:unitPrice "20.0" .
+
+ord:invRec1 a ord:InventoryRecord ;
+    ord:storedAt ord:whCentral ;
+    ord:forProduct ord:prodLaptop ;
+    ord:stockLevel "12" .
+
+ord:invRec2 a ord:InventoryRecord ;
+    ord:storedAt ord:whCentral ;
+    ord:forProduct ord:prodMouse ;
+    ord:stockLevel "250" .
+
+ord:ship5001 a ord:Shipment ;
+    ord:shippedVia ord:carrierFastShip ;
+    ord:deliveredTo ord:storeDowntown ;
+    ord:trackingNumber "TRK-5001" .
