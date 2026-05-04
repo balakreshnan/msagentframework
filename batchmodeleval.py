@@ -131,7 +131,7 @@ def modeleval():
 
     target = {
         "type": "azure_ai_model",
-        "model": "gpt-5-mini",
+        "model": model_deployment_name,
         "sampling_params": {
             "top_p": 1.0,
             "max_completion_tokens": 2048,
