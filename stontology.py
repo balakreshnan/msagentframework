@@ -536,6 +536,8 @@ def _persist_artifacts() -> Path | None:
     (out / f"{name}.ttl").write_text(o.to_turtle(), encoding="utf-8")
     (out / f"{name}.jsonld").write_text(
         json.dumps(o.to_jsonld(), indent=2), encoding="utf-8")
+    (out / f"{name}.rdf").write_text(o.to_rdf_xml(), encoding="utf-8")
+    (out / f"{name}.nt").write_text(o.to_ntriples(), encoding="utf-8")
     (out / f"{name}.json").write_text(
         json.dumps(o.to_dict(), indent=2), encoding="utf-8")
     if st.session_state.spec is not None:
@@ -774,28 +776,47 @@ with tab_artifacts:
         name = st.session_state.name or "ontology"
         ttl = ont.to_turtle()
         jld = json.dumps(ont.to_jsonld(), indent=2)
+        rdfxml = ont.to_rdf_xml()
+        nt = ont.to_ntriples()
         nat = json.dumps(ont.to_dict(), indent=2)
         raw = json.dumps(st.session_state.spec or {}, indent=2)
 
-        d1, d2, d3, d4 = st.columns(4)
+        d1, d2, d3, d4, d5, d6 = st.columns(6)
         with d1:
             st.download_button("⬇ Turtle", ttl, file_name=f"{name}.ttl",
                                mime="text/turtle", use_container_width=True)
         with d2:
+            st.download_button("⬇ RDF/XML", rdfxml, file_name=f"{name}.rdf",
+                               mime="application/rdf+xml", use_container_width=True)
+        with d3:
+            st.download_button("⬇ N-Triples", nt, file_name=f"{name}.nt",
+                               mime="application/n-triples", use_container_width=True)
+        with d4:
             st.download_button("⬇ JSON-LD", jld, file_name=f"{name}.jsonld",
                                mime="application/ld+json", use_container_width=True)
-        with d3:
+        with d5:
             st.download_button("⬇ JSON", nat, file_name=f"{name}.json",
                                mime="application/json", use_container_width=True)
-        with d4:
+        with d6:
             st.download_button("⬇ Raw spec", raw, file_name=f"{name}.raw.json",
                                mime="application/json", use_container_width=True)
 
-        view = st.radio("Preview", ["Turtle", "JSON-LD", "JSON", "Raw"],
-                        horizontal=True, label_visibility="collapsed")
-        body = {"Turtle": ttl, "JSON-LD": jld, "JSON": nat, "Raw": raw}[view]
-        lang = {"Turtle": "turtle", "JSON-LD": "json",
-                "JSON": "json", "Raw": "json"}[view]
+        st.caption(
+            "All three of **Turtle**, **RDF/XML**, **N-Triples** and **JSON-LD** "
+            "are W3C-standard RDF serializations — load any of them directly "
+            "into GraphDB, Stardog, Apache Jena Fuseki, Blazegraph, AWS Neptune, "
+            "Neo4j n10s, or any other RDF-compatible triplestore."
+        )
+
+        view = st.radio(
+            "Preview",
+            ["Turtle", "RDF/XML", "N-Triples", "JSON-LD", "JSON", "Raw"],
+            horizontal=True, label_visibility="collapsed",
+        )
+        body = {"Turtle": ttl, "RDF/XML": rdfxml, "N-Triples": nt,
+                "JSON-LD": jld, "JSON": nat, "Raw": raw}[view]
+        lang = {"Turtle": "turtle", "RDF/XML": "xml", "N-Triples": "text",
+                "JSON-LD": "json", "JSON": "json", "Raw": "json"}[view]
         with st.container(height=PANEL_HEIGHT - 60):
             st.code(body, language=lang)
     else:
@@ -841,6 +862,10 @@ if prompt:
                 ont_obj.to_turtle(), encoding="utf-8")
             (out_dir / f"{name}.jsonld").write_text(
                 json.dumps(ont_obj.to_jsonld(), indent=2), encoding="utf-8")
+            (out_dir / f"{name}.rdf").write_text(
+                ont_obj.to_rdf_xml(), encoding="utf-8")
+            (out_dir / f"{name}.nt").write_text(
+                ont_obj.to_ntriples(), encoding="utf-8")
             (out_dir / f"{name}.json").write_text(
                 json.dumps(ont_obj.to_dict(), indent=2), encoding="utf-8")
 
@@ -856,7 +881,7 @@ if prompt:
             f"{len(ont_obj.data_properties)} data props, "
             f"{len(ont_obj.individuals)} individuals. "
             f"Consistency: {'OK ✅' if not issues else f'{len(issues)} issue(s) ⚠️'}  \n"
-            f"Saved to `ontology/{name}.{{ttl,jsonld,json,raw.json}}`"
+            f"Saved to `ontology/{name}.{{ttl,jsonld,rdf,nt,json,raw.json}}`"
         )
         st.session_state.messages.append({"role": "assistant", "content": summary})
         st.rerun()

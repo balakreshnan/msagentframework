@@ -1,0 +1,770 @@
+{
+  "iri": "https://example.org/dataset/",
+  "classes": {
+    "Thing": {
+      "name": "Thing",
+      "parents": [],
+      "comment": "Top-level root class for all entities in the ontology.",
+      "disjoint_with": []
+    },
+    "InformationEntity": {
+      "name": "InformationEntity",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "An abstract entity that represents information-bearing content.",
+      "disjoint_with": []
+    },
+    "DatasetArtifact": {
+      "name": "DatasetArtifact",
+      "parents": [
+        "InformationEntity"
+      ],
+      "comment": "A dataset as a managed information artifact.",
+      "disjoint_with": []
+    },
+    "StructuredDataset": {
+      "name": "StructuredDataset",
+      "parents": [
+        "DatasetArtifact"
+      ],
+      "comment": "A dataset organized into records and fields.",
+      "disjoint_with": []
+    },
+    "TabularDataset": {
+      "name": "TabularDataset",
+      "parents": [
+        "StructuredDataset"
+      ],
+      "comment": "A structured dataset represented in tabular form.",
+      "disjoint_with": []
+    },
+    "LoadedDataset": {
+      "name": "LoadedDataset",
+      "parents": [
+        "TabularDataset"
+      ],
+      "comment": "A dataset that has been loaded into a system.",
+      "disjoint_with": []
+    },
+    "DatasetVersion": {
+      "name": "DatasetVersion",
+      "parents": [
+        "InformationEntity"
+      ],
+      "comment": "A specific version or snapshot of a dataset.",
+      "disjoint_with": []
+    },
+    "DatasetSchema": {
+      "name": "DatasetSchema",
+      "parents": [
+        "InformationEntity"
+      ],
+      "comment": "The structural definition of a dataset.",
+      "disjoint_with": []
+    },
+    "SchemaComponent": {
+      "name": "SchemaComponent",
+      "parents": [
+        "DatasetSchema"
+      ],
+      "comment": "A component of a dataset schema.",
+      "disjoint_with": []
+    },
+    "FieldDefinition": {
+      "name": "FieldDefinition",
+      "parents": [
+        "SchemaComponent"
+      ],
+      "comment": "Definition of a field or column in a dataset.",
+      "disjoint_with": []
+    },
+    "KeyFieldDefinition": {
+      "name": "KeyFieldDefinition",
+      "parents": [
+        "FieldDefinition"
+      ],
+      "comment": "A field definition that identifies records uniquely.",
+      "disjoint_with": []
+    },
+    "DerivedFieldDefinition": {
+      "name": "DerivedFieldDefinition",
+      "parents": [
+        "FieldDefinition"
+      ],
+      "comment": "A field definition computed from other fields.",
+      "disjoint_with": []
+    },
+    "RecordStructure": {
+      "name": "RecordStructure",
+      "parents": [
+        "SchemaComponent"
+      ],
+      "comment": "Definition of a record structure in the dataset.",
+      "disjoint_with": []
+    },
+    "DataRecord": {
+      "name": "DataRecord",
+      "parents": [
+        "InformationEntity"
+      ],
+      "comment": "A single record or row in a dataset.",
+      "disjoint_with": []
+    },
+    "LoadedRecord": {
+      "name": "LoadedRecord",
+      "parents": [
+        "DataRecord"
+      ],
+      "comment": "A record that has been loaded from the source dataset.",
+      "disjoint_with": []
+    },
+    "ValidatedRecord": {
+      "name": "ValidatedRecord",
+      "parents": [
+        "LoadedRecord"
+      ],
+      "comment": "A loaded record that has passed validation checks.",
+      "disjoint_with": []
+    },
+    "FieldValue": {
+      "name": "FieldValue",
+      "parents": [
+        "InformationEntity"
+      ],
+      "comment": "A value associated with a field in a record.",
+      "disjoint_with": []
+    },
+    "AtomicValue": {
+      "name": "AtomicValue",
+      "parents": [
+        "FieldValue"
+      ],
+      "comment": "A single, indivisible field value.",
+      "disjoint_with": []
+    },
+    "TextValue": {
+      "name": "TextValue",
+      "parents": [
+        "AtomicValue"
+      ],
+      "comment": "A textual field value.",
+      "disjoint_with": []
+    },
+    "NumericValue": {
+      "name": "NumericValue",
+      "parents": [
+        "AtomicValue"
+      ],
+      "comment": "A numeric field value.",
+      "disjoint_with": []
+    },
+    "BooleanValue": {
+      "name": "BooleanValue",
+      "parents": [
+        "AtomicValue"
+      ],
+      "comment": "A boolean field value.",
+      "disjoint_with": []
+    },
+    "TemporalValue": {
+      "name": "TemporalValue",
+      "parents": [
+        "AtomicValue"
+      ],
+      "comment": "A date or date-time field value.",
+      "disjoint_with": []
+    },
+    "MetadataEntity": {
+      "name": "MetadataEntity",
+      "parents": [
+        "InformationEntity"
+      ],
+      "comment": "Metadata describing the dataset or its processing.",
+      "disjoint_with": []
+    },
+    "ProvenanceRecord": {
+      "name": "ProvenanceRecord",
+      "parents": [
+        "MetadataEntity"
+      ],
+      "comment": "A provenance description for a dataset or record.",
+      "disjoint_with": []
+    },
+    "LoadEvent": {
+      "name": "LoadEvent",
+      "parents": [
+        "ProvenanceRecord"
+      ],
+      "comment": "An event describing the loading of a dataset.",
+      "disjoint_with": []
+    },
+    "ValidationEvent": {
+      "name": "ValidationEvent",
+      "parents": [
+        "ProvenanceRecord"
+      ],
+      "comment": "An event describing validation of data.",
+      "disjoint_with": []
+    },
+    "QualityAssessment": {
+      "name": "QualityAssessment",
+      "parents": [
+        "MetadataEntity"
+      ],
+      "comment": "An assessment of dataset quality.",
+      "disjoint_with": []
+    },
+    "CompletenessAssessment": {
+      "name": "CompletenessAssessment",
+      "parents": [
+        "QualityAssessment"
+      ],
+      "comment": "Assessment of missingness or completeness.",
+      "disjoint_with": []
+    },
+    "ConsistencyAssessment": {
+      "name": "ConsistencyAssessment",
+      "parents": [
+        "QualityAssessment"
+      ],
+      "comment": "Assessment of internal consistency.",
+      "disjoint_with": []
+    },
+    "QualityIssue": {
+      "name": "QualityIssue",
+      "parents": [
+        "MetadataEntity"
+      ],
+      "comment": "A detected issue affecting data quality.",
+      "disjoint_with": []
+    }
+  },
+  "object_properties": {
+    "hasVersion": {
+      "name": "hasVersion",
+      "domain": "DatasetArtifact",
+      "range_": "DatasetVersion",
+      "inverse_of": "versionOf",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a dataset artifact to one of its versions."
+    },
+    "versionOf": {
+      "name": "versionOf",
+      "domain": "DatasetVersion",
+      "range_": "DatasetArtifact",
+      "inverse_of": "hasVersion",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the dataset artifact that a version belongs to."
+    },
+    "hasSchema": {
+      "name": "hasSchema",
+      "domain": "DatasetArtifact",
+      "range_": "DatasetSchema",
+      "inverse_of": "schemaOf",
+      "transitive": false,
+      "symmetric": false,
+      "functional": true,
+      "comment": "Associates a dataset with its schema."
+    },
+    "schemaOf": {
+      "name": "schemaOf",
+      "domain": "DatasetSchema",
+      "range_": "DatasetArtifact",
+      "inverse_of": "hasSchema",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the dataset described by a schema."
+    },
+    "hasFieldDefinition": {
+      "name": "hasFieldDefinition",
+      "domain": "DatasetSchema",
+      "range_": "FieldDefinition",
+      "inverse_of": "fieldDefinitionOf",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a schema to its field definitions."
+    },
+    "fieldDefinitionOf": {
+      "name": "fieldDefinitionOf",
+      "domain": "FieldDefinition",
+      "range_": "DatasetSchema",
+      "inverse_of": "hasFieldDefinition",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the schema that contains a field definition."
+    },
+    "hasRecord": {
+      "name": "hasRecord",
+      "domain": "LoadedDataset",
+      "range_": "DataRecord",
+      "inverse_of": "recordOf",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a loaded dataset to its records."
+    },
+    "recordOf": {
+      "name": "recordOf",
+      "domain": "DataRecord",
+      "range_": "LoadedDataset",
+      "inverse_of": "hasRecord",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the loaded dataset that contains a record."
+    },
+    "hasValue": {
+      "name": "hasValue",
+      "domain": "DataRecord",
+      "range_": "FieldValue",
+      "inverse_of": "valueOf",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a record to one of its field values."
+    },
+    "valueOf": {
+      "name": "valueOf",
+      "domain": "FieldValue",
+      "range_": "DataRecord",
+      "inverse_of": "hasValue",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the record that a field value belongs to."
+    },
+    "hasProvenance": {
+      "name": "hasProvenance",
+      "domain": "DatasetArtifact",
+      "range_": "ProvenanceRecord",
+      "inverse_of": "provenanceOf",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a dataset to provenance information."
+    },
+    "provenanceOf": {
+      "name": "provenanceOf",
+      "domain": "ProvenanceRecord",
+      "range_": "DatasetArtifact",
+      "inverse_of": "hasProvenance",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the dataset described by provenance information."
+    },
+    "hasAssessment": {
+      "name": "hasAssessment",
+      "domain": "DatasetArtifact",
+      "range_": "QualityAssessment",
+      "inverse_of": "assessmentOf",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Links a dataset to a quality assessment."
+    },
+    "assessmentOf": {
+      "name": "assessmentOf",
+      "domain": "QualityAssessment",
+      "range_": "DatasetArtifact",
+      "inverse_of": "hasAssessment",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Indicates the dataset that was assessed."
+    }
+  },
+  "data_properties": {
+    "datasetName": {
+      "name": "datasetName",
+      "domain": "DatasetArtifact",
+      "datatype": "xsd:string",
+      "comment": "Human-readable name of the dataset."
+    },
+    "datasetId": {
+      "name": "datasetId",
+      "domain": "DatasetArtifact",
+      "datatype": "xsd:string",
+      "comment": "Identifier for the dataset."
+    },
+    "versionLabel": {
+      "name": "versionLabel",
+      "domain": "DatasetVersion",
+      "datatype": "xsd:string",
+      "comment": "Label for a dataset version."
+    },
+    "fieldName": {
+      "name": "fieldName",
+      "domain": "FieldDefinition",
+      "datatype": "xsd:string",
+      "comment": "Name of a field or column."
+    },
+    "fieldIndex": {
+      "name": "fieldIndex",
+      "domain": "FieldDefinition",
+      "datatype": "xsd:integer",
+      "comment": "Position of a field in the dataset."
+    },
+    "recordIndex": {
+      "name": "recordIndex",
+      "domain": "DataRecord",
+      "datatype": "xsd:integer",
+      "comment": "Position or row number of a record."
+    },
+    "textLiteral": {
+      "name": "textLiteral",
+      "domain": "TextValue",
+      "datatype": "xsd:string",
+      "comment": "String content of a text value."
+    },
+    "numericLiteral": {
+      "name": "numericLiteral",
+      "domain": "NumericValue",
+      "datatype": "xsd:double",
+      "comment": "Numeric content of a numeric value."
+    },
+    "booleanLiteral": {
+      "name": "booleanLiteral",
+      "domain": "BooleanValue",
+      "datatype": "xsd:boolean",
+      "comment": "Boolean content of a boolean value."
+    },
+    "temporalLiteral": {
+      "name": "temporalLiteral",
+      "domain": "TemporalValue",
+      "datatype": "xsd:dateTime",
+      "comment": "Temporal content of a date or date-time value."
+    },
+    "issueSeverity": {
+      "name": "issueSeverity",
+      "domain": "QualityIssue",
+      "datatype": "xsd:string",
+      "comment": "Severity level of a quality issue."
+    },
+    "assessmentScore": {
+      "name": "assessmentScore",
+      "domain": "QualityAssessment",
+      "datatype": "xsd:double",
+      "comment": "Numeric score assigned by a quality assessment."
+    }
+  },
+  "individuals": {
+    "loadedSalesDataset": {
+      "types": [
+        "LoadedDataset"
+      ],
+      "object_props": {
+        "hasSchema": [
+          "salesSchema"
+        ],
+        "hasRecord": [
+          "record001",
+          "record002"
+        ],
+        "hasProvenance": [
+          "loadProv001"
+        ],
+        "hasAssessment": [
+          "completenessAssessment001"
+        ]
+      },
+      "data_props": {
+        "datasetName": [
+          "Sales Dataset"
+        ],
+        "datasetId": [
+          "sales-2026"
+        ]
+      }
+    },
+    "salesSchema": {
+      "types": [
+        "DatasetSchema"
+      ],
+      "object_props": {
+        "schemaOf": [
+          "loadedSalesDataset"
+        ],
+        "hasFieldDefinition": [
+          "fieldAmount",
+          "fieldCustomerId",
+          "fieldIsPaid",
+          "fieldOrderDate"
+        ]
+      },
+      "data_props": {}
+    },
+    "fieldCustomerId": {
+      "types": [
+        "KeyFieldDefinition"
+      ],
+      "object_props": {
+        "fieldDefinitionOf": [
+          "salesSchema"
+        ]
+      },
+      "data_props": {
+        "fieldName": [
+          "customerId"
+        ],
+        "fieldIndex": [
+          "1"
+        ]
+      }
+    },
+    "fieldOrderDate": {
+      "types": [
+        "FieldDefinition"
+      ],
+      "object_props": {
+        "fieldDefinitionOf": [
+          "salesSchema"
+        ]
+      },
+      "data_props": {
+        "fieldName": [
+          "orderDate"
+        ],
+        "fieldIndex": [
+          "2"
+        ]
+      }
+    },
+    "fieldAmount": {
+      "types": [
+        "DerivedFieldDefinition"
+      ],
+      "object_props": {
+        "fieldDefinitionOf": [
+          "salesSchema"
+        ]
+      },
+      "data_props": {
+        "fieldName": [
+          "amount"
+        ],
+        "fieldIndex": [
+          "3"
+        ]
+      }
+    },
+    "fieldIsPaid": {
+      "types": [
+        "FieldDefinition"
+      ],
+      "object_props": {
+        "fieldDefinitionOf": [
+          "salesSchema"
+        ]
+      },
+      "data_props": {
+        "fieldName": [
+          "isPaid"
+        ],
+        "fieldIndex": [
+          "4"
+        ]
+      }
+    },
+    "record001": {
+      "types": [
+        "ValidatedRecord"
+      ],
+      "object_props": {
+        "recordOf": [
+          "loadedSalesDataset"
+        ],
+        "hasValue": [
+          "valueAmount001",
+          "valueCust001",
+          "valueDate001",
+          "valuePaid001"
+        ]
+      },
+      "data_props": {
+        "recordIndex": [
+          "1"
+        ]
+      }
+    },
+    "record002": {
+      "types": [
+        "LoadedRecord"
+      ],
+      "object_props": {
+        "recordOf": [
+          "loadedSalesDataset"
+        ],
+        "hasValue": [
+          "valueAmount002",
+          "valueCust002",
+          "valueDate002",
+          "valuePaid002"
+        ]
+      },
+      "data_props": {
+        "recordIndex": [
+          "2"
+        ]
+      }
+    },
+    "valueCust001": {
+      "types": [
+        "TextValue"
+      ],
+      "object_props": {
+        "valueOf": [
+          "record001"
+        ]
+      },
+      "data_props": {
+        "textLiteral": [
+          "C001"
+        ]
+      }
+    },
+    "valueDate001": {
+      "types": [
+        "TemporalValue"
+      ],
+      "object_props": {
+        "valueOf": [
+          "record001"
+        ]
+      },
+      "data_props": {
+        "temporalLiteral": [
+          "2026-01-15T00:00:00"
+        ]
+      }
+    },
+    "valueAmount001": {
+      "types": [
+        "NumericValue"
+      ],
+      "object_props": {
+        "valueOf": [
+          "record001"
+        ]
+      },
+      "data_props": {
+        "numericLiteral": [
+          "125.5"
+        ]
+      }
+    },
+    "valuePaid001": {
+      "types": [
+        "BooleanValue"
+      ],
+      "object_props": {
+        "valueOf": [
+          "record001"
+        ]
+      },
+      "data_props": {
+        "booleanLiteral": [
+          "true"
+        ]
+      }
+    },
+    "valueCust002": {
+      "types": [
+        "TextValue"
+      ],
+      "object_props": {
+        "valueOf": [
+          "record002"
+        ]
+      },
+      "data_props": {
+        "textLiteral": [
+          "C002"
+        ]
+      }
+    },
+    "valueDate002": {
+      "types": [
+        "TemporalValue"
+      ],
+      "object_props": {
+        "valueOf": [
+          "record002"
+        ]
+      },
+      "data_props": {
+        "temporalLiteral": [
+          "2026-01-16T00:00:00"
+        ]
+      }
+    },
+    "valueAmount002": {
+      "types": [
+        "NumericValue"
+      ],
+      "object_props": {
+        "valueOf": [
+          "record002"
+        ]
+      },
+      "data_props": {
+        "numericLiteral": [
+          "89.99"
+        ]
+      }
+    },
+    "valuePaid002": {
+      "types": [
+        "BooleanValue"
+      ],
+      "object_props": {
+        "valueOf": [
+          "record002"
+        ]
+      },
+      "data_props": {
+        "booleanLiteral": [
+          "false"
+        ]
+      }
+    },
+    "loadProv001": {
+      "types": [
+        "LoadEvent"
+      ],
+      "object_props": {
+        "provenanceOf": [
+          "loadedSalesDataset"
+        ]
+      },
+      "data_props": {
+        "versionLabel": [
+          "initial load"
+        ]
+      }
+    },
+    "completenessAssessment001": {
+      "types": [
+        "CompletenessAssessment"
+      ],
+      "object_props": {
+        "assessmentOf": [
+          "loadedSalesDataset"
+        ]
+      },
+      "data_props": {
+        "assessmentScore": [
+          "0.98"
+        ]
+      }
+    }
+  }
+}

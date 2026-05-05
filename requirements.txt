@@ -18,3 +18,4 @@ pysmartthings
 matplotlib
 pdfplumber
 python-docx
+rdflib

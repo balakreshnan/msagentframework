@@ -1,0 +1,744 @@
+{
+  "ontology_name": "genericontology",
+  "iri_base": "https://example.org/genericontology/",
+  "prefix": "gen",
+  "description": "A generic ontology for modeling organizations, people, assets, activities, and records.",
+  "classes": [
+    {
+      "name": "Thing",
+      "parents": [],
+      "comment": "Top-level root class for all entities.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Entity",
+      "parents": [
+        "Thing"
+      ],
+      "comment": "Any identifiable entity in the ontology.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Agent",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "An entity capable of acting or participating in activities.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Person",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "A human individual.",
+      "disjoint_with": [
+        "Organization"
+      ]
+    },
+    {
+      "name": "ProfessionalPerson",
+      "parents": [
+        "Person"
+      ],
+      "comment": "A person who performs a professional role.",
+      "disjoint_with": []
+    },
+    {
+      "name": "SpecialistPerson",
+      "parents": [
+        "ProfessionalPerson"
+      ],
+      "comment": "A professional person with a specialized role.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Operator",
+      "parents": [
+        "SpecialistPerson"
+      ],
+      "comment": "A specialist person who operates systems or equipment.",
+      "disjoint_with": [
+        "Technician"
+      ]
+    },
+    {
+      "name": "Technician",
+      "parents": [
+        "SpecialistPerson"
+      ],
+      "comment": "A specialist person who maintains or repairs systems or equipment.",
+      "disjoint_with": [
+        "Operator"
+      ]
+    },
+    {
+      "name": "Manager",
+      "parents": [
+        "ProfessionalPerson"
+      ],
+      "comment": "A professional person who manages people or resources.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Organization",
+      "parents": [
+        "Agent"
+      ],
+      "comment": "A structured collective agent such as a company or institution.",
+      "disjoint_with": [
+        "Person"
+      ]
+    },
+    {
+      "name": "Department",
+      "parents": [
+        "Organization"
+      ],
+      "comment": "A subdivision of an organization.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Facility",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A physical place or site used for operations.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Site",
+      "parents": [
+        "Facility"
+      ],
+      "comment": "A specific physical site or location.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Building",
+      "parents": [
+        "Site"
+      ],
+      "comment": "A constructed building at a site.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Room",
+      "parents": [
+        "Building"
+      ],
+      "comment": "A room within a building.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Asset",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A valuable resource owned or used by an organization.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Equipment",
+      "parents": [
+        "Asset"
+      ],
+      "comment": "A physical piece of equipment.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Machine",
+      "parents": [
+        "Equipment"
+      ],
+      "comment": "A machine used in operations.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Instrument",
+      "parents": [
+        "Equipment"
+      ],
+      "comment": "A precision instrument or tool.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Activity",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "An event or action carried out by agents.",
+      "disjoint_with": []
+    },
+    {
+      "name": "OperationalActivity",
+      "parents": [
+        "Activity"
+      ],
+      "comment": "An activity related to operations.",
+      "disjoint_with": []
+    },
+    {
+      "name": "MaintenanceActivity",
+      "parents": [
+        "OperationalActivity"
+      ],
+      "comment": "An operational activity for maintaining assets.",
+      "disjoint_with": []
+    },
+    {
+      "name": "InspectionActivity",
+      "parents": [
+        "OperationalActivity"
+      ],
+      "comment": "An operational activity for inspecting assets or facilities.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Record",
+      "parents": [
+        "Entity"
+      ],
+      "comment": "A documented record of an activity or state.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Document",
+      "parents": [
+        "Record"
+      ],
+      "comment": "A textual or structured document.",
+      "disjoint_with": []
+    },
+    {
+      "name": "Report",
+      "parents": [
+        "Document"
+      ],
+      "comment": "A report document.",
+      "disjoint_with": []
+    },
+    {
+      "name": "MaintenanceReport",
+      "parents": [
+        "Report"
+      ],
+      "comment": "A report describing maintenance work.",
+      "disjoint_with": []
+    },
+    {
+      "name": "InspectionReport",
+      "parents": [
+        "Report"
+      ],
+      "comment": "A report describing inspection work.",
+      "disjoint_with": []
+    }
+  ],
+  "object_properties": [
+    {
+      "name": "worksFor",
+      "domain": "Person",
+      "range": "Organization",
+      "inverse_of": "employs",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates a person to the organization they work for."
+    },
+    {
+      "name": "employs",
+      "domain": "Organization",
+      "range": "Person",
+      "inverse_of": "worksFor",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates an organization to a person it employs."
+    },
+    {
+      "name": "manages",
+      "domain": "Manager",
+      "range": "Department",
+      "inverse_of": "managedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates a manager to a department."
+    },
+    {
+      "name": "managedBy",
+      "domain": "Department",
+      "range": "Manager",
+      "inverse_of": "manages",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates a department to its manager."
+    },
+    {
+      "name": "locatedIn",
+      "domain": "Entity",
+      "range": "Facility",
+      "inverse_of": null,
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates an entity to the facility where it is located."
+    },
+    {
+      "name": "partOf",
+      "domain": "Entity",
+      "range": "Entity",
+      "inverse_of": null,
+      "transitive": true,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates an entity to a larger whole of which it is a part."
+    },
+    {
+      "name": "operates",
+      "domain": "Operator",
+      "range": "Machine",
+      "inverse_of": "operatedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates an operator to a machine they operate."
+    },
+    {
+      "name": "operatedBy",
+      "domain": "Machine",
+      "range": "Operator",
+      "inverse_of": "operates",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates a machine to the operator who operates it."
+    },
+    {
+      "name": "maintains",
+      "domain": "Technician",
+      "range": "Equipment",
+      "inverse_of": "maintainedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates a technician to equipment they maintain."
+    },
+    {
+      "name": "maintainedBy",
+      "domain": "Equipment",
+      "range": "Technician",
+      "inverse_of": "maintains",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates equipment to the technician who maintains it."
+    },
+    {
+      "name": "documents",
+      "domain": "Report",
+      "range": "Activity",
+      "inverse_of": "documentedBy",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates a report to the activity it documents."
+    },
+    {
+      "name": "documentedBy",
+      "domain": "Activity",
+      "range": "Report",
+      "inverse_of": "documents",
+      "transitive": false,
+      "symmetric": false,
+      "functional": false,
+      "comment": "Relates an activity to the report that documents it."
+    }
+  ],
+  "data_properties": [
+    {
+      "name": "hasName",
+      "domain": "Entity",
+      "datatype": "xsd:string",
+      "comment": "A human-readable name."
+    },
+    {
+      "name": "hasIdentifier",
+      "domain": "Entity",
+      "datatype": "xsd:string",
+      "comment": "A unique identifier string."
+    },
+    {
+      "name": "hasDescription",
+      "domain": "Entity",
+      "datatype": "xsd:string",
+      "comment": "A textual description."
+    },
+    {
+      "name": "hasStartDateTime",
+      "domain": "Activity",
+      "datatype": "xsd:dateTime",
+      "comment": "The start date and time of an activity."
+    },
+    {
+      "name": "hasEndDateTime",
+      "domain": "Activity",
+      "datatype": "xsd:dateTime",
+      "comment": "The end date and time of an activity."
+    },
+    {
+      "name": "hasStatus",
+      "domain": "Activity",
+      "datatype": "xsd:string",
+      "comment": "The status of an activity."
+    },
+    {
+      "name": "hasSerialNumber",
+      "domain": "Equipment",
+      "datatype": "xsd:string",
+      "comment": "The serial number of an equipment item."
+    },
+    {
+      "name": "hasCapacity",
+      "domain": "Machine",
+      "datatype": "xsd:integer",
+      "comment": "The capacity of a machine."
+    },
+    {
+      "name": "hasScore",
+      "domain": "InspectionReport",
+      "datatype": "xsd:double",
+      "comment": "A numeric inspection score."
+    },
+    {
+      "name": "isActive",
+      "domain": "Person",
+      "datatype": "xsd:boolean",
+      "comment": "Whether a person is currently active."
+    }
+  ],
+  "individuals": [
+    {
+      "name": "AcmeCorp",
+      "types": [
+        "Organization"
+      ],
+      "object_props": {
+        "employs": [
+          "AliceManager",
+          "OliviaOperator",
+          "TomTechnician"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "AcmeCorp"
+        ],
+        "hasIdentifier": [
+          "ORG-001"
+        ]
+      }
+    },
+    {
+      "name": "ResearchDept",
+      "types": [
+        "Department"
+      ],
+      "object_props": {
+        "managedBy": [
+          "AliceManager"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "ResearchDept"
+        ],
+        "hasIdentifier": [
+          "DEPT-01"
+        ]
+      }
+    },
+    {
+      "name": "AliceManager",
+      "types": [
+        "Manager"
+      ],
+      "object_props": {
+        "worksFor": [
+          "AcmeCorp"
+        ],
+        "manages": [
+          "ResearchDept"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "Alice Manager"
+        ],
+        "hasIdentifier": [
+          "PER-001"
+        ],
+        "isActive": [
+          "true"
+        ]
+      }
+    },
+    {
+      "name": "OliviaOperator",
+      "types": [
+        "Operator"
+      ],
+      "object_props": {
+        "worksFor": [
+          "AcmeCorp"
+        ],
+        "operates": [
+          "PressMachine1"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "Olivia Operator"
+        ],
+        "hasIdentifier": [
+          "PER-002"
+        ],
+        "isActive": [
+          "true"
+        ]
+      }
+    },
+    {
+      "name": "TomTechnician",
+      "types": [
+        "Technician"
+      ],
+      "object_props": {
+        "worksFor": [
+          "AcmeCorp"
+        ],
+        "maintains": [
+          "PressMachine1"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "Tom Technician"
+        ],
+        "hasIdentifier": [
+          "PER-003"
+        ],
+        "isActive": [
+          "true"
+        ]
+      }
+    },
+    {
+      "name": "MainSite",
+      "types": [
+        "Site"
+      ],
+      "data_props": {
+        "hasName": [
+          "MainSite"
+        ],
+        "hasIdentifier": [
+          "FAC-001"
+        ]
+      }
+    },
+    {
+      "name": "PlantBuilding",
+      "types": [
+        "Building"
+      ],
+      "object_props": {
+        "partOf": [
+          "MainSite"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "PlantBuilding"
+        ],
+        "hasIdentifier": [
+          "FAC-002"
+        ]
+      }
+    },
+    {
+      "name": "ControlRoom",
+      "types": [
+        "Room"
+      ],
+      "object_props": {
+        "partOf": [
+          "PlantBuilding"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "ControlRoom"
+        ],
+        "hasIdentifier": [
+          "FAC-003"
+        ]
+      }
+    },
+    {
+      "name": "PressMachine1",
+      "types": [
+        "Machine"
+      ],
+      "object_props": {
+        "locatedIn": [
+          "MainSite"
+        ],
+        "operatedBy": [
+          "OliviaOperator"
+        ],
+        "maintainedBy": [
+          "TomTechnician"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "PressMachine1"
+        ],
+        "hasIdentifier": [
+          "AST-001"
+        ],
+        "hasSerialNumber": [
+          "SN-1001"
+        ],
+        "hasCapacity": [
+          "250"
+        ]
+      }
+    },
+    {
+      "name": "CalibrationTool1",
+      "types": [
+        "Instrument"
+      ],
+      "object_props": {
+        "locatedIn": [
+          "ControlRoom"
+        ],
+        "maintainedBy": [
+          "TomTechnician"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "CalibrationTool1"
+        ],
+        "hasIdentifier": [
+          "AST-002"
+        ],
+        "hasSerialNumber": [
+          "SN-2001"
+        ]
+      }
+    },
+    {
+      "name": "MaintenanceActivity1",
+      "types": [
+        "MaintenanceActivity"
+      ],
+      "object_props": {
+        "documentedBy": [
+          "MaintenanceReport1"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "MaintenanceActivity1"
+        ],
+        "hasIdentifier": [
+          "ACT-001"
+        ],
+        "hasStartDateTime": [
+          "2026-05-01T09:00:00"
+        ],
+        "hasEndDateTime": [
+          "2026-05-01T11:00:00"
+        ],
+        "hasStatus": [
+          "completed"
+        ]
+      }
+    },
+    {
+      "name": "InspectionActivity1",
+      "types": [
+        "InspectionActivity"
+      ],
+      "object_props": {
+        "documentedBy": [
+          "InspectionReport1"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "InspectionActivity1"
+        ],
+        "hasIdentifier": [
+          "ACT-002"
+        ],
+        "hasStartDateTime": [
+          "2026-05-02T10:00:00"
+        ],
+        "hasEndDateTime": [
+          "2026-05-02T10:30:00"
+        ],
+        "hasStatus": [
+          "completed"
+        ]
+      }
+    },
+    {
+      "name": "MaintenanceReport1",
+      "types": [
+        "MaintenanceReport"
+      ],
+      "object_props": {
+        "documents": [
+          "MaintenanceActivity1"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "MaintenanceReport1"
+        ],
+        "hasIdentifier": [
+          "REP-001"
+        ]
+      }
+    },
+    {
+      "name": "InspectionReport1",
+      "types": [
+        "InspectionReport"
+      ],
+      "object_props": {
+        "documents": [
+          "InspectionActivity1"
+        ]
+      },
+      "data_props": {
+        "hasName": [
+          "InspectionReport1"
+        ],
+        "hasIdentifier": [
+          "REP-002"
+        ],
+        "hasScore": [
+          "98.5"
+        ]
+      }
+    }
+  ]
+}

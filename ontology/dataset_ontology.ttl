@@ -1,0 +1,326 @@
+@prefix ds: <https://example.org/dataset/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/dataset> a owl:Ontology .
+
+ds:Thing a owl:Class ;
+    rdfs:comment "Top-level root class for all entities in the ontology." .
+
+ds:InformationEntity a owl:Class ;
+    rdfs:subClassOf ds:Thing ;
+    rdfs:comment "An abstract entity that represents information-bearing content." .
+
+ds:DatasetArtifact a owl:Class ;
+    rdfs:subClassOf ds:InformationEntity ;
+    rdfs:comment "A dataset as a managed information artifact." .
+
+ds:StructuredDataset a owl:Class ;
+    rdfs:subClassOf ds:DatasetArtifact ;
+    rdfs:comment "A dataset organized into records and fields." .
+
+ds:TabularDataset a owl:Class ;
+    rdfs:subClassOf ds:StructuredDataset ;
+    rdfs:comment "A structured dataset represented in tabular form." .
+
+ds:LoadedDataset a owl:Class ;
+    rdfs:subClassOf ds:TabularDataset ;
+    rdfs:comment "A dataset that has been loaded into a system." .
+
+ds:DatasetVersion a owl:Class ;
+    rdfs:subClassOf ds:InformationEntity ;
+    rdfs:comment "A specific version or snapshot of a dataset." .
+
+ds:DatasetSchema a owl:Class ;
+    rdfs:subClassOf ds:InformationEntity ;
+    rdfs:comment "The structural definition of a dataset." .
+
+ds:SchemaComponent a owl:Class ;
+    rdfs:subClassOf ds:DatasetSchema ;
+    rdfs:comment "A component of a dataset schema." .
+
+ds:FieldDefinition a owl:Class ;
+    rdfs:subClassOf ds:SchemaComponent ;
+    rdfs:comment "Definition of a field or column in a dataset." .
+
+ds:KeyFieldDefinition a owl:Class ;
+    rdfs:subClassOf ds:FieldDefinition ;
+    rdfs:comment "A field definition that identifies records uniquely." .
+
+ds:DerivedFieldDefinition a owl:Class ;
+    rdfs:subClassOf ds:FieldDefinition ;
+    rdfs:comment "A field definition computed from other fields." .
+
+ds:RecordStructure a owl:Class ;
+    rdfs:subClassOf ds:SchemaComponent ;
+    rdfs:comment "Definition of a record structure in the dataset." .
+
+ds:DataRecord a owl:Class ;
+    rdfs:subClassOf ds:InformationEntity ;
+    rdfs:comment "A single record or row in a dataset." .
+
+ds:LoadedRecord a owl:Class ;
+    rdfs:subClassOf ds:DataRecord ;
+    rdfs:comment "A record that has been loaded from the source dataset." .
+
+ds:ValidatedRecord a owl:Class ;
+    rdfs:subClassOf ds:LoadedRecord ;
+    rdfs:comment "A loaded record that has passed validation checks." .
+
+ds:FieldValue a owl:Class ;
+    rdfs:subClassOf ds:InformationEntity ;
+    rdfs:comment "A value associated with a field in a record." .
+
+ds:AtomicValue a owl:Class ;
+    rdfs:subClassOf ds:FieldValue ;
+    rdfs:comment "A single, indivisible field value." .
+
+ds:TextValue a owl:Class ;
+    rdfs:subClassOf ds:AtomicValue ;
+    rdfs:comment "A textual field value." .
+
+ds:NumericValue a owl:Class ;
+    rdfs:subClassOf ds:AtomicValue ;
+    rdfs:comment "A numeric field value." .
+
+ds:BooleanValue a owl:Class ;
+    rdfs:subClassOf ds:AtomicValue ;
+    rdfs:comment "A boolean field value." .
+
+ds:TemporalValue a owl:Class ;
+    rdfs:subClassOf ds:AtomicValue ;
+    rdfs:comment "A date or date-time field value." .
+
+ds:MetadataEntity a owl:Class ;
+    rdfs:subClassOf ds:InformationEntity ;
+    rdfs:comment "Metadata describing the dataset or its processing." .
+
+ds:ProvenanceRecord a owl:Class ;
+    rdfs:subClassOf ds:MetadataEntity ;
+    rdfs:comment "A provenance description for a dataset or record." .
+
+ds:LoadEvent a owl:Class ;
+    rdfs:subClassOf ds:ProvenanceRecord ;
+    rdfs:comment "An event describing the loading of a dataset." .
+
+ds:ValidationEvent a owl:Class ;
+    rdfs:subClassOf ds:ProvenanceRecord ;
+    rdfs:comment "An event describing validation of data." .
+
+ds:QualityAssessment a owl:Class ;
+    rdfs:subClassOf ds:MetadataEntity ;
+    rdfs:comment "An assessment of dataset quality." .
+
+ds:CompletenessAssessment a owl:Class ;
+    rdfs:subClassOf ds:QualityAssessment ;
+    rdfs:comment "Assessment of missingness or completeness." .
+
+ds:ConsistencyAssessment a owl:Class ;
+    rdfs:subClassOf ds:QualityAssessment ;
+    rdfs:comment "Assessment of internal consistency." .
+
+ds:QualityIssue a owl:Class ;
+    rdfs:subClassOf ds:MetadataEntity ;
+    rdfs:comment "A detected issue affecting data quality." .
+
+ds:hasVersion a owl:ObjectProperty ;
+    rdfs:domain ds:DatasetArtifact ;
+    rdfs:range  ds:DatasetVersion ;
+    owl:inverseOf ds:versionOf .
+
+ds:versionOf a owl:ObjectProperty ;
+    rdfs:domain ds:DatasetVersion ;
+    rdfs:range  ds:DatasetArtifact ;
+    owl:inverseOf ds:hasVersion .
+
+ds:hasSchema a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain ds:DatasetArtifact ;
+    rdfs:range  ds:DatasetSchema ;
+    owl:inverseOf ds:schemaOf .
+
+ds:schemaOf a owl:ObjectProperty ;
+    rdfs:domain ds:DatasetSchema ;
+    rdfs:range  ds:DatasetArtifact ;
+    owl:inverseOf ds:hasSchema .
+
+ds:hasFieldDefinition a owl:ObjectProperty ;
+    rdfs:domain ds:DatasetSchema ;
+    rdfs:range  ds:FieldDefinition ;
+    owl:inverseOf ds:fieldDefinitionOf .
+
+ds:fieldDefinitionOf a owl:ObjectProperty ;
+    rdfs:domain ds:FieldDefinition ;
+    rdfs:range  ds:DatasetSchema ;
+    owl:inverseOf ds:hasFieldDefinition .
+
+ds:hasRecord a owl:ObjectProperty ;
+    rdfs:domain ds:LoadedDataset ;
+    rdfs:range  ds:DataRecord ;
+    owl:inverseOf ds:recordOf .
+
+ds:recordOf a owl:ObjectProperty ;
+    rdfs:domain ds:DataRecord ;
+    rdfs:range  ds:LoadedDataset ;
+    owl:inverseOf ds:hasRecord .
+
+ds:hasValue a owl:ObjectProperty ;
+    rdfs:domain ds:DataRecord ;
+    rdfs:range  ds:FieldValue ;
+    owl:inverseOf ds:valueOf .
+
+ds:valueOf a owl:ObjectProperty ;
+    rdfs:domain ds:FieldValue ;
+    rdfs:range  ds:DataRecord ;
+    owl:inverseOf ds:hasValue .
+
+ds:hasProvenance a owl:ObjectProperty ;
+    rdfs:domain ds:DatasetArtifact ;
+    rdfs:range  ds:ProvenanceRecord ;
+    owl:inverseOf ds:provenanceOf .
+
+ds:provenanceOf a owl:ObjectProperty ;
+    rdfs:domain ds:ProvenanceRecord ;
+    rdfs:range  ds:DatasetArtifact ;
+    owl:inverseOf ds:hasProvenance .
+
+ds:hasAssessment a owl:ObjectProperty ;
+    rdfs:domain ds:DatasetArtifact ;
+    rdfs:range  ds:QualityAssessment ;
+    owl:inverseOf ds:assessmentOf .
+
+ds:assessmentOf a owl:ObjectProperty ;
+    rdfs:domain ds:QualityAssessment ;
+    rdfs:range  ds:DatasetArtifact ;
+    owl:inverseOf ds:hasAssessment .
+
+ds:datasetName a owl:DatatypeProperty ;
+    rdfs:domain ds:DatasetArtifact ;
+    rdfs:range  xsd:string .
+
+ds:datasetId a owl:DatatypeProperty ;
+    rdfs:domain ds:DatasetArtifact ;
+    rdfs:range  xsd:string .
+
+ds:versionLabel a owl:DatatypeProperty ;
+    rdfs:domain ds:DatasetVersion ;
+    rdfs:range  xsd:string .
+
+ds:fieldName a owl:DatatypeProperty ;
+    rdfs:domain ds:FieldDefinition ;
+    rdfs:range  xsd:string .
+
+ds:fieldIndex a owl:DatatypeProperty ;
+    rdfs:domain ds:FieldDefinition ;
+    rdfs:range  xsd:integer .
+
+ds:recordIndex a owl:DatatypeProperty ;
+    rdfs:domain ds:DataRecord ;
+    rdfs:range  xsd:integer .
+
+ds:textLiteral a owl:DatatypeProperty ;
+    rdfs:domain ds:TextValue ;
+    rdfs:range  xsd:string .
+
+ds:numericLiteral a owl:DatatypeProperty ;
+    rdfs:domain ds:NumericValue ;
+    rdfs:range  xsd:double .
+
+ds:booleanLiteral a owl:DatatypeProperty ;
+    rdfs:domain ds:BooleanValue ;
+    rdfs:range  xsd:boolean .
+
+ds:temporalLiteral a owl:DatatypeProperty ;
+    rdfs:domain ds:TemporalValue ;
+    rdfs:range  xsd:dateTime .
+
+ds:issueSeverity a owl:DatatypeProperty ;
+    rdfs:domain ds:QualityIssue ;
+    rdfs:range  xsd:string .
+
+ds:assessmentScore a owl:DatatypeProperty ;
+    rdfs:domain ds:QualityAssessment ;
+    rdfs:range  xsd:double .
+
+ds:loadedSalesDataset a ds:LoadedDataset ;
+    ds:hasSchema ds:salesSchema ;
+    ds:hasRecord ds:record001, ds:record002 ;
+    ds:hasProvenance ds:loadProv001 ;
+    ds:hasAssessment ds:completenessAssessment001 ;
+    ds:datasetName "Sales Dataset" ;
+    ds:datasetId "sales-2026" .
+
+ds:salesSchema a ds:DatasetSchema ;
+    ds:schemaOf ds:loadedSalesDataset ;
+    ds:hasFieldDefinition ds:fieldAmount, ds:fieldCustomerId, ds:fieldIsPaid, ds:fieldOrderDate .
+
+ds:fieldCustomerId a ds:KeyFieldDefinition ;
+    ds:fieldDefinitionOf ds:salesSchema ;
+    ds:fieldName "customerId" ;
+    ds:fieldIndex "1" .
+
+ds:fieldOrderDate a ds:FieldDefinition ;
+    ds:fieldDefinitionOf ds:salesSchema ;
+    ds:fieldName "orderDate" ;
+    ds:fieldIndex "2" .
+
+ds:fieldAmount a ds:DerivedFieldDefinition ;
+    ds:fieldDefinitionOf ds:salesSchema ;
+    ds:fieldName "amount" ;
+    ds:fieldIndex "3" .
+
+ds:fieldIsPaid a ds:FieldDefinition ;
+    ds:fieldDefinitionOf ds:salesSchema ;
+    ds:fieldName "isPaid" ;
+    ds:fieldIndex "4" .
+
+ds:record001 a ds:ValidatedRecord ;
+    ds:recordOf ds:loadedSalesDataset ;
+    ds:hasValue ds:valueAmount001, ds:valueCust001, ds:valueDate001, ds:valuePaid001 ;
+    ds:recordIndex "1" .
+
+ds:record002 a ds:LoadedRecord ;
+    ds:recordOf ds:loadedSalesDataset ;
+    ds:hasValue ds:valueAmount002, ds:valueCust002, ds:valueDate002, ds:valuePaid002 ;
+    ds:recordIndex "2" .
+
+ds:valueCust001 a ds:TextValue ;
+    ds:valueOf ds:record001 ;
+    ds:textLiteral "C001" .
+
+ds:valueDate001 a ds:TemporalValue ;
+    ds:valueOf ds:record001 ;
+    ds:temporalLiteral "2026-01-15T00:00:00" .
+
+ds:valueAmount001 a ds:NumericValue ;
+    ds:valueOf ds:record001 ;
+    ds:numericLiteral "125.5" .
+
+ds:valuePaid001 a ds:BooleanValue ;
+    ds:valueOf ds:record001 ;
+    ds:booleanLiteral "true" .
+
+ds:valueCust002 a ds:TextValue ;
+    ds:valueOf ds:record002 ;
+    ds:textLiteral "C002" .
+
+ds:valueDate002 a ds:TemporalValue ;
+    ds:valueOf ds:record002 ;
+    ds:temporalLiteral "2026-01-16T00:00:00" .
+
+ds:valueAmount002 a ds:NumericValue ;
+    ds:valueOf ds:record002 ;
+    ds:numericLiteral "89.99" .
+
+ds:valuePaid002 a ds:BooleanValue ;
+    ds:valueOf ds:record002 ;
+    ds:booleanLiteral "false" .
+
+ds:loadProv001 a ds:LoadEvent ;
+    ds:provenanceOf ds:loadedSalesDataset ;
+    ds:versionLabel "initial load" .
+
+ds:completenessAssessment001 a ds:CompletenessAssessment ;
+    ds:assessmentOf ds:loadedSalesDataset ;
+    ds:assessmentScore "0.98" .

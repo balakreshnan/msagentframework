@@ -1,0 +1,308 @@
+@prefix gen: <https://example.org/genericontology/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/genericontology> a owl:Ontology .
+
+gen:Thing a owl:Class ;
+    rdfs:comment "Top-level root class for all entities." .
+
+gen:Entity a owl:Class ;
+    rdfs:subClassOf gen:Thing ;
+    rdfs:comment "Any identifiable entity in the ontology." .
+
+gen:Agent a owl:Class ;
+    rdfs:subClassOf gen:Entity ;
+    rdfs:comment "An entity capable of acting or participating in activities." .
+
+gen:Person a owl:Class ;
+    rdfs:subClassOf gen:Agent ;
+    owl:disjointWith gen:Organization ;
+    rdfs:comment "A human individual." .
+
+gen:ProfessionalPerson a owl:Class ;
+    rdfs:subClassOf gen:Person ;
+    rdfs:comment "A person who performs a professional role." .
+
+gen:SpecialistPerson a owl:Class ;
+    rdfs:subClassOf gen:ProfessionalPerson ;
+    rdfs:comment "A professional person with a specialized role." .
+
+gen:Operator a owl:Class ;
+    rdfs:subClassOf gen:SpecialistPerson ;
+    owl:disjointWith gen:Technician ;
+    rdfs:comment "A specialist person who operates systems or equipment." .
+
+gen:Technician a owl:Class ;
+    rdfs:subClassOf gen:SpecialistPerson ;
+    owl:disjointWith gen:Operator ;
+    rdfs:comment "A specialist person who maintains or repairs systems or equipment." .
+
+gen:Manager a owl:Class ;
+    rdfs:subClassOf gen:ProfessionalPerson ;
+    rdfs:comment "A professional person who manages people or resources." .
+
+gen:Organization a owl:Class ;
+    rdfs:subClassOf gen:Agent ;
+    owl:disjointWith gen:Person ;
+    rdfs:comment "A structured collective agent such as a company or institution." .
+
+gen:Department a owl:Class ;
+    rdfs:subClassOf gen:Organization ;
+    rdfs:comment "A subdivision of an organization." .
+
+gen:Facility a owl:Class ;
+    rdfs:subClassOf gen:Entity ;
+    rdfs:comment "A physical place or site used for operations." .
+
+gen:Site a owl:Class ;
+    rdfs:subClassOf gen:Facility ;
+    rdfs:comment "A specific physical site or location." .
+
+gen:Building a owl:Class ;
+    rdfs:subClassOf gen:Site ;
+    rdfs:comment "A constructed building at a site." .
+
+gen:Room a owl:Class ;
+    rdfs:subClassOf gen:Building ;
+    rdfs:comment "A room within a building." .
+
+gen:Asset a owl:Class ;
+    rdfs:subClassOf gen:Entity ;
+    rdfs:comment "A valuable resource owned or used by an organization." .
+
+gen:Equipment a owl:Class ;
+    rdfs:subClassOf gen:Asset ;
+    rdfs:comment "A physical piece of equipment." .
+
+gen:Machine a owl:Class ;
+    rdfs:subClassOf gen:Equipment ;
+    rdfs:comment "A machine used in operations." .
+
+gen:Instrument a owl:Class ;
+    rdfs:subClassOf gen:Equipment ;
+    rdfs:comment "A precision instrument or tool." .
+
+gen:Activity a owl:Class ;
+    rdfs:subClassOf gen:Entity ;
+    rdfs:comment "An event or action carried out by agents." .
+
+gen:OperationalActivity a owl:Class ;
+    rdfs:subClassOf gen:Activity ;
+    rdfs:comment "An activity related to operations." .
+
+gen:MaintenanceActivity a owl:Class ;
+    rdfs:subClassOf gen:OperationalActivity ;
+    rdfs:comment "An operational activity for maintaining assets." .
+
+gen:InspectionActivity a owl:Class ;
+    rdfs:subClassOf gen:OperationalActivity ;
+    rdfs:comment "An operational activity for inspecting assets or facilities." .
+
+gen:Record a owl:Class ;
+    rdfs:subClassOf gen:Entity ;
+    rdfs:comment "A documented record of an activity or state." .
+
+gen:Document a owl:Class ;
+    rdfs:subClassOf gen:Record ;
+    rdfs:comment "A textual or structured document." .
+
+gen:Report a owl:Class ;
+    rdfs:subClassOf gen:Document ;
+    rdfs:comment "A report document." .
+
+gen:MaintenanceReport a owl:Class ;
+    rdfs:subClassOf gen:Report ;
+    rdfs:comment "A report describing maintenance work." .
+
+gen:InspectionReport a owl:Class ;
+    rdfs:subClassOf gen:Report ;
+    rdfs:comment "A report describing inspection work." .
+
+gen:worksFor a owl:ObjectProperty ;
+    rdfs:domain gen:Person ;
+    rdfs:range  gen:Organization ;
+    owl:inverseOf gen:employs .
+
+gen:employs a owl:ObjectProperty ;
+    rdfs:domain gen:Organization ;
+    rdfs:range  gen:Person ;
+    owl:inverseOf gen:worksFor .
+
+gen:manages a owl:ObjectProperty ;
+    rdfs:domain gen:Manager ;
+    rdfs:range  gen:Department ;
+    owl:inverseOf gen:managedBy .
+
+gen:managedBy a owl:ObjectProperty ;
+    rdfs:domain gen:Department ;
+    rdfs:range  gen:Manager ;
+    owl:inverseOf gen:manages .
+
+gen:locatedIn a owl:ObjectProperty ;
+    rdfs:domain gen:Entity ;
+    rdfs:range  gen:Facility .
+
+gen:partOf a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:domain gen:Entity ;
+    rdfs:range  gen:Entity .
+
+gen:operates a owl:ObjectProperty ;
+    rdfs:domain gen:Operator ;
+    rdfs:range  gen:Machine ;
+    owl:inverseOf gen:operatedBy .
+
+gen:operatedBy a owl:ObjectProperty ;
+    rdfs:domain gen:Machine ;
+    rdfs:range  gen:Operator ;
+    owl:inverseOf gen:operates .
+
+gen:maintains a owl:ObjectProperty ;
+    rdfs:domain gen:Technician ;
+    rdfs:range  gen:Equipment ;
+    owl:inverseOf gen:maintainedBy .
+
+gen:maintainedBy a owl:ObjectProperty ;
+    rdfs:domain gen:Equipment ;
+    rdfs:range  gen:Technician ;
+    owl:inverseOf gen:maintains .
+
+gen:documents a owl:ObjectProperty ;
+    rdfs:domain gen:Report ;
+    rdfs:range  gen:Activity ;
+    owl:inverseOf gen:documentedBy .
+
+gen:documentedBy a owl:ObjectProperty ;
+    rdfs:domain gen:Activity ;
+    rdfs:range  gen:Report ;
+    owl:inverseOf gen:documents .
+
+gen:hasName a owl:DatatypeProperty ;
+    rdfs:domain gen:Entity ;
+    rdfs:range  xsd:string .
+
+gen:hasIdentifier a owl:DatatypeProperty ;
+    rdfs:domain gen:Entity ;
+    rdfs:range  xsd:string .
+
+gen:hasDescription a owl:DatatypeProperty ;
+    rdfs:domain gen:Entity ;
+    rdfs:range  xsd:string .
+
+gen:hasStartDateTime a owl:DatatypeProperty ;
+    rdfs:domain gen:Activity ;
+    rdfs:range  xsd:dateTime .
+
+gen:hasEndDateTime a owl:DatatypeProperty ;
+    rdfs:domain gen:Activity ;
+    rdfs:range  xsd:dateTime .
+
+gen:hasStatus a owl:DatatypeProperty ;
+    rdfs:domain gen:Activity ;
+    rdfs:range  xsd:string .
+
+gen:hasSerialNumber a owl:DatatypeProperty ;
+    rdfs:domain gen:Equipment ;
+    rdfs:range  xsd:string .
+
+gen:hasCapacity a owl:DatatypeProperty ;
+    rdfs:domain gen:Machine ;
+    rdfs:range  xsd:integer .
+
+gen:hasScore a owl:DatatypeProperty ;
+    rdfs:domain gen:InspectionReport ;
+    rdfs:range  xsd:double .
+
+gen:isActive a owl:DatatypeProperty ;
+    rdfs:domain gen:Person ;
+    rdfs:range  xsd:boolean .
+
+gen:AcmeCorp a gen:Organization ;
+    gen:employs gen:AliceManager, gen:OliviaOperator, gen:TomTechnician ;
+    gen:hasName "AcmeCorp" ;
+    gen:hasIdentifier "ORG-001" .
+
+gen:ResearchDept a gen:Department ;
+    gen:managedBy gen:AliceManager ;
+    gen:hasName "ResearchDept" ;
+    gen:hasIdentifier "DEPT-01" .
+
+gen:AliceManager a gen:Manager ;
+    gen:worksFor gen:AcmeCorp ;
+    gen:manages gen:ResearchDept ;
+    gen:hasName "Alice Manager" ;
+    gen:hasIdentifier "PER-001" ;
+    gen:isActive "true" .
+
+gen:OliviaOperator a gen:Operator ;
+    gen:worksFor gen:AcmeCorp ;
+    gen:operates gen:PressMachine1 ;
+    gen:hasName "Olivia Operator" ;
+    gen:hasIdentifier "PER-002" ;
+    gen:isActive "true" .
+
+gen:TomTechnician a gen:Technician ;
+    gen:worksFor gen:AcmeCorp ;
+    gen:maintains gen:CalibrationTool1, gen:PressMachine1 ;
+    gen:hasName "Tom Technician" ;
+    gen:hasIdentifier "PER-003" ;
+    gen:isActive "true" .
+
+gen:MainSite a gen:Site ;
+    gen:hasName "MainSite" ;
+    gen:hasIdentifier "FAC-001" .
+
+gen:PlantBuilding a gen:Building ;
+    gen:partOf gen:MainSite ;
+    gen:hasName "PlantBuilding" ;
+    gen:hasIdentifier "FAC-002" .
+
+gen:ControlRoom a gen:Room ;
+    gen:partOf gen:PlantBuilding ;
+    gen:hasName "ControlRoom" ;
+    gen:hasIdentifier "FAC-003" .
+
+gen:PressMachine1 a gen:Machine ;
+    gen:operatedBy gen:OliviaOperator ;
+    gen:maintainedBy gen:TomTechnician ;
+    gen:locatedIn gen:MainSite ;
+    gen:hasName "PressMachine1" ;
+    gen:hasIdentifier "AST-001" ;
+    gen:hasSerialNumber "SN-1001" ;
+    gen:hasCapacity "250" .
+
+gen:CalibrationTool1 a gen:Instrument ;
+    gen:locatedIn gen:ControlRoom ;
+    gen:maintainedBy gen:TomTechnician ;
+    gen:hasName "CalibrationTool1" ;
+    gen:hasIdentifier "AST-002" ;
+    gen:hasSerialNumber "SN-2001" .
+
+gen:MaintenanceActivity1 a gen:MaintenanceActivity ;
+    gen:documentedBy gen:MaintenanceReport1 ;
+    gen:hasName "MaintenanceActivity1" ;
+    gen:hasIdentifier "ACT-001" ;
+    gen:hasStartDateTime "2026-05-01T09:00:00" ;
+    gen:hasEndDateTime "2026-05-01T11:00:00" ;
+    gen:hasStatus "completed" .
+
+gen:InspectionActivity1 a gen:InspectionActivity ;
+    gen:documentedBy gen:InspectionReport1 ;
+    gen:hasName "InspectionActivity1" ;
+    gen:hasIdentifier "ACT-002" ;
+    gen:hasStartDateTime "2026-05-02T10:00:00" ;
+    gen:hasEndDateTime "2026-05-02T10:30:00" ;
+    gen:hasStatus "completed" .
+
+gen:MaintenanceReport1 a gen:MaintenanceReport ;
+    gen:documents gen:MaintenanceActivity1 ;
+    gen:hasName "MaintenanceReport1" ;
+    gen:hasIdentifier "REP-001" .
+
+gen:InspectionReport1 a gen:InspectionReport ;
+    gen:documents gen:InspectionActivity1 ;
+    gen:hasName "InspectionReport1" ;
+    gen:hasIdentifier "REP-002" ;
+    gen:hasScore "98.5" .

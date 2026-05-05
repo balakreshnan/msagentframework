@@ -1,0 +1,266 @@
+<https://example.org/genericontology> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .
+<https://example.org/genericontology/Thing> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Thing> <http://www.w3.org/2000/01/rdf-schema#comment> "Top-level root class for all entities."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Entity> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Entity> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Thing> .
+<https://example.org/genericontology/Entity> <http://www.w3.org/2000/01/rdf-schema#comment> "Any identifiable entity in the ontology."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Agent> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Agent> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/Agent> <http://www.w3.org/2000/01/rdf-schema#comment> "An entity capable of acting or participating in activities."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Person> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Agent> .
+<https://example.org/genericontology/Person> <http://www.w3.org/2002/07/owl#disjointWith> <https://example.org/genericontology/Organization> .
+<https://example.org/genericontology/Person> <http://www.w3.org/2000/01/rdf-schema#comment> "A human individual."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/ProfessionalPerson> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/ProfessionalPerson> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Person> .
+<https://example.org/genericontology/ProfessionalPerson> <http://www.w3.org/2000/01/rdf-schema#comment> "A person who performs a professional role."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/SpecialistPerson> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/SpecialistPerson> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/ProfessionalPerson> .
+<https://example.org/genericontology/SpecialistPerson> <http://www.w3.org/2000/01/rdf-schema#comment> "A professional person with a specialized role."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Operator> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Operator> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/SpecialistPerson> .
+<https://example.org/genericontology/Operator> <http://www.w3.org/2002/07/owl#disjointWith> <https://example.org/genericontology/Technician> .
+<https://example.org/genericontology/Operator> <http://www.w3.org/2000/01/rdf-schema#comment> "A specialist person who operates systems or equipment."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Technician> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Technician> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/SpecialistPerson> .
+<https://example.org/genericontology/Technician> <http://www.w3.org/2002/07/owl#disjointWith> <https://example.org/genericontology/Operator> .
+<https://example.org/genericontology/Technician> <http://www.w3.org/2000/01/rdf-schema#comment> "A specialist person who maintains or repairs systems or equipment."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Manager> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Manager> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/ProfessionalPerson> .
+<https://example.org/genericontology/Manager> <http://www.w3.org/2000/01/rdf-schema#comment> "A professional person who manages people or resources."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Organization> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Organization> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Agent> .
+<https://example.org/genericontology/Organization> <http://www.w3.org/2002/07/owl#disjointWith> <https://example.org/genericontology/Person> .
+<https://example.org/genericontology/Organization> <http://www.w3.org/2000/01/rdf-schema#comment> "A structured collective agent such as a company or institution."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Department> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Department> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Organization> .
+<https://example.org/genericontology/Department> <http://www.w3.org/2000/01/rdf-schema#comment> "A subdivision of an organization."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Facility> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Facility> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/Facility> <http://www.w3.org/2000/01/rdf-schema#comment> "A physical place or site used for operations."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Site> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Site> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Facility> .
+<https://example.org/genericontology/Site> <http://www.w3.org/2000/01/rdf-schema#comment> "A specific physical site or location."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Building> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Building> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Site> .
+<https://example.org/genericontology/Building> <http://www.w3.org/2000/01/rdf-schema#comment> "A constructed building at a site."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Room> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Room> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Building> .
+<https://example.org/genericontology/Room> <http://www.w3.org/2000/01/rdf-schema#comment> "A room within a building."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Asset> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Asset> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/Asset> <http://www.w3.org/2000/01/rdf-schema#comment> "A valuable resource owned or used by an organization."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Equipment> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Equipment> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Asset> .
+<https://example.org/genericontology/Equipment> <http://www.w3.org/2000/01/rdf-schema#comment> "A physical piece of equipment."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Machine> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Machine> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Equipment> .
+<https://example.org/genericontology/Machine> <http://www.w3.org/2000/01/rdf-schema#comment> "A machine used in operations."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Instrument> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Instrument> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Equipment> .
+<https://example.org/genericontology/Instrument> <http://www.w3.org/2000/01/rdf-schema#comment> "A precision instrument or tool."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Activity> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Activity> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/Activity> <http://www.w3.org/2000/01/rdf-schema#comment> "An event or action carried out by agents."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/OperationalActivity> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/OperationalActivity> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Activity> .
+<https://example.org/genericontology/OperationalActivity> <http://www.w3.org/2000/01/rdf-schema#comment> "An activity related to operations."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/MaintenanceActivity> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/MaintenanceActivity> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/OperationalActivity> .
+<https://example.org/genericontology/MaintenanceActivity> <http://www.w3.org/2000/01/rdf-schema#comment> "An operational activity for maintaining assets."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/InspectionActivity> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/InspectionActivity> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/OperationalActivity> .
+<https://example.org/genericontology/InspectionActivity> <http://www.w3.org/2000/01/rdf-schema#comment> "An operational activity for inspecting assets or facilities."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Record> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Record> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/Record> <http://www.w3.org/2000/01/rdf-schema#comment> "A documented record of an activity or state."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Document> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Document> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Record> .
+<https://example.org/genericontology/Document> <http://www.w3.org/2000/01/rdf-schema#comment> "A textual or structured document."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/Report> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/Report> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Document> .
+<https://example.org/genericontology/Report> <http://www.w3.org/2000/01/rdf-schema#comment> "A report document."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/MaintenanceReport> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/MaintenanceReport> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Report> .
+<https://example.org/genericontology/MaintenanceReport> <http://www.w3.org/2000/01/rdf-schema#comment> "A report describing maintenance work."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/InspectionReport> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<https://example.org/genericontology/InspectionReport> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://example.org/genericontology/Report> .
+<https://example.org/genericontology/InspectionReport> <http://www.w3.org/2000/01/rdf-schema#comment> "A report describing inspection work."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/worksFor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/worksFor> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Person> .
+<https://example.org/genericontology/worksFor> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Organization> .
+<https://example.org/genericontology/worksFor> <http://www.w3.org/2002/07/owl#inverseOf> <https://example.org/genericontology/employs> .
+<https://example.org/genericontology/employs> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/employs> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Organization> .
+<https://example.org/genericontology/employs> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Person> .
+<https://example.org/genericontology/employs> <http://www.w3.org/2002/07/owl#inverseOf> <https://example.org/genericontology/worksFor> .
+<https://example.org/genericontology/manages> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/manages> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Manager> .
+<https://example.org/genericontology/manages> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Department> .
+<https://example.org/genericontology/manages> <http://www.w3.org/2002/07/owl#inverseOf> <https://example.org/genericontology/managedBy> .
+<https://example.org/genericontology/managedBy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/managedBy> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Department> .
+<https://example.org/genericontology/managedBy> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Manager> .
+<https://example.org/genericontology/managedBy> <http://www.w3.org/2002/07/owl#inverseOf> <https://example.org/genericontology/manages> .
+<https://example.org/genericontology/locatedIn> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/locatedIn> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/locatedIn> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Facility> .
+<https://example.org/genericontology/partOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/partOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#TransitiveProperty> .
+<https://example.org/genericontology/partOf> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/partOf> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/operates> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/operates> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Operator> .
+<https://example.org/genericontology/operates> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Machine> .
+<https://example.org/genericontology/operates> <http://www.w3.org/2002/07/owl#inverseOf> <https://example.org/genericontology/operatedBy> .
+<https://example.org/genericontology/operatedBy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/operatedBy> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Machine> .
+<https://example.org/genericontology/operatedBy> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Operator> .
+<https://example.org/genericontology/operatedBy> <http://www.w3.org/2002/07/owl#inverseOf> <https://example.org/genericontology/operates> .
+<https://example.org/genericontology/maintains> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/maintains> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Technician> .
+<https://example.org/genericontology/maintains> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Equipment> .
+<https://example.org/genericontology/maintains> <http://www.w3.org/2002/07/owl#inverseOf> <https://example.org/genericontology/maintainedBy> .
+<https://example.org/genericontology/maintainedBy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/maintainedBy> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Equipment> .
+<https://example.org/genericontology/maintainedBy> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Technician> .
+<https://example.org/genericontology/maintainedBy> <http://www.w3.org/2002/07/owl#inverseOf> <https://example.org/genericontology/maintains> .
+<https://example.org/genericontology/documents> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/documents> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Report> .
+<https://example.org/genericontology/documents> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Activity> .
+<https://example.org/genericontology/documents> <http://www.w3.org/2002/07/owl#inverseOf> <https://example.org/genericontology/documentedBy> .
+<https://example.org/genericontology/documentedBy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<https://example.org/genericontology/documentedBy> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Activity> .
+<https://example.org/genericontology/documentedBy> <http://www.w3.org/2000/01/rdf-schema#range> <https://example.org/genericontology/Report> .
+<https://example.org/genericontology/documentedBy> <http://www.w3.org/2002/07/owl#inverseOf> <https://example.org/genericontology/documents> .
+<https://example.org/genericontology/hasName> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+<https://example.org/genericontology/hasName> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/hasName> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasName> <http://www.w3.org/2000/01/rdf-schema#comment> "A human-readable name."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasIdentifier> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+<https://example.org/genericontology/hasIdentifier> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/hasIdentifier> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasIdentifier> <http://www.w3.org/2000/01/rdf-schema#comment> "A unique identifier string."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasDescription> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+<https://example.org/genericontology/hasDescription> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Entity> .
+<https://example.org/genericontology/hasDescription> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasDescription> <http://www.w3.org/2000/01/rdf-schema#comment> "A textual description."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasStartDateTime> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+<https://example.org/genericontology/hasStartDateTime> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Activity> .
+<https://example.org/genericontology/hasStartDateTime> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#dateTime> .
+<https://example.org/genericontology/hasStartDateTime> <http://www.w3.org/2000/01/rdf-schema#comment> "The start date and time of an activity."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasEndDateTime> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+<https://example.org/genericontology/hasEndDateTime> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Activity> .
+<https://example.org/genericontology/hasEndDateTime> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#dateTime> .
+<https://example.org/genericontology/hasEndDateTime> <http://www.w3.org/2000/01/rdf-schema#comment> "The end date and time of an activity."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasStatus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+<https://example.org/genericontology/hasStatus> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Activity> .
+<https://example.org/genericontology/hasStatus> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasStatus> <http://www.w3.org/2000/01/rdf-schema#comment> "The status of an activity."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasSerialNumber> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+<https://example.org/genericontology/hasSerialNumber> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Equipment> .
+<https://example.org/genericontology/hasSerialNumber> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasSerialNumber> <http://www.w3.org/2000/01/rdf-schema#comment> "The serial number of an equipment item."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasCapacity> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+<https://example.org/genericontology/hasCapacity> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Machine> .
+<https://example.org/genericontology/hasCapacity> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#integer> .
+<https://example.org/genericontology/hasCapacity> <http://www.w3.org/2000/01/rdf-schema#comment> "The capacity of a machine."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/hasScore> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+<https://example.org/genericontology/hasScore> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/InspectionReport> .
+<https://example.org/genericontology/hasScore> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#double> .
+<https://example.org/genericontology/hasScore> <http://www.w3.org/2000/01/rdf-schema#comment> "A numeric inspection score."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/isActive> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+<https://example.org/genericontology/isActive> <http://www.w3.org/2000/01/rdf-schema#domain> <https://example.org/genericontology/Person> .
+<https://example.org/genericontology/isActive> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#boolean> .
+<https://example.org/genericontology/isActive> <http://www.w3.org/2000/01/rdf-schema#comment> "Whether a person is currently active."^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/AcmeCorp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/AcmeCorp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/Organization> .
+<https://example.org/genericontology/AcmeCorp> <https://example.org/genericontology/employs> <https://example.org/genericontology/AliceManager> .
+<https://example.org/genericontology/AcmeCorp> <https://example.org/genericontology/employs> <https://example.org/genericontology/OliviaOperator> .
+<https://example.org/genericontology/AcmeCorp> <https://example.org/genericontology/employs> <https://example.org/genericontology/TomTechnician> .
+<https://example.org/genericontology/AcmeCorp> <https://example.org/genericontology/hasName> "AcmeCorp"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/AcmeCorp> <https://example.org/genericontology/hasIdentifier> "ORG-001"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/ResearchDept> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/ResearchDept> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/Department> .
+<https://example.org/genericontology/ResearchDept> <https://example.org/genericontology/managedBy> <https://example.org/genericontology/AliceManager> .
+<https://example.org/genericontology/ResearchDept> <https://example.org/genericontology/hasName> "ResearchDept"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/ResearchDept> <https://example.org/genericontology/hasIdentifier> "DEPT-01"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/AliceManager> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/AliceManager> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/Manager> .
+<https://example.org/genericontology/AliceManager> <https://example.org/genericontology/worksFor> <https://example.org/genericontology/AcmeCorp> .
+<https://example.org/genericontology/AliceManager> <https://example.org/genericontology/manages> <https://example.org/genericontology/ResearchDept> .
+<https://example.org/genericontology/AliceManager> <https://example.org/genericontology/hasName> "Alice Manager"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/AliceManager> <https://example.org/genericontology/hasIdentifier> "PER-001"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/AliceManager> <https://example.org/genericontology/isActive> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> .
+<https://example.org/genericontology/OliviaOperator> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/OliviaOperator> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/Operator> .
+<https://example.org/genericontology/OliviaOperator> <https://example.org/genericontology/worksFor> <https://example.org/genericontology/AcmeCorp> .
+<https://example.org/genericontology/OliviaOperator> <https://example.org/genericontology/operates> <https://example.org/genericontology/PressMachine1> .
+<https://example.org/genericontology/OliviaOperator> <https://example.org/genericontology/hasName> "Olivia Operator"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/OliviaOperator> <https://example.org/genericontology/hasIdentifier> "PER-002"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/OliviaOperator> <https://example.org/genericontology/isActive> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> .
+<https://example.org/genericontology/TomTechnician> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/TomTechnician> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/Technician> .
+<https://example.org/genericontology/TomTechnician> <https://example.org/genericontology/worksFor> <https://example.org/genericontology/AcmeCorp> .
+<https://example.org/genericontology/TomTechnician> <https://example.org/genericontology/maintains> <https://example.org/genericontology/CalibrationTool1> .
+<https://example.org/genericontology/TomTechnician> <https://example.org/genericontology/maintains> <https://example.org/genericontology/PressMachine1> .
+<https://example.org/genericontology/TomTechnician> <https://example.org/genericontology/hasName> "Tom Technician"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/TomTechnician> <https://example.org/genericontology/hasIdentifier> "PER-003"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/TomTechnician> <https://example.org/genericontology/isActive> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> .
+<https://example.org/genericontology/MainSite> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/MainSite> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/Site> .
+<https://example.org/genericontology/MainSite> <https://example.org/genericontology/hasName> "MainSite"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/MainSite> <https://example.org/genericontology/hasIdentifier> "FAC-001"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/PlantBuilding> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/PlantBuilding> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/Building> .
+<https://example.org/genericontology/PlantBuilding> <https://example.org/genericontology/partOf> <https://example.org/genericontology/MainSite> .
+<https://example.org/genericontology/PlantBuilding> <https://example.org/genericontology/hasName> "PlantBuilding"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/PlantBuilding> <https://example.org/genericontology/hasIdentifier> "FAC-002"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/ControlRoom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/ControlRoom> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/Room> .
+<https://example.org/genericontology/ControlRoom> <https://example.org/genericontology/partOf> <https://example.org/genericontology/PlantBuilding> .
+<https://example.org/genericontology/ControlRoom> <https://example.org/genericontology/hasName> "ControlRoom"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/ControlRoom> <https://example.org/genericontology/hasIdentifier> "FAC-003"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/PressMachine1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/PressMachine1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/Machine> .
+<https://example.org/genericontology/PressMachine1> <https://example.org/genericontology/operatedBy> <https://example.org/genericontology/OliviaOperator> .
+<https://example.org/genericontology/PressMachine1> <https://example.org/genericontology/maintainedBy> <https://example.org/genericontology/TomTechnician> .
+<https://example.org/genericontology/PressMachine1> <https://example.org/genericontology/locatedIn> <https://example.org/genericontology/MainSite> .
+<https://example.org/genericontology/PressMachine1> <https://example.org/genericontology/hasName> "PressMachine1"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/PressMachine1> <https://example.org/genericontology/hasIdentifier> "AST-001"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/PressMachine1> <https://example.org/genericontology/hasSerialNumber> "SN-1001"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/PressMachine1> <https://example.org/genericontology/hasCapacity> "250"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<https://example.org/genericontology/CalibrationTool1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/CalibrationTool1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/Instrument> .
+<https://example.org/genericontology/CalibrationTool1> <https://example.org/genericontology/locatedIn> <https://example.org/genericontology/ControlRoom> .
+<https://example.org/genericontology/CalibrationTool1> <https://example.org/genericontology/maintainedBy> <https://example.org/genericontology/TomTechnician> .
+<https://example.org/genericontology/CalibrationTool1> <https://example.org/genericontology/hasName> "CalibrationTool1"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/CalibrationTool1> <https://example.org/genericontology/hasIdentifier> "AST-002"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/CalibrationTool1> <https://example.org/genericontology/hasSerialNumber> "SN-2001"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/MaintenanceActivity1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/MaintenanceActivity1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/MaintenanceActivity> .
+<https://example.org/genericontology/MaintenanceActivity1> <https://example.org/genericontology/documentedBy> <https://example.org/genericontology/MaintenanceReport1> .
+<https://example.org/genericontology/MaintenanceActivity1> <https://example.org/genericontology/hasName> "MaintenanceActivity1"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/MaintenanceActivity1> <https://example.org/genericontology/hasIdentifier> "ACT-001"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/MaintenanceActivity1> <https://example.org/genericontology/hasStartDateTime> "2026-05-01T09:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<https://example.org/genericontology/MaintenanceActivity1> <https://example.org/genericontology/hasEndDateTime> "2026-05-01T11:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<https://example.org/genericontology/MaintenanceActivity1> <https://example.org/genericontology/hasStatus> "completed"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/InspectionActivity1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/InspectionActivity1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/InspectionActivity> .
+<https://example.org/genericontology/InspectionActivity1> <https://example.org/genericontology/documentedBy> <https://example.org/genericontology/InspectionReport1> .
+<https://example.org/genericontology/InspectionActivity1> <https://example.org/genericontology/hasName> "InspectionActivity1"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/InspectionActivity1> <https://example.org/genericontology/hasIdentifier> "ACT-002"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/InspectionActivity1> <https://example.org/genericontology/hasStartDateTime> "2026-05-02T10:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<https://example.org/genericontology/InspectionActivity1> <https://example.org/genericontology/hasEndDateTime> "2026-05-02T10:30:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<https://example.org/genericontology/InspectionActivity1> <https://example.org/genericontology/hasStatus> "completed"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/MaintenanceReport1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/MaintenanceReport1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/MaintenanceReport> .
+<https://example.org/genericontology/MaintenanceReport1> <https://example.org/genericontology/documents> <https://example.org/genericontology/MaintenanceActivity1> .
+<https://example.org/genericontology/MaintenanceReport1> <https://example.org/genericontology/hasName> "MaintenanceReport1"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/MaintenanceReport1> <https://example.org/genericontology/hasIdentifier> "REP-001"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/InspectionReport1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<https://example.org/genericontology/InspectionReport1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.org/genericontology/InspectionReport> .
+<https://example.org/genericontology/InspectionReport1> <https://example.org/genericontology/documents> <https://example.org/genericontology/InspectionActivity1> .
+<https://example.org/genericontology/InspectionReport1> <https://example.org/genericontology/hasName> "InspectionReport1"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/InspectionReport1> <https://example.org/genericontology/hasIdentifier> "REP-002"^^<http://www.w3.org/2001/XMLSchema#string> .
+<https://example.org/genericontology/InspectionReport1> <https://example.org/genericontology/hasScore> "98.5"^^<http://www.w3.org/2001/XMLSchema#double> .

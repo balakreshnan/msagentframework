@@ -1,0 +1,600 @@
+{
+  "@context": {
+    "ds": "https://example.org/dataset/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "ds:Thing",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "ds:InformationEntity",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "ds:DatasetArtifact",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:InformationEntity"
+        }
+      ]
+    },
+    {
+      "@id": "ds:StructuredDataset",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:DatasetArtifact"
+        }
+      ]
+    },
+    {
+      "@id": "ds:TabularDataset",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:StructuredDataset"
+        }
+      ]
+    },
+    {
+      "@id": "ds:LoadedDataset",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:TabularDataset"
+        }
+      ]
+    },
+    {
+      "@id": "ds:DatasetVersion",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:InformationEntity"
+        }
+      ]
+    },
+    {
+      "@id": "ds:DatasetSchema",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:InformationEntity"
+        }
+      ]
+    },
+    {
+      "@id": "ds:SchemaComponent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:DatasetSchema"
+        }
+      ]
+    },
+    {
+      "@id": "ds:FieldDefinition",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:SchemaComponent"
+        }
+      ]
+    },
+    {
+      "@id": "ds:KeyFieldDefinition",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:FieldDefinition"
+        }
+      ]
+    },
+    {
+      "@id": "ds:DerivedFieldDefinition",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:FieldDefinition"
+        }
+      ]
+    },
+    {
+      "@id": "ds:RecordStructure",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:SchemaComponent"
+        }
+      ]
+    },
+    {
+      "@id": "ds:DataRecord",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:InformationEntity"
+        }
+      ]
+    },
+    {
+      "@id": "ds:LoadedRecord",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:DataRecord"
+        }
+      ]
+    },
+    {
+      "@id": "ds:ValidatedRecord",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:LoadedRecord"
+        }
+      ]
+    },
+    {
+      "@id": "ds:FieldValue",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:InformationEntity"
+        }
+      ]
+    },
+    {
+      "@id": "ds:AtomicValue",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:FieldValue"
+        }
+      ]
+    },
+    {
+      "@id": "ds:TextValue",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:AtomicValue"
+        }
+      ]
+    },
+    {
+      "@id": "ds:NumericValue",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:AtomicValue"
+        }
+      ]
+    },
+    {
+      "@id": "ds:BooleanValue",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:AtomicValue"
+        }
+      ]
+    },
+    {
+      "@id": "ds:TemporalValue",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:AtomicValue"
+        }
+      ]
+    },
+    {
+      "@id": "ds:MetadataEntity",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:InformationEntity"
+        }
+      ]
+    },
+    {
+      "@id": "ds:ProvenanceRecord",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:MetadataEntity"
+        }
+      ]
+    },
+    {
+      "@id": "ds:LoadEvent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:ProvenanceRecord"
+        }
+      ]
+    },
+    {
+      "@id": "ds:ValidationEvent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:ProvenanceRecord"
+        }
+      ]
+    },
+    {
+      "@id": "ds:QualityAssessment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:MetadataEntity"
+        }
+      ]
+    },
+    {
+      "@id": "ds:CompletenessAssessment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:QualityAssessment"
+        }
+      ]
+    },
+    {
+      "@id": "ds:ConsistencyAssessment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:QualityAssessment"
+        }
+      ]
+    },
+    {
+      "@id": "ds:QualityIssue",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "ds:MetadataEntity"
+        }
+      ]
+    },
+    {
+      "@id": "ds:loadedSalesDataset",
+      "@type": [
+        "ds:LoadedDataset"
+      ],
+      "ds:hasSchema": [
+        {
+          "@id": "ds:salesSchema"
+        }
+      ],
+      "ds:hasRecord": [
+        {
+          "@id": "ds:record001"
+        },
+        {
+          "@id": "ds:record002"
+        }
+      ],
+      "ds:hasProvenance": [
+        {
+          "@id": "ds:loadProv001"
+        }
+      ],
+      "ds:hasAssessment": [
+        {
+          "@id": "ds:completenessAssessment001"
+        }
+      ],
+      "ds:datasetName": [
+        "Sales Dataset"
+      ],
+      "ds:datasetId": [
+        "sales-2026"
+      ]
+    },
+    {
+      "@id": "ds:salesSchema",
+      "@type": [
+        "ds:DatasetSchema"
+      ],
+      "ds:schemaOf": [
+        {
+          "@id": "ds:loadedSalesDataset"
+        }
+      ],
+      "ds:hasFieldDefinition": [
+        {
+          "@id": "ds:fieldAmount"
+        },
+        {
+          "@id": "ds:fieldCustomerId"
+        },
+        {
+          "@id": "ds:fieldIsPaid"
+        },
+        {
+          "@id": "ds:fieldOrderDate"
+        }
+      ]
+    },
+    {
+      "@id": "ds:fieldCustomerId",
+      "@type": [
+        "ds:KeyFieldDefinition"
+      ],
+      "ds:fieldDefinitionOf": [
+        {
+          "@id": "ds:salesSchema"
+        }
+      ],
+      "ds:fieldName": [
+        "customerId"
+      ],
+      "ds:fieldIndex": [
+        "1"
+      ]
+    },
+    {
+      "@id": "ds:fieldOrderDate",
+      "@type": [
+        "ds:FieldDefinition"
+      ],
+      "ds:fieldDefinitionOf": [
+        {
+          "@id": "ds:salesSchema"
+        }
+      ],
+      "ds:fieldName": [
+        "orderDate"
+      ],
+      "ds:fieldIndex": [
+        "2"
+      ]
+    },
+    {
+      "@id": "ds:fieldAmount",
+      "@type": [
+        "ds:DerivedFieldDefinition"
+      ],
+      "ds:fieldDefinitionOf": [
+        {
+          "@id": "ds:salesSchema"
+        }
+      ],
+      "ds:fieldName": [
+        "amount"
+      ],
+      "ds:fieldIndex": [
+        "3"
+      ]
+    },
+    {
+      "@id": "ds:fieldIsPaid",
+      "@type": [
+        "ds:FieldDefinition"
+      ],
+      "ds:fieldDefinitionOf": [
+        {
+          "@id": "ds:salesSchema"
+        }
+      ],
+      "ds:fieldName": [
+        "isPaid"
+      ],
+      "ds:fieldIndex": [
+        "4"
+      ]
+    },
+    {
+      "@id": "ds:record001",
+      "@type": [
+        "ds:ValidatedRecord"
+      ],
+      "ds:recordOf": [
+        {
+          "@id": "ds:loadedSalesDataset"
+        }
+      ],
+      "ds:hasValue": [
+        {
+          "@id": "ds:valueAmount001"
+        },
+        {
+          "@id": "ds:valueCust001"
+        },
+        {
+          "@id": "ds:valueDate001"
+        },
+        {
+          "@id": "ds:valuePaid001"
+        }
+      ],
+      "ds:recordIndex": [
+        "1"
+      ]
+    },
+    {
+      "@id": "ds:record002",
+      "@type": [
+        "ds:LoadedRecord"
+      ],
+      "ds:recordOf": [
+        {
+          "@id": "ds:loadedSalesDataset"
+        }
+      ],
+      "ds:hasValue": [
+        {
+          "@id": "ds:valueAmount002"
+        },
+        {
+          "@id": "ds:valueCust002"
+        },
+        {
+          "@id": "ds:valueDate002"
+        },
+        {
+          "@id": "ds:valuePaid002"
+        }
+      ],
+      "ds:recordIndex": [
+        "2"
+      ]
+    },
+    {
+      "@id": "ds:valueCust001",
+      "@type": [
+        "ds:TextValue"
+      ],
+      "ds:valueOf": [
+        {
+          "@id": "ds:record001"
+        }
+      ],
+      "ds:textLiteral": [
+        "C001"
+      ]
+    },
+    {
+      "@id": "ds:valueDate001",
+      "@type": [
+        "ds:TemporalValue"
+      ],
+      "ds:valueOf": [
+        {
+          "@id": "ds:record001"
+        }
+      ],
+      "ds:temporalLiteral": [
+        "2026-01-15T00:00:00"
+      ]
+    },
+    {
+      "@id": "ds:valueAmount001",
+      "@type": [
+        "ds:NumericValue"
+      ],
+      "ds:valueOf": [
+        {
+          "@id": "ds:record001"
+        }
+      ],
+      "ds:numericLiteral": [
+        "125.5"
+      ]
+    },
+    {
+      "@id": "ds:valuePaid001",
+      "@type": [
+        "ds:BooleanValue"
+      ],
+      "ds:valueOf": [
+        {
+          "@id": "ds:record001"
+        }
+      ],
+      "ds:booleanLiteral": [
+        "true"
+      ]
+    },
+    {
+      "@id": "ds:valueCust002",
+      "@type": [
+        "ds:TextValue"
+      ],
+      "ds:valueOf": [
+        {
+          "@id": "ds:record002"
+        }
+      ],
+      "ds:textLiteral": [
+        "C002"
+      ]
+    },
+    {
+      "@id": "ds:valueDate002",
+      "@type": [
+        "ds:TemporalValue"
+      ],
+      "ds:valueOf": [
+        {
+          "@id": "ds:record002"
+        }
+      ],
+      "ds:temporalLiteral": [
+        "2026-01-16T00:00:00"
+      ]
+    },
+    {
+      "@id": "ds:valueAmount002",
+      "@type": [
+        "ds:NumericValue"
+      ],
+      "ds:valueOf": [
+        {
+          "@id": "ds:record002"
+        }
+      ],
+      "ds:numericLiteral": [
+        "89.99"
+      ]
+    },
+    {
+      "@id": "ds:valuePaid002",
+      "@type": [
+        "ds:BooleanValue"
+      ],
+      "ds:valueOf": [
+        {
+          "@id": "ds:record002"
+        }
+      ],
+      "ds:booleanLiteral": [
+        "false"
+      ]
+    },
+    {
+      "@id": "ds:loadProv001",
+      "@type": [
+        "ds:LoadEvent"
+      ],
+      "ds:provenanceOf": [
+        {
+          "@id": "ds:loadedSalesDataset"
+        }
+      ],
+      "ds:versionLabel": [
+        "initial load"
+      ]
+    },
+    {
+      "@id": "ds:completenessAssessment001",
+      "@type": [
+        "ds:CompletenessAssessment"
+      ],
+      "ds:assessmentOf": [
+        {
+          "@id": "ds:loadedSalesDataset"
+        }
+      ],
+      "ds:assessmentScore": [
+        "0.98"
+      ]
+    }
+  ]
+}

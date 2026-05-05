@@ -342,6 +342,181 @@ class Ontology:
             graph.append(node)
         return {"@context": ctx, "@graph": graph}
 
+    # --------------------------- RDF/XML + N-Triples ----------------------
+    # Both formats are W3C-standard RDF serializations that can be loaded
+    # directly into any RDF-compatible triplestore (GraphDB, Stardog, Apache
+    # Jena Fuseki, Blazegraph, AnzoGraph, Neo4j n10s, AWS Neptune, etc.).
+    # If `rdflib` is installed we use it for a fully-spec-compliant round-trip
+    # via Turtle; otherwise we emit a minimal but valid serialization
+    # directly from the in-memory model.
+
+    def _expand(self, local: str) -> str:
+        """Expand a local name to a full IRI under this ontology's namespace."""
+        return f"{self.iri}{local}"
+
+    _XSD = "http://www.w3.org/2001/XMLSchema#"
+    _RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    _RDFS = "http://www.w3.org/2000/01/rdf-schema#"
+    _OWL = "http://www.w3.org/2002/07/owl#"
+
+    def _xsd_iri(self, qname: str) -> str:
+        """Turn 'xsd:string' into the full XSD IRI."""
+        if qname.startswith("xsd:"):
+            return self._XSD + qname.split(":", 1)[1]
+        return qname
+
+    def _iter_triples(self) -> Iterable[tuple[str, str, tuple[str, str | None]]]:
+        """
+        Yield (subject_iri, predicate_iri, (object, kind)) where kind is
+        either 'iri' or an XSD datatype IRI for literals.
+        """
+        ont_iri = self.iri.rstrip("/")
+        yield (ont_iri, self._RDF + "type", (self._OWL + "Ontology", "iri"))
+
+        # Classes
+        for cls in self.classes.values():
+            s = self._expand(cls.name)
+            yield (s, self._RDF + "type", (self._OWL + "Class", "iri"))
+            for p in sorted(cls.parents):
+                yield (s, self._RDFS + "subClassOf", (self._expand(p), "iri"))
+            for d in sorted(cls.disjoint_with):
+                yield (s, self._OWL + "disjointWith", (self._expand(d), "iri"))
+            if cls.comment:
+                yield (s, self._RDFS + "comment", (cls.comment, self._XSD + "string"))
+
+        # Object properties
+        for prop in self.object_properties.values():
+            s = self._expand(prop.name)
+            yield (s, self._RDF + "type", (self._OWL + "ObjectProperty", "iri"))
+            if prop.transitive:
+                yield (s, self._RDF + "type", (self._OWL + "TransitiveProperty", "iri"))
+            if prop.symmetric:
+                yield (s, self._RDF + "type", (self._OWL + "SymmetricProperty", "iri"))
+            if prop.functional:
+                yield (s, self._RDF + "type", (self._OWL + "FunctionalProperty", "iri"))
+            if prop.domain:
+                yield (s, self._RDFS + "domain", (self._expand(prop.domain), "iri"))
+            if prop.range_:
+                yield (s, self._RDFS + "range", (self._expand(prop.range_), "iri"))
+            if prop.inverse_of:
+                yield (s, self._OWL + "inverseOf", (self._expand(prop.inverse_of), "iri"))
+
+        # Data properties
+        for prop in self.data_properties.values():
+            s = self._expand(prop.name)
+            yield (s, self._RDF + "type", (self._OWL + "DatatypeProperty", "iri"))
+            if prop.domain:
+                yield (s, self._RDFS + "domain", (self._expand(prop.domain), "iri"))
+            yield (s, self._RDFS + "range", (self._xsd_iri(prop.datatype), "iri"))
+            if prop.comment:
+                yield (s, self._RDFS + "comment", (prop.comment, self._XSD + "string"))
+
+        # Individuals (A-Box)
+        for ind in self.individuals.values():
+            s = self._expand(ind.name)
+            yield (s, self._RDF + "type", (self._OWL + "NamedIndividual", "iri"))
+            for t in sorted(ind.types):
+                yield (s, self._RDF + "type", (self._expand(t), "iri"))
+            for pname, targets in ind.object_props.items():
+                p_iri = self._expand(pname)
+                for tgt in sorted(targets):
+                    yield (s, p_iri, (self._expand(tgt), "iri"))
+            for pname, values in ind.data_props.items():
+                p_iri = self._expand(pname)
+                dp = self.data_properties.get(pname)
+                dt_iri = self._xsd_iri(dp.datatype) if dp else self._XSD + "string"
+                for v in values:
+                    if isinstance(v, bool):
+                        yield (s, p_iri, ("true" if v else "false", self._XSD + "boolean"))
+                    elif isinstance(v, int):
+                        yield (s, p_iri, (str(v), self._XSD + "integer"))
+                    elif isinstance(v, float):
+                        yield (s, p_iri, (str(v), self._XSD + "double"))
+                    else:
+                        yield (s, p_iri, (str(v), dt_iri))
+
+    def to_ntriples(self) -> str:
+        """W3C N-Triples serialization (one triple per line). RFC-compliant."""
+
+        def _esc(s: str) -> str:
+            return (s.replace("\\", "\\\\")
+                     .replace('"', '\\"')
+                     .replace("\n", "\\n")
+                     .replace("\r", "\\r")
+                     .replace("\t", "\\t"))
+
+        lines: list[str] = []
+        for s, p, (o, kind) in self._iter_triples():
+            if kind == "iri":
+                obj = f"<{o}>"
+            else:
+                obj = f'"{_esc(o)}"^^<{kind}>'
+            lines.append(f"<{s}> <{p}> {obj} .")
+        return "\n".join(lines) + "\n"
+
+    def to_rdf_xml(self) -> str:
+        """
+        RDF/XML serialization. Prefers rdflib (round-trip via Turtle) for
+        a fully canonical output; falls back to a flat rdf:Description-based
+        emission that is still valid RDF/XML.
+        """
+        try:
+            import rdflib  # type: ignore
+
+            g = rdflib.Graph()
+            g.parse(data=self.to_turtle(), format="turtle")
+            g.bind(self.prefix, rdflib.Namespace(self.iri))
+            return g.serialize(format="xml")
+        except Exception:
+            pass
+
+        from xml.sax.saxutils import escape, quoteattr
+
+        ns_to_prefix = {
+            self._RDF: "rdf",
+            self._RDFS: "rdfs",
+            self._OWL: "owl",
+            self._XSD: "xsd",
+            self.iri: self.prefix,
+        }
+
+        def _qname(iri: str) -> str:
+            for ns_uri, pfx in ns_to_prefix.items():
+                if iri.startswith(ns_uri):
+                    return f"{pfx}:{iri[len(ns_uri):]}"
+            # Unknown namespace — emit as rdf:Description child with full IRI
+            # is not legal as an element name, so wrap under a generic prefix.
+            return f"ex:{iri.rsplit('/', 1)[-1].rsplit('#', 1)[-1]}"
+
+        out: list[str] = ['<?xml version="1.0" encoding="UTF-8"?>']
+        out.append(
+            f'<rdf:RDF xmlns:rdf={quoteattr(self._RDF)} '
+            f'xmlns:rdfs={quoteattr(self._RDFS)} '
+            f'xmlns:owl={quoteattr(self._OWL)} '
+            f'xmlns:xsd={quoteattr(self._XSD)} '
+            f'xmlns:{self.prefix}={quoteattr(self.iri)}>'
+        )
+
+        by_subject: dict[str, list[tuple[str, tuple[str, str | None]]]] = {}
+        for s, p, obj in self._iter_triples():
+            by_subject.setdefault(s, []).append((p, obj))
+
+        for subject, preds in by_subject.items():
+            out.append(f'  <rdf:Description rdf:about={quoteattr(subject)}>')
+            for p, (o, kind) in preds:
+                tag = _qname(p)
+                if kind == "iri":
+                    out.append(f'    <{tag} rdf:resource={quoteattr(o)} />')
+                else:
+                    out.append(
+                        f'    <{tag} rdf:datatype={quoteattr(kind)}>'
+                        f'{escape(o)}</{tag}>'
+                    )
+            out.append("  </rdf:Description>")
+
+        out.append("</rdf:RDF>")
+        return "\n".join(out) + "\n"
+
     def to_dict(self) -> dict:
         return {
             "iri": self.iri,

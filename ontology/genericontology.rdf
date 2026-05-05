@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:gen="https://example.org/genericontology/">
+  <rdf:Description rdf:about="https://example.org/genericontology">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Thing">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Top-level root class for all entities.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Entity">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Thing" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Any identifiable entity in the ontology.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Agent">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Entity" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An entity capable of acting or participating in activities.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Person">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Agent" />
+    <owl:disjointWith rdf:resource="https://example.org/genericontology/Organization" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A human individual.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/ProfessionalPerson">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Person" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A person who performs a professional role.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/SpecialistPerson">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/ProfessionalPerson" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A professional person with a specialized role.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Operator">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/SpecialistPerson" />
+    <owl:disjointWith rdf:resource="https://example.org/genericontology/Technician" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A specialist person who operates systems or equipment.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Technician">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/SpecialistPerson" />
+    <owl:disjointWith rdf:resource="https://example.org/genericontology/Operator" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A specialist person who maintains or repairs systems or equipment.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Manager">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/ProfessionalPerson" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A professional person who manages people or resources.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Organization">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Agent" />
+    <owl:disjointWith rdf:resource="https://example.org/genericontology/Person" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A structured collective agent such as a company or institution.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Department">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Organization" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A subdivision of an organization.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Facility">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Entity" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A physical place or site used for operations.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Site">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Facility" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A specific physical site or location.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Building">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Site" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A constructed building at a site.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Room">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Building" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A room within a building.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Asset">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Entity" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A valuable resource owned or used by an organization.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Equipment">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Asset" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A physical piece of equipment.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Machine">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Equipment" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A machine used in operations.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Instrument">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Equipment" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A precision instrument or tool.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Activity">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Entity" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An event or action carried out by agents.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/OperationalActivity">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Activity" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An activity related to operations.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/MaintenanceActivity">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/OperationalActivity" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An operational activity for maintaining assets.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/InspectionActivity">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/OperationalActivity" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An operational activity for inspecting assets or facilities.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Record">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Entity" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A documented record of an activity or state.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Document">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Record" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A textual or structured document.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/Report">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Document" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A report document.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/MaintenanceReport">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Report" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A report describing maintenance work.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/InspectionReport">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class" />
+    <rdfs:subClassOf rdf:resource="https://example.org/genericontology/Report" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A report describing inspection work.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/worksFor">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Person" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Organization" />
+    <owl:inverseOf rdf:resource="https://example.org/genericontology/employs" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/employs">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Organization" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Person" />
+    <owl:inverseOf rdf:resource="https://example.org/genericontology/worksFor" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/manages">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Manager" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Department" />
+    <owl:inverseOf rdf:resource="https://example.org/genericontology/managedBy" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/managedBy">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Department" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Manager" />
+    <owl:inverseOf rdf:resource="https://example.org/genericontology/manages" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/locatedIn">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Entity" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Facility" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/partOf">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Entity" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Entity" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/operates">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Operator" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Machine" />
+    <owl:inverseOf rdf:resource="https://example.org/genericontology/operatedBy" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/operatedBy">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Machine" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Operator" />
+    <owl:inverseOf rdf:resource="https://example.org/genericontology/operates" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/maintains">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Technician" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Equipment" />
+    <owl:inverseOf rdf:resource="https://example.org/genericontology/maintainedBy" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/maintainedBy">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Equipment" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Technician" />
+    <owl:inverseOf rdf:resource="https://example.org/genericontology/maintains" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/documents">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Report" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Activity" />
+    <owl:inverseOf rdf:resource="https://example.org/genericontology/documentedBy" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/documentedBy">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Activity" />
+    <rdfs:range rdf:resource="https://example.org/genericontology/Report" />
+    <owl:inverseOf rdf:resource="https://example.org/genericontology/documents" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/hasName">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Entity" />
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A human-readable name.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/hasIdentifier">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Entity" />
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A unique identifier string.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/hasDescription">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Entity" />
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A textual description.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/hasStartDateTime">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Activity" />
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The start date and time of an activity.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/hasEndDateTime">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Activity" />
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The end date and time of an activity.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/hasStatus">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Activity" />
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The status of an activity.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/hasSerialNumber">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Equipment" />
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The serial number of an equipment item.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/hasCapacity">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Machine" />
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The capacity of a machine.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/hasScore">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/InspectionReport" />
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A numeric inspection score.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/isActive">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty" />
+    <rdfs:domain rdf:resource="https://example.org/genericontology/Person" />
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean" />
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Whether a person is currently active.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/AcmeCorp">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/Organization" />
+    <gen:employs rdf:resource="https://example.org/genericontology/AliceManager" />
+    <gen:employs rdf:resource="https://example.org/genericontology/OliviaOperator" />
+    <gen:employs rdf:resource="https://example.org/genericontology/TomTechnician" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AcmeCorp</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ORG-001</gen:hasIdentifier>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/ResearchDept">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/Department" />
+    <gen:managedBy rdf:resource="https://example.org/genericontology/AliceManager" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ResearchDept</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DEPT-01</gen:hasIdentifier>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/AliceManager">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/Manager" />
+    <gen:worksFor rdf:resource="https://example.org/genericontology/AcmeCorp" />
+    <gen:manages rdf:resource="https://example.org/genericontology/ResearchDept" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Alice Manager</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PER-001</gen:hasIdentifier>
+    <gen:isActive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</gen:isActive>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/OliviaOperator">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/Operator" />
+    <gen:worksFor rdf:resource="https://example.org/genericontology/AcmeCorp" />
+    <gen:operates rdf:resource="https://example.org/genericontology/PressMachine1" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Olivia Operator</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PER-002</gen:hasIdentifier>
+    <gen:isActive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</gen:isActive>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/TomTechnician">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/Technician" />
+    <gen:worksFor rdf:resource="https://example.org/genericontology/AcmeCorp" />
+    <gen:maintains rdf:resource="https://example.org/genericontology/CalibrationTool1" />
+    <gen:maintains rdf:resource="https://example.org/genericontology/PressMachine1" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tom Technician</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PER-003</gen:hasIdentifier>
+    <gen:isActive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</gen:isActive>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/MainSite">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/Site" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MainSite</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FAC-001</gen:hasIdentifier>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/PlantBuilding">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/Building" />
+    <gen:partOf rdf:resource="https://example.org/genericontology/MainSite" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PlantBuilding</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FAC-002</gen:hasIdentifier>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/ControlRoom">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/Room" />
+    <gen:partOf rdf:resource="https://example.org/genericontology/PlantBuilding" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ControlRoom</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FAC-003</gen:hasIdentifier>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/PressMachine1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/Machine" />
+    <gen:operatedBy rdf:resource="https://example.org/genericontology/OliviaOperator" />
+    <gen:maintainedBy rdf:resource="https://example.org/genericontology/TomTechnician" />
+    <gen:locatedIn rdf:resource="https://example.org/genericontology/MainSite" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PressMachine1</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AST-001</gen:hasIdentifier>
+    <gen:hasSerialNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SN-1001</gen:hasSerialNumber>
+    <gen:hasCapacity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">250</gen:hasCapacity>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/CalibrationTool1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/Instrument" />
+    <gen:locatedIn rdf:resource="https://example.org/genericontology/ControlRoom" />
+    <gen:maintainedBy rdf:resource="https://example.org/genericontology/TomTechnician" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CalibrationTool1</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AST-002</gen:hasIdentifier>
+    <gen:hasSerialNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SN-2001</gen:hasSerialNumber>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/MaintenanceActivity1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/MaintenanceActivity" />
+    <gen:documentedBy rdf:resource="https://example.org/genericontology/MaintenanceReport1" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MaintenanceActivity1</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ACT-001</gen:hasIdentifier>
+    <gen:hasStartDateTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-05-01T09:00:00</gen:hasStartDateTime>
+    <gen:hasEndDateTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-05-01T11:00:00</gen:hasEndDateTime>
+    <gen:hasStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string">completed</gen:hasStatus>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/InspectionActivity1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/InspectionActivity" />
+    <gen:documentedBy rdf:resource="https://example.org/genericontology/InspectionReport1" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">InspectionActivity1</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ACT-002</gen:hasIdentifier>
+    <gen:hasStartDateTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-05-02T10:00:00</gen:hasStartDateTime>
+    <gen:hasEndDateTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-05-02T10:30:00</gen:hasEndDateTime>
+    <gen:hasStatus rdf:datatype="http://www.w3.org/2001/XMLSchema#string">completed</gen:hasStatus>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/MaintenanceReport1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/MaintenanceReport" />
+    <gen:documents rdf:resource="https://example.org/genericontology/MaintenanceActivity1" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MaintenanceReport1</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">REP-001</gen:hasIdentifier>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://example.org/genericontology/InspectionReport1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual" />
+    <rdf:type rdf:resource="https://example.org/genericontology/InspectionReport" />
+    <gen:documents rdf:resource="https://example.org/genericontology/InspectionActivity1" />
+    <gen:hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">InspectionReport1</gen:hasName>
+    <gen:hasIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">REP-002</gen:hasIdentifier>
+    <gen:hasScore rdf:datatype="http://www.w3.org/2001/XMLSchema#double">98.5</gen:hasScore>
+  </rdf:Description>
+</rdf:RDF>

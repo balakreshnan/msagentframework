@@ -1,0 +1,569 @@
+{
+  "@context": {
+    "gen": "https://example.org/genericontology/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "gen:Thing",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": []
+    },
+    {
+      "@id": "gen:Entity",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Thing"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Agent",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Person",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "gen:ProfessionalPerson",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Person"
+        }
+      ]
+    },
+    {
+      "@id": "gen:SpecialistPerson",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:ProfessionalPerson"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Operator",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:SpecialistPerson"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Technician",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:SpecialistPerson"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Manager",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:ProfessionalPerson"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Organization",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Agent"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Department",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Organization"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Facility",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Site",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Facility"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Building",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Site"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Room",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Building"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Asset",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Equipment",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Asset"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Machine",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Equipment"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Instrument",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Equipment"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Activity",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "gen:OperationalActivity",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Activity"
+        }
+      ]
+    },
+    {
+      "@id": "gen:MaintenanceActivity",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:OperationalActivity"
+        }
+      ]
+    },
+    {
+      "@id": "gen:InspectionActivity",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:OperationalActivity"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Record",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Entity"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Document",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Record"
+        }
+      ]
+    },
+    {
+      "@id": "gen:Report",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Document"
+        }
+      ]
+    },
+    {
+      "@id": "gen:MaintenanceReport",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Report"
+        }
+      ]
+    },
+    {
+      "@id": "gen:InspectionReport",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": [
+        {
+          "@id": "gen:Report"
+        }
+      ]
+    },
+    {
+      "@id": "gen:AcmeCorp",
+      "@type": [
+        "gen:Organization"
+      ],
+      "gen:employs": [
+        {
+          "@id": "gen:AliceManager"
+        },
+        {
+          "@id": "gen:OliviaOperator"
+        },
+        {
+          "@id": "gen:TomTechnician"
+        }
+      ],
+      "gen:hasName": [
+        "AcmeCorp"
+      ],
+      "gen:hasIdentifier": [
+        "ORG-001"
+      ]
+    },
+    {
+      "@id": "gen:ResearchDept",
+      "@type": [
+        "gen:Department"
+      ],
+      "gen:managedBy": [
+        {
+          "@id": "gen:AliceManager"
+        }
+      ],
+      "gen:hasName": [
+        "ResearchDept"
+      ],
+      "gen:hasIdentifier": [
+        "DEPT-01"
+      ]
+    },
+    {
+      "@id": "gen:AliceManager",
+      "@type": [
+        "gen:Manager"
+      ],
+      "gen:worksFor": [
+        {
+          "@id": "gen:AcmeCorp"
+        }
+      ],
+      "gen:manages": [
+        {
+          "@id": "gen:ResearchDept"
+        }
+      ],
+      "gen:hasName": [
+        "Alice Manager"
+      ],
+      "gen:hasIdentifier": [
+        "PER-001"
+      ],
+      "gen:isActive": [
+        "true"
+      ]
+    },
+    {
+      "@id": "gen:OliviaOperator",
+      "@type": [
+        "gen:Operator"
+      ],
+      "gen:worksFor": [
+        {
+          "@id": "gen:AcmeCorp"
+        }
+      ],
+      "gen:operates": [
+        {
+          "@id": "gen:PressMachine1"
+        }
+      ],
+      "gen:hasName": [
+        "Olivia Operator"
+      ],
+      "gen:hasIdentifier": [
+        "PER-002"
+      ],
+      "gen:isActive": [
+        "true"
+      ]
+    },
+    {
+      "@id": "gen:TomTechnician",
+      "@type": [
+        "gen:Technician"
+      ],
+      "gen:worksFor": [
+        {
+          "@id": "gen:AcmeCorp"
+        }
+      ],
+      "gen:maintains": [
+        {
+          "@id": "gen:CalibrationTool1"
+        },
+        {
+          "@id": "gen:PressMachine1"
+        }
+      ],
+      "gen:hasName": [
+        "Tom Technician"
+      ],
+      "gen:hasIdentifier": [
+        "PER-003"
+      ],
+      "gen:isActive": [
+        "true"
+      ]
+    },
+    {
+      "@id": "gen:MainSite",
+      "@type": [
+        "gen:Site"
+      ],
+      "gen:hasName": [
+        "MainSite"
+      ],
+      "gen:hasIdentifier": [
+        "FAC-001"
+      ]
+    },
+    {
+      "@id": "gen:PlantBuilding",
+      "@type": [
+        "gen:Building"
+      ],
+      "gen:partOf": [
+        {
+          "@id": "gen:MainSite"
+        }
+      ],
+      "gen:hasName": [
+        "PlantBuilding"
+      ],
+      "gen:hasIdentifier": [
+        "FAC-002"
+      ]
+    },
+    {
+      "@id": "gen:ControlRoom",
+      "@type": [
+        "gen:Room"
+      ],
+      "gen:partOf": [
+        {
+          "@id": "gen:PlantBuilding"
+        }
+      ],
+      "gen:hasName": [
+        "ControlRoom"
+      ],
+      "gen:hasIdentifier": [
+        "FAC-003"
+      ]
+    },
+    {
+      "@id": "gen:PressMachine1",
+      "@type": [
+        "gen:Machine"
+      ],
+      "gen:operatedBy": [
+        {
+          "@id": "gen:OliviaOperator"
+        }
+      ],
+      "gen:maintainedBy": [
+        {
+          "@id": "gen:TomTechnician"
+        }
+      ],
+      "gen:locatedIn": [
+        {
+          "@id": "gen:MainSite"
+        }
+      ],
+      "gen:hasName": [
+        "PressMachine1"
+      ],
+      "gen:hasIdentifier": [
+        "AST-001"
+      ],
+      "gen:hasSerialNumber": [
+        "SN-1001"
+      ],
+      "gen:hasCapacity": [
+        "250"
+      ]
+    },
+    {
+      "@id": "gen:CalibrationTool1",
+      "@type": [
+        "gen:Instrument"
+      ],
+      "gen:locatedIn": [
+        {
+          "@id": "gen:ControlRoom"
+        }
+      ],
+      "gen:maintainedBy": [
+        {
+          "@id": "gen:TomTechnician"
+        }
+      ],
+      "gen:hasName": [
+        "CalibrationTool1"
+      ],
+      "gen:hasIdentifier": [
+        "AST-002"
+      ],
+      "gen:hasSerialNumber": [
+        "SN-2001"
+      ]
+    },
+    {
+      "@id": "gen:MaintenanceActivity1",
+      "@type": [
+        "gen:MaintenanceActivity"
+      ],
+      "gen:documentedBy": [
+        {
+          "@id": "gen:MaintenanceReport1"
+        }
+      ],
+      "gen:hasName": [
+        "MaintenanceActivity1"
+      ],
+      "gen:hasIdentifier": [
+        "ACT-001"
+      ],
+      "gen:hasStartDateTime": [
+        "2026-05-01T09:00:00"
+      ],
+      "gen:hasEndDateTime": [
+        "2026-05-01T11:00:00"
+      ],
+      "gen:hasStatus": [
+        "completed"
+      ]
+    },
+    {
+      "@id": "gen:InspectionActivity1",
+      "@type": [
+        "gen:InspectionActivity"
+      ],
+      "gen:documentedBy": [
+        {
+          "@id": "gen:InspectionReport1"
+        }
+      ],
+      "gen:hasName": [
+        "InspectionActivity1"
+      ],
+      "gen:hasIdentifier": [
+        "ACT-002"
+      ],
+      "gen:hasStartDateTime": [
+        "2026-05-02T10:00:00"
+      ],
+      "gen:hasEndDateTime": [
+        "2026-05-02T10:30:00"
+      ],
+      "gen:hasStatus": [
+        "completed"
+      ]
+    },
+    {
+      "@id": "gen:MaintenanceReport1",
+      "@type": [
+        "gen:MaintenanceReport"
+      ],
+      "gen:documents": [
+        {
+          "@id": "gen:MaintenanceActivity1"
+        }
+      ],
+      "gen:hasName": [
+        "MaintenanceReport1"
+      ],
+      "gen:hasIdentifier": [
+        "REP-001"
+      ]
+    },
+    {
+      "@id": "gen:InspectionReport1",
+      "@type": [
+        "gen:InspectionReport"
+      ],
+      "gen:documents": [
+        {
+          "@id": "gen:InspectionActivity1"
+        }
+      ],
+      "gen:hasName": [
+        "InspectionReport1"
+      ],
+      "gen:hasIdentifier": [
+        "REP-002"
+      ],
+      "gen:hasScore": [
+        "98.5"
+      ]
+    }
+  ]
+}
