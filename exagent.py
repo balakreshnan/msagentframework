@@ -86,6 +86,11 @@ async def existingagent() -> None:
         agent_name=AGENT_NAME,
         agent_version=AGENT_VERSION,
         credential=credential,
+        # The `agent_reference` extra_body field used by FoundryAgent is a
+        # preview Responses API feature. Without preview opt-in the service
+        # ignores the reference and returns 400 "Missing required parameter:
+        # 'model'." because no model was sent (model lives on the agent).
+        allow_preview=True,
     ) as agent:
         # Wire up Application Insights / OpenTelemetry via the project's
         # configured Application Insights resource. Safely no-ops with a
