@@ -640,6 +640,30 @@ if _pending:
     for _wkey, _wval in _pending.items():
         st.session_state[_wkey] = _wval
 
+# Seed widget-bound session_state keys from the form defaults BEFORE widgets
+# render. Once seeded, widgets read their value from session_state via key=,
+# so we omit the `value=` argument on the widgets to avoid Streamlit's
+# "created with default value but also had its value set via Session State"
+# warning. Min-value clamping mirrors the per-widget min_value.
+_WIDGET_MINS: dict[str, float] = {
+    "daily_active_users": 1, "sessions_per_user_per_day": 1,
+    "turns_per_session": 1, "avg_input_tokens_per_turn": 1,
+    "avg_output_tokens_per_turn": 1, "num_agents": 1,
+    "avg_run_duration_sec": 1.0, "agent_vcpu": 0.25,
+    "agent_memory_gib": 0.5, "foundry_iq_retrieval_tokens_per_query": 100,
+}
+for _fk, _fv in st.session_state.form.items():
+    _wk = f"cf_{_fk}"
+    if _wk in st.session_state:
+        continue
+    if _fv is None:
+        # Skip None defaults (e.g. "model"); they're seeded in-form where the
+        # active deployment is known.
+        continue
+    if _fk in _WIDGET_MINS and isinstance(_fv, (int, float)):
+        _fv = max(_WIDGET_MINS[_fk], _fv)
+    st.session_state[_wk] = _fv
+
 
 # ----------------------------------------------------------------------------
 # Header
@@ -721,46 +745,43 @@ with left:
             model_keys = list(FOUNDRY_PRICING_PER_1K.keys())
             form_model_key = _resolve_model_key(fd["model"]) if fd["model"] else key
             with st.form("cost_form", border=False):
-                use_case = st.text_input("Use case", value=fd["use_case"], key="cf_use_case")
+                use_case = st.text_input("Use case", key="cf_use_case")
                 cc1, cc2 = st.columns(2)
                 with cc1:
-                    model_in = st.selectbox(
-                        "Model",
-                        options=model_keys,
-                        index=model_keys.index(form_model_key)
-                        if form_model_key in model_keys else 1,
-                        key="cf_model",
-                    )
-                    dau = st.number_input("Daily active users", min_value=1, value=max(1, int(fd["daily_active_users"])), step=50, key="cf_daily_active_users")
-                    sess = st.number_input("Sessions / user / day", min_value=1, value=max(1, int(fd["sessions_per_user_per_day"])), step=1, key="cf_sessions_per_user_per_day")
-                    turns = st.number_input("Turns / session", min_value=1, value=max(1, int(fd["turns_per_session"])), step=1, key="cf_turns_per_session")
-                    in_tok = st.number_input("Avg input tok / turn", min_value=1, value=max(1, int(fd["avg_input_tokens_per_turn"])), step=100, key="cf_avg_input_tokens_per_turn")
-                    out_tok = st.number_input("Avg output tok / turn", min_value=1, value=max(1, int(fd["avg_output_tokens_per_turn"])), step=50, key="cf_avg_output_tokens_per_turn")
+                    # Model selectbox: keep `index=` only on first render (no key in state yet)
+                    if "cf_model" not in st.session_state:
+                        st.session_state["cf_model"] = form_model_key if form_model_key in model_keys else model_keys[1]
+                    model_in = st.selectbox("Model", options=model_keys, key="cf_model")
+                    dau = st.number_input("Daily active users", min_value=1, step=50, key="cf_daily_active_users")
+                    sess = st.number_input("Sessions / user / day", min_value=1, step=1, key="cf_sessions_per_user_per_day")
+                    turns = st.number_input("Turns / session", min_value=1, step=1, key="cf_turns_per_session")
+                    in_tok = st.number_input("Avg input tok / turn", min_value=1, step=100, key="cf_avg_input_tokens_per_turn")
+                    out_tok = st.number_input("Avg output tok / turn", min_value=1, step=50, key="cf_avg_output_tokens_per_turn")
                     st.caption("Agent Execution")
-                    n_agents = st.number_input("Number of agents", min_value=1, value=max(1, int(fd["num_agents"])), step=1, key="cf_num_agents")
-                    run_dur = st.number_input("Avg run duration (sec)", min_value=1.0, value=max(1.0, float(fd["avg_run_duration_sec"])), step=5.0, key="cf_avg_run_duration_sec")
-                    agent_vcpu = st.number_input("vCPU per agent", min_value=0.25, value=max(0.25, float(fd["agent_vcpu"])), step=0.5, key="cf_agent_vcpu")
-                    agent_mem = st.number_input("Memory (GiB) per agent", min_value=0.5, value=max(0.5, float(fd["agent_memory_gib"])), step=1.0, key="cf_agent_memory_gib")
+                    n_agents = st.number_input("Number of agents", min_value=1, step=1, key="cf_num_agents")
+                    run_dur = st.number_input("Avg run duration (sec)", min_value=1.0, step=5.0, key="cf_avg_run_duration_sec")
+                    agent_vcpu = st.number_input("vCPU per agent", min_value=0.25, step=0.5, key="cf_agent_vcpu")
+                    agent_mem = st.number_input("Memory (GiB) per agent", min_value=0.5, step=1.0, key="cf_agent_memory_gib")
                 with cc2:
                     st.caption("Knowledge & Tools")
-                    use_fs = st.checkbox("File search / vector store", value=bool(fd["uses_file_search"]), key="cf_uses_file_search")
-                    use_ci = st.checkbox("Code interpreter", value=bool(fd["uses_code_interpreter"]), key="cf_uses_code_interpreter")
-                    use_ws = st.checkbox("Web search (Bing)", value=bool(fd["uses_web_search"]), key="cf_uses_web_search")
-                    use_csearch = st.checkbox("Custom search", value=bool(fd["uses_custom_search"]), key="cf_uses_custom_search")
-                    vs_gb = st.number_input("Vector store (GB)", min_value=0.0, value=float(fd["vector_store_gb"]), step=0.5, key="cf_vector_store_gb")
+                    use_fs = st.checkbox("File search / vector store", key="cf_uses_file_search")
+                    use_ci = st.checkbox("Code interpreter", key="cf_uses_code_interpreter")
+                    use_ws = st.checkbox("Web search (Bing)", key="cf_uses_web_search")
+                    use_csearch = st.checkbox("Custom search", key="cf_uses_custom_search")
+                    vs_gb = st.number_input("Vector store (GB)", min_value=0.0, step=0.5, key="cf_vector_store_gb")
                     st.caption("Foundry IQ")
-                    use_fiq = st.checkbox("Foundry IQ (AI Search + reasoning)", value=bool(fd["uses_foundry_iq"]), key="cf_uses_foundry_iq")
-                    ai_tier = st.selectbox("AI Search tier", options=["basic", "s1", "s2"], index=["basic", "s1", "s2"].index(fd["ai_search_tier"]), key="cf_ai_search_tier")
-                    fiq_queries = st.number_input("IQ queries / month", min_value=0, value=int(fd["foundry_iq_queries_per_month"]), step=5000, key="cf_foundry_iq_queries_per_month")
-                    fiq_reason_lvl = st.selectbox("IQ reasoning level", options=["low", "medium"], index=["low", "medium"].index(fd["foundry_iq_reasoning_level"]), key="cf_foundry_iq_reasoning_level")
-                    fiq_ret_tok = st.number_input("Retrieval tok / query", min_value=100, value=max(100, int(fd["foundry_iq_retrieval_tokens_per_query"])), step=500, key="cf_foundry_iq_retrieval_tokens_per_query")
+                    use_fiq = st.checkbox("Foundry IQ (AI Search + reasoning)", key="cf_uses_foundry_iq")
+                    ai_tier = st.selectbox("AI Search tier", options=["basic", "s1", "s2"], key="cf_ai_search_tier")
+                    fiq_queries = st.number_input("IQ queries / month", min_value=0, step=5000, key="cf_foundry_iq_queries_per_month")
+                    fiq_reason_lvl = st.selectbox("IQ reasoning level", options=["low", "medium"], key="cf_foundry_iq_reasoning_level")
+                    fiq_ret_tok = st.number_input("Retrieval tok / query", min_value=100, step=500, key="cf_foundry_iq_retrieval_tokens_per_query")
                     st.caption("Observability & Trust")
-                    use_cs = st.checkbox("Content Safety", value=bool(fd["uses_content_safety"]), key="cf_uses_content_safety")
-                    use_ps = st.checkbox("Prompt Shields", value=bool(fd["uses_prompt_shields"]), key="cf_uses_prompt_shields")
-                    use_rt_eval = st.checkbox("Realtime eval (per run)", value=bool(fd["uses_realtime_eval"]), key="cf_uses_realtime_eval")
-                    use_batch_eval = st.checkbox("Batch eval", value=bool(fd["uses_batch_eval"]), key="cf_uses_batch_eval")
-                    batch_eval_rows = st.number_input("Batch eval rows / month", min_value=0, value=int(fd["batch_eval_rows_per_month"]), step=500, key="cf_batch_eval_rows_per_month")
-                    obs_gb = st.number_input("App Insights (GB/mo)", min_value=0.0, value=float(fd["observability_gb_per_month"]), step=1.0, key="cf_observability_gb_per_month")
+                    use_cs = st.checkbox("Content Safety", key="cf_uses_content_safety")
+                    use_ps = st.checkbox("Prompt Shields", key="cf_uses_prompt_shields")
+                    use_rt_eval = st.checkbox("Realtime eval (per run)", key="cf_uses_realtime_eval")
+                    use_batch_eval = st.checkbox("Batch eval", key="cf_uses_batch_eval")
+                    batch_eval_rows = st.number_input("Batch eval rows / month", min_value=0, step=500, key="cf_batch_eval_rows_per_month")
+                    obs_gb = st.number_input("App Insights (GB/mo)", min_value=0.0, step=1.0, key="cf_observability_gb_per_month")
                 submitted = st.form_submit_button("Estimate", use_container_width=True)
             if submitted:
                 # Persist current widget values back to session state
