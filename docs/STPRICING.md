@@ -386,7 +386,128 @@ Optional for Excel export: `pip install openpyxl pandas`.
 
 ---
 
-## 10. Extension points
+## 10. How to use the page
+
+Once `streamlit run stpricing.py` opens the app in your browser, you'll see a
+single screen split 50/50: the **cost calculator** on the left and the **chat
+advisor** on the right. You can drive an estimate purely through the form,
+purely through chat, or any mix of the two.
+
+### 10.1 First look
+
+```mermaid
+flowchart LR
+    OPEN["Open app"] --> SCAN["Header shows<br/>current deployment + turns"]
+    SCAN --> CHOOSE{"How do you<br/>want to drive it?"}
+    CHOOSE -- "I know my numbers" --> FORM["Fill the cost form\n(left column)"]
+    CHOOSE -- "Help me figure it out" --> CHAT["Ask the advisor\n(right column)"]
+    CHOOSE -- "Both" --> MIX["Start in chat,<br/>fine-tune in form"]
+    FORM --> SUBMIT["Click Estimate"]
+    CHAT --> SYNC["Form auto-updates<br/>from chat answers"]
+    MIX --> SUBMIT
+    SYNC --> SUBMIT
+    SUBMIT --> RESULT["Read estimate<br/>+ download CSV / Excel"]
+```
+
+### 10.2 Workflow A — drive everything from the form
+
+1. **Pick a model** in the *Model* selectbox (left column). Prices come from
+   `FOUNDRY_PRICING_PER_1K`.
+2. **Enter traffic**: daily active users, sessions per user per day, turns per
+   session, average input/output tokens per turn.
+3. **Configure agent execution**: number of agents per session, average run
+   duration in seconds, vCPU cores, memory (GiB).
+4. **Toggle Knowledge & Tools** you'll use — file search, code interpreter,
+   web/custom search, vector store size in GB.
+5. **(Optional) Enable Foundry IQ** — pick AI Search tier (`basic`/`s1`/`s2`),
+   monthly query volume, reasoning level (`low`/`medium`), and average
+   retrieval tokens per query.
+6. **Toggle Observability & Trust** — Content Safety, Prompt Shields, realtime
+   eval, batch eval (with monthly row count), App Insights GB/month.
+7. **Click `Estimate`**. The full breakdown renders in a code block below the
+   form, and two download buttons appear:
+   - **📥 Export CSV** — always available
+   - **📥 Export Excel** — only if `openpyxl` is installed (otherwise the
+     button is disabled with a hint)
+
+### 10.3 Workflow B — chat first
+
+Type a question or scenario into the chat input at the bottom of the right
+column. Examples that work well:
+
+- *"Cost for a 1,000-user copilot using gpt-4o-mini with file search?"*
+- *"I have 3 agents per session, each running about 15 seconds. How does that
+  change the bill?"*
+- *"Add Foundry IQ on S1 with 50,000 queries per month, medium reasoning."*
+- *"Bump output tokens to 600 per turn."*
+- *"Just price one call: 4,500 input tokens, 800 output, gpt-5-mini."*
+
+What happens behind the scenes for each message:
+
+1. The current form values are injected as a `[CURRENT_FORM_STATE]` developer
+   note so the agent never re-asks what you've already set.
+2. The agent calls `update_cost_parameters(...)` with **only the fields you
+   mentioned**.
+3. The keyword guard (`_KEYWORDS`) drops anything the agent tried to set that
+   you didn't actually mention in your latest message.
+4. Surviving fields are written into `st.session_state.form` and the
+   corresponding widgets refresh on the next run.
+5. The agent replies in ≤180 words, often with a cost summary and at most one
+   clarifying question.
+
+> Tip: the form is **the source of truth**. If chat-driven sync surprises you,
+> open the form, tweak the widget, click `Estimate`, and that value will be
+> the baseline for the next chat turn.
+
+### 10.4 Workflow C — hybrid (recommended)
+
+1. Open with a sentence in chat: *"Estimate a customer-support copilot, 2,000
+   DAU, gpt-4.1-mini, file search on."*
+2. Watch the form populate. Anything you didn't say keeps its default.
+3. Fine-tune the form widgets manually (e.g., raise `Memory (GiB) per agent`
+   to 8, or enable Prompt Shields).
+4. Click `Estimate` to lock in the official breakdown and export.
+5. Continue iterating in chat: *"What if traffic doubles?"* or *"Switch to
+   gpt-5-mini and recompute."*
+
+### 10.5 Reading the panels
+
+- **📊 Token usage (session)** — three live metrics (input / output / total)
+  plus a "Last turns" mini-log of the most recent five chat exchanges. This
+  reflects **chat token consumption**, not the simulated app.
+- **💰 Foundry application cost — Session cost** — what your *current chat
+  session* has cost so far, using the **deployment's** pricing (top-right
+  header), not the form's selected model.
+- **💰 Foundry application cost — Full app estimate** — the simulated monthly
+  cost from the form. Sections (model tokens / agent execution / knowledge &
+  tools / observability & trust) sum to the **ESTIMATED TOTAL / MONTH** line.
+
+### 10.6 Exporting estimates
+
+After clicking `Estimate`:
+
+- **CSV** — flat table with `Category | Line Item | Detail | Monthly Cost (USD)`,
+  including subtotals per category and a `TOTAL` row.
+- **Excel** — same data via `pandas.DataFrame.to_excel` to a single
+  `Estimate` sheet. Requires `openpyxl`.
+
+Use these to paste into a deck, share with finance, or diff against prior
+estimates.
+
+### 10.7 Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---------|--------------|-----|
+| `⚠️ Agent error: ...` in chat | Endpoint, deployment, or Entra auth misconfigured | Check env vars; re-run `az login`; verify role assignment on the AOAI resource |
+| Form value changed unexpectedly after chat | Your message contained a keyword in `_KEYWORDS` for that field | Re-enter the value in the form widget; it becomes the new baseline |
+| Chat agent re-asks what you already set | `[CURRENT_FORM_STATE]` may have been clipped by a very long history | Reset by refreshing the page (session state clears) |
+| "Export Excel" button is disabled | `openpyxl` not installed | `pip install openpyxl pandas` |
+| Foundry IQ rows show $0 even when enabled | Known quirk in `_build_cost_rows` (see §4.2) — IQ totals still flow through the estimate text block | Trust the text estimate; CSV column is informational |
+| Estimate seems too low/high vs. your contract | Default fees in `EXTRA_FOUNDRY_FEES` are list prices | Edit the table to match your committed pricing |
+
+---
+
+## 11. Extension points
 
 | You want to… | Touch this |
 |--------------|-----------|
@@ -399,7 +520,7 @@ Optional for Excel export: `pip install openpyxl pandas`.
 
 ---
 
-## 11. Security & data handling notes
+## 12. Security & data handling notes
 
 - ✅ **No secrets in code** — uses Entra ID via `DefaultAzureCredential`.
 - ✅ **No outbound calls** beyond Azure OpenAI; all pricing math is local.
@@ -414,7 +535,7 @@ Optional for Excel export: `pip install openpyxl pandas`.
 
 ---
 
-## 12. Glossary
+## 13. Glossary
 
 - **Foundry IQ** — Azure AI Search + agentic reasoning bundle; priced as the
   Search tier (flat monthly) plus per-query reasoning and per-1M retrieval
@@ -428,7 +549,7 @@ Optional for Excel export: `pip install openpyxl pandas`.
 
 ---
 
-## 13. Cost model at a glance
+## 14. Cost model at a glance
 
 ```mermaid
 flowchart TB
