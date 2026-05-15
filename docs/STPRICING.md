@@ -14,36 +14,38 @@ conversation perfectly in sync.
 
 ## 1. High-level architecture
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                          Streamlit page                              │
-│                                                                      │
-│  LEFT column (50%)                       RIGHT column (50%)          │
-│  ───────────────────────                 ─────────────────────       │
-│  📊 Token usage (expander)               🗨️ Conversation             │
-│  💰 Foundry application cost              (st.container h=500)       │
-│     ├─ Session cost (live)                                           │
-│     ├─ Cost form (st.form)                                           │
-│     └─ Estimate output + CSV / Excel     ┌─────────────────────┐    │
-│                                          │ st.chat_input       │    │
-│                                          └──────┬──────────────┘    │
-└─────────────────────────────────────────────────┼───────────────────┘
-                                                  │ user prompt
-                                                  ▼
-                       ┌──────────────────────────────────────────┐
-                       │ ask_agent_sync()                         │
-                       │  • Injects [CURRENT_FORM_STATE]           │
-                       │  • Calls Azure OpenAI Responses API       │
-                       │  • Up to 3 tool-call round-trips          │
-                       └──────────────┬───────────────────────────┘
-                                      │ tool calls
-                                      ▼
-                  ┌────────────────────────────────────────────┐
-                  │ TOOL_DISPATCH                              │
-                  │  1. calculate_foundry_token_cost           │
-                  │  2. estimate_agentic_app_cost              │
-                  │  3. update_cost_parameters  ◀── form sync  │
-                  └────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph UI["Streamlit page (wide, sidebar collapsed)"]
+        direction LR
+        subgraph LEFT["LEFT column (50%)"]
+            TOK["📊 Token usage expander<br/>input / output / total"]
+            COST["💰 Foundry application cost expander"]
+            FORM["Cost form (st.form)<br/>28 widgets, keys cf_*"]
+            EST["Estimate output<br/>+ CSV / Excel export"]
+            COST --> FORM --> EST
+        end
+        subgraph RIGHT["RIGHT column (50%)"]
+            CHAT["🗨️ Conversation<br/>st.container height=500"]
+            INPUT["st.chat_input (pinned)"]
+            CHAT --> INPUT
+        end
+    end
+
+    INPUT -- "user prompt" --> HANDLER["Prompt handler<br/>(bottom of script)"]
+    HANDLER -- "messages + [CURRENT_FORM_STATE]" --> AGENT["ask_agent_sync()"]
+    AGENT -- "Responses API" --> AOAI["Azure OpenAI<br/>(Entra auth)"]
+    AOAI -- "function_call items" --> AGENT
+    AGENT -- "dispatch" --> TOOLS["TOOL_DISPATCH"]
+    TOOLS --> T1["calculate_foundry_token_cost"]
+    TOOLS --> T2["estimate_agentic_app_cost"]
+    TOOLS --> T3["update_cost_parameters<br/>(drives form sync)"]
+    T3 -. "gated by _KEYWORDS" .-> FORM
+    HANDLER --> CHAT
+    FORM -. "st.session_state.form" .-> AGENT
+
+    classDef tool fill:#eef,stroke:#557;
+    class T1,T2,T3 tool;
 ```
 
 Key idea: the LLM never writes Streamlit state directly. It expresses intent
@@ -199,6 +201,37 @@ Behaviour:
 Auth is via `DefaultAzureCredential` + `get_bearer_token_provider` against
 `https://cognitiveservices.azure.com/.default`. No API keys are stored in code.
 
+### 5.1 Tool-call round-trip loop
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as User
+    participant H as Prompt handler
+    participant A as ask_agent_sync
+    participant R as Azure OpenAI<br/>Responses API
+    participant T as TOOL_DISPATCH
+    participant F as st.session_state.form
+
+    U->>H: prompt via st.chat_input
+    H->>H: inject [CURRENT_FORM_STATE] developer msg
+    H->>A: api_input = [developer, ...history, dev-state, user]
+    loop up to 3 round-trips
+        A->>R: responses.create(input, tools, temperature=0.3)
+        R-->>A: output items (+ usage)
+        alt contains function_call items
+            A->>T: dispatch(name, args)
+            T-->>A: result string
+            A->>A: append function_call_output, capture last update_cost_parameters args
+        else final text
+            A-->>H: (text, usage, tool_args, tool_name)
+        end
+    end
+    H->>H: keyword-guard tool_args vs prompt
+    H->>F: write surviving fields
+    H->>H: stage cf_* widget updates → st.rerun()
+```
+
 ---
 
 ## 6. System prompt rules (`SYSTEM_PROMPT`)
@@ -247,6 +280,22 @@ same run. The handler stages updates after `ask_agent_sync` returns, calls
 `st.rerun()`, and the very next run drains `pending_widget_updates` into
 `session_state` before any widget renders.
 
+```mermaid
+stateDiagram-v2
+    [*] --> FirstRun
+    FirstRun: First run — seed form defaults\nand cf_* widget keys
+    FirstRun --> Idle
+    Idle: Widgets rendered\nawaiting chat input
+    Idle --> Thinking: user submits prompt
+    Thinking: ask_agent_sync running\n(spinner)
+    Thinking --> StageUpdates: tool_args returned
+    StageUpdates: keyword-guard\nfill pending_widget_updates
+    StageUpdates --> Rerun: st.rerun()
+    Rerun --> FlushPending: top of next run
+    FlushPending: drain pending into\nst.session_state[cf_*]
+    FlushPending --> Idle: widgets re-render with new values
+```
+
 ### 7.3 Form-sync guard (the most important code in the file)
 
 After each chat turn, the prompt handler:
@@ -264,6 +313,23 @@ After each chat turn, the prompt handler:
 
 This double-guard (system prompt + keyword whitelist) is what makes the chat
 feel responsive without ever overwriting a value the user typed manually.
+
+```mermaid
+flowchart LR
+    A["agent returns<br/>update_cost_parameters(args)"] --> B{tool_name ==<br/>update_cost_parameters?}
+    B -- no --> X["ignore (estimate_* never syncs)"]
+    B -- yes --> C["for field, value in args"]
+    C --> D{field in<br/>form?}
+    D -- no --> X2["drop"]
+    D -- yes --> E{user prompt<br/>contains any<br/>_KEYWORDS[field]?}
+    E -- no --> X3["drop<br/>(LLM hallucination)"]
+    E -- yes --> F["clamp to _MINS[field]"]
+    F --> G{new == current?}
+    G -- yes --> X4["skip no-op"]
+    G -- no --> H["form[field] = new<br/>pending['cf_' + field] = new"]
+    H --> I["st.rerun()"]
+    I --> J["next run: flush pending<br/>BEFORE widgets render"]
+```
 
 ### 7.4 Cost form
 
@@ -359,3 +425,31 @@ Optional for Excel export: `pip install openpyxl pandas`.
   `batch_eval_rows_per_month`.
 - **Thread storage** — Foundry's per-thread message persistence; billed
   per-GB-month.
+
+---
+
+## 13. Cost model at a glance
+
+```mermaid
+flowchart TB
+    INPUTS["Inputs<br/>DAU · sessions/user · turns/session<br/>in_tok · out_tok · num_agents<br/>run_duration · vCPU · GiB · feature flags"]
+    INPUTS --> CALLS["calls_per_month =<br/>DAU × sessions × turns × 30"]
+    INPUTS --> RUNS["runs_per_month =<br/>DAU × sessions × 30"]
+
+    CALLS --> MODEL["Model token cost<br/>in_tok × price_in + out_tok × price_out"]
+    RUNS --> EXEC["Agent execution<br/>vCPU + memory + thread storage"]
+    CALLS --> TOOLS2["Knowledge & Tools<br/>file search · code interp · web/custom search<br/>vector store · Foundry IQ"]
+    RUNS --> EVAL["Realtime eval<br/>(per run)"]
+    CALLS --> TRUST["Observability & Trust<br/>App Insights · Content Safety<br/>Prompt Shields · Batch eval"]
+
+    MODEL --> TOTAL["💵 ESTIMATED MONTHLY TOTAL"]
+    EXEC --> TOTAL
+    TOOLS2 --> TOTAL
+    EVAL --> TOTAL
+    TRUST --> TOTAL
+
+    classDef bucket fill:#fef6e4,stroke:#b08968;
+    class MODEL,EXEC,TOOLS2,EVAL,TRUST bucket;
+    classDef total fill:#d8f3dc,stroke:#2d6a4f,font-weight:bold;
+    class TOTAL total;
+```
