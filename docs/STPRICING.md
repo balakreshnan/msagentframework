@@ -316,19 +316,19 @@ feel responsive without ever overwriting a value the user typed manually.
 
 ```mermaid
 flowchart LR
-    A["agent returns<br/>update_cost_parameters(args)"] --> B{tool_name ==<br/>update_cost_parameters?}
+    A["agent returns update_cost_parameters(args)"] --> B{"tool_name == update_cost_parameters?"}
     B -- no --> X["ignore (estimate_* never syncs)"]
     B -- yes --> C["for field, value in args"]
-    C --> D{field in<br/>form?}
+    C --> D{"field in form?"}
     D -- no --> X2["drop"]
-    D -- yes --> E{user prompt<br/>contains any<br/>_KEYWORDS[field]?}
-    E -- no --> X3["drop<br/>(LLM hallucination)"]
-    E -- yes --> F["clamp to _MINS[field]"]
-    F --> G{new == current?}
+    D -- yes --> E{"user prompt contains any _KEYWORDS for field?"}
+    E -- no --> X3["drop (LLM hallucination)"]
+    E -- yes --> F["clamp to _MINS for field"]
+    F --> G{"new == current?"}
     G -- yes --> X4["skip no-op"]
-    G -- no --> H["form[field] = new<br/>pending['cf_' + field] = new"]
+    G -- no --> H["form[field] = new; pending[cf_field] = new"]
     H --> I["st.rerun()"]
-    I --> J["next run: flush pending<br/>BEFORE widgets render"]
+    I --> J["next run: flush pending BEFORE widgets render"]
 ```
 
 ### 7.4 Cost form
