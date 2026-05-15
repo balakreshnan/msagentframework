@@ -8,20 +8,56 @@ This document details specific business use cases where agentic AI transforms op
 
 ## Table of Contents
 
-1. [Retail & E-Commerce](#retail--e-commerce)
-2. [Manufacturing & Supply Chain](#manufacturing--supply-chain)
-3. [Healthcare & Medical Imaging](#healthcare--medical-imaging)
-4. [Smart Home & IoT](#smart-home--iot)
-5. [Financial Services](#financial-services)
-6. [Engineering & Design](#engineering--design)
-7. [Customer Service & Support](#customer-service--support)
-8. [Architecture Analysis & Design Review](#architecture-analysis--design-review)
-9. [Strategic Planning](#strategic-planning)
-10. [Workplace Productivity](#workplace-productivity)
-11. [Manufacturing Intelligence](#manufacturing-intelligence)
-12. [Education & Learning](#education--learning)
-13. [Creative Content Generation](#creative-content-generation)
-14. [AI Agent Lifecycle & Governance](#ai-agent-lifecycle--governance)
+- [Business Use Cases \& Domain Applications](#business-use-cases--domain-applications)
+  - [Overview](#overview)
+  - [Table of Contents](#table-of-contents)
+  - [Retail \& E-Commerce](#retail--e-commerce)
+    - [Use Case: Intelligent Product Advisory](#use-case-intelligent-product-advisory)
+  - [Manufacturing \& Supply Chain](#manufacturing--supply-chain)
+    - [Use Case 1: Automated Root Cause Analysis (RCA)](#use-case-1-automated-root-cause-analysis-rca)
+    - [Use Case 2: Supply Chain Optimization](#use-case-2-supply-chain-optimization)
+  - [Healthcare \& Medical Imaging](#healthcare--medical-imaging)
+    - [Use Case: AI-Assisted Radiology Workflow](#use-case-ai-assisted-radiology-workflow)
+  - [Smart Home \& IoT](#smart-home--iot)
+    - [Use Case: Intelligent Home Automation](#use-case-intelligent-home-automation)
+  - [Financial Services](#financial-services)
+    - [Use Case: AI Financial Advisor](#use-case-ai-financial-advisor)
+  - [Engineering \& Design](#engineering--design)
+    - [Use Case: Engineering Drawing Analysis](#use-case-engineering-drawing-analysis)
+  - [Customer Service \& Support](#customer-service--support)
+    - [Use Case: Intelligent Customer Support Agent](#use-case-intelligent-customer-support-agent)
+  - [Cross-Cutting Use Case: Brainstorming \& Innovation](#cross-cutting-use-case-brainstorming--innovation)
+    - [Use Case: AI-Powered Innovation Sessions](#use-case-ai-powered-innovation-sessions)
+  - [Architecture Analysis \& Design Review](#architecture-analysis--design-review)
+    - [Use Case: AI-Powered Architecture IQ](#use-case-ai-powered-architecture-iq)
+  - [Strategic Planning](#strategic-planning)
+    - [Use Case: Three Horizons Strategy with AI](#use-case-three-horizons-strategy-with-ai)
+  - [Workplace Productivity](#workplace-productivity)
+    - [Use Case: WorkIQ — AI Workplace Assistant](#use-case-workiq--ai-workplace-assistant)
+  - [Manufacturing Intelligence](#manufacturing-intelligence)
+    - [Use Case: PlantIQ — Manufacturing Plant Design \& Monitoring](#use-case-plantiq--manufacturing-plant-design--monitoring)
+  - [Education \& Learning](#education--learning)
+    - [Use Case: StudentIQ — AI Tutor with Voice](#use-case-studentiq--ai-tutor-with-voice)
+  - [Creative Content Generation](#creative-content-generation)
+    - [Use Case: AI Skit \& Video Production](#use-case-ai-skit--video-production)
+  - [AI Agent Lifecycle \& Governance](#ai-agent-lifecycle--governance)
+    - [Use Case: Agent Lifecycle Management \& Safety Assurance](#use-case-agent-lifecycle-management--safety-assurance)
+  - [Cost \& Pricing Advisory](#cost--pricing-advisory)
+    - [Use Case: Foundry Pricing \& Agentic Cost Estimator](#use-case-foundry-pricing--agentic-cost-estimator)
+  - [Intelligent Model Routing](#intelligent-model-routing)
+    - [Use Case: Model Router — Right Model for Every Request](#use-case-model-router--right-model-for-every-request)
+  - [Knowledge Graphs \& Ontology Generation](#knowledge-graphs--ontology-generation)
+    - [Use Case: LLM-Driven Ontology Builder](#use-case-llm-driven-ontology-builder)
+  - [Physical AI \& Robotics Design](#physical-ai--robotics-design)
+    - [Use Case: Physical AI Designer (Omniverse + Isaac + Jetson)](#use-case-physical-ai-designer-omniverse--isaac--jetson)
+  - [Procurement \& Competitive Bidding](#procurement--competitive-bidding)
+    - [Use Case: Retail Bidding Agent — Multi-Vendor Negotiation](#use-case-retail-bidding-agent--multi-vendor-negotiation)
+  - [Enterprise Knowledge Retrieval (Foundry IQ RAG)](#enterprise-knowledge-retrieval-foundry-iq-rag)
+    - [Use Case: Agentic Retrieval over Enterprise Knowledge Bases](#use-case-agentic-retrieval-over-enterprise-knowledge-bases)
+  - [Summary: Why Agentic AI Transforms Business Processes](#summary-why-agentic-ai-transforms-business-processes)
+    - [Common Patterns Across Use Cases](#common-patterns-across-use-cases)
+    - [Universal Benefits](#universal-benefits)
+    - [Key Differentiators of Agentic AI](#key-differentiators-of-agentic-ai)
 
 ---
 
@@ -988,6 +1024,318 @@ graph TB
 - 🔒 Automated safety validation against adversarial attacks
 - 📊 Quantitative evaluation scores (not just subjective reviews)
 - 🔄 Continuous evaluation integrated into CI/CD pipelines
+
+---
+
+## Cost & Pricing Advisory
+
+### Use Case: Foundry Pricing & Agentic Cost Estimator
+
+**Business Challenge**:
+Architects, FinOps teams, and platform owners need to estimate the **monthly
+cost** of running an agentic AI application on Microsoft Foundry **before**
+they deploy. List pricing is spread across model tokens, hosted agent compute,
+knowledge tools, search tiers, evaluations, and observability — making
+back-of-envelope math error-prone and slow.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "Foundry Pricing Advisor"
+        USER[Architect / FinOps user] --> CHAT[Chat advisor agent]
+        USER --> FORM[Cost calculator form]
+
+        CHAT --> TOOLS{Tool calls}
+        TOOLS --> CALC[calculate_foundry_token_cost]
+        TOOLS --> EST[estimate_agentic_app_cost]
+        TOOLS --> SYNC[update_cost_parameters]
+
+        SYNC -. keyword-gated .-> FORM
+        FORM --> ESTIMATE[Monthly cost breakdown]
+        ESTIMATE --> EXPORT[CSV / Excel download]
+        EST --> ESTIMATE
+
+        classDef tool fill:#eef,stroke:#557;
+        class CALC,EST,SYNC tool;
+    end
+
+    style CHAT fill:#4CAF50
+    style ESTIMATE fill:#2196F3
+    style EXPORT fill:#FF9800
+```
+
+**Implementation Details**:
+- **Module**: `stpricing.py`
+- **Detailed doc**: [STPRICING.md](STPRICING.md)
+- **Pricing tables**: `FOUNDRY_PRICING_PER_1K` (model tokens) + `EXTRA_FOUNDRY_FEES` (agent vCPU/memory, file search, code interpreter, Foundry IQ, App Insights, evaluations)
+- **Agent runtime**: Azure OpenAI Responses API + 3-round tool-calling loop
+- **Form-sync guard**: server-side keyword whitelist (`_KEYWORDS`) prevents the LLM from clobbering user-typed values
+
+**Cost dimensions covered**:
+- Model token cost (input + output, per-1K rates for `gpt-4o*`, `gpt-4.1*`, `gpt-5*`, `o1`, `o3-mini`)
+- Hosted agent execution (vCPU-hours, GiB-hours, thread storage)
+- Knowledge & tools (file search storage, code interpreter sessions, Bing/custom search, vector store)
+- Foundry IQ (AI Search Basic/S1/S2 + agentic reasoning + retrieval tokens)
+- Observability & trust (App Insights, Content Safety, Prompt Shields, realtime/batch evals)
+
+**Business Impact**:
+- 💸 Estimates produced in minutes (vs days of spreadsheet work)
+- 📊 Side-by-side what-if comparisons by changing one slider
+- 📥 Exportable CSV/Excel feeds straight into FinOps reviews
+- 🛡️ Identifies cost-driving features (e.g., realtime eval, Foundry IQ tier) before they hit production
+- 🤝 Bridges architecture and finance with a shared conversational artefact
+
+---
+
+## Intelligent Model Routing
+
+### Use Case: Model Router — Right Model for Every Request
+
+**Business Challenge**:
+Different requests have different cost/latency/quality trade-offs. Sending
+every prompt to a frontier model (e.g., `gpt-5`) is expensive; routing
+everything to a small model degrades quality on hard tasks. Teams need a
+**policy-driven router** that picks the cheapest model that can satisfy a
+given request.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "Model Router Agent"
+        Q[User query] --> ROUTER[modelrouteragent\nFoundry hosted]
+        ROUTER --> DECIDE{Routing decision}
+
+        DECIDE -- simple Q&A --> NANO[gpt-4.1-nano]
+        DECIDE -- moderate reasoning --> MINI[gpt-4o-mini / gpt-5-mini]
+        DECIDE -- complex / multimodal --> FRONTIER[gpt-4o / gpt-5]
+        DECIDE -- code or deep reasoning --> O[o-series]
+
+        NANO --> RESP[Response + telemetry]
+        MINI --> RESP
+        FRONTIER --> RESP
+        O --> RESP
+
+        RESP --> METRICS[Model used\nTokens in/out\nLatency\nKB sources]
+        METRICS --> UI[Streamlit conversation panel]
+    end
+
+    style ROUTER fill:#1B5E20
+    style DECIDE fill:#FF9800
+    style METRICS fill:#2196F3
+```
+
+**Implementation Details**:
+- **Module**: `stmodelrouter.py`
+- **Agent**: `modelrouteragent` hosted on Azure AI Foundry
+- **Capabilities surfaced in UI**: chosen model name, token usage, knowledge-base sources retrieved (MCP output parsed for source titles), per-turn latency
+- **Companion doc**: `docs/MODEL_ROUTER_BEST_PRACTICES.md`
+
+**Business Impact**:
+- 💰 30–60% cost reduction vs always-frontier baselines
+- ⚡ Lower P50 latency for the long tail of simple requests
+- 🎯 Quality preserved on hard requests via fallback to frontier model
+- 📊 Per-turn telemetry makes routing decisions auditable
+
+---
+
+## Knowledge Graphs & Ontology Generation
+
+### Use Case: LLM-Driven Ontology Builder
+
+**Business Challenge**:
+Enterprise data teams spend weeks hand-crafting ontologies (entities,
+relationships, properties) from messy source documents and CSVs before they
+can power RAG, graph databases, or semantic search. Manual modelling doesn't
+scale across hundreds of datasets.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "Ontology Generation Pipeline"
+        SRC[Source data\nCSV / PDF / spec docs] --> INTAKE[ontology_intake_processor.py]
+        INTAKE --> SPEC[Normalised spec\nentities / fields / samples]
+
+        SPEC --> LLM[llm_ontology_generator.py\nAzure OpenAI]
+        LLM --> RAW[Raw JSON ontology]
+
+        RAW --> BUILD[ontology_builder.py]
+        BUILD --> JSON[.json]
+        BUILD --> JSONLD[.jsonld]
+        BUILD --> TTL[.ttl Turtle]
+
+        JSON --> UI[stontology.py\nStreamlit graph viewer]
+        JSONLD --> RAG[RAG / Foundry IQ]
+        TTL --> KG[Graph database\nNeo4j / GraphDB]
+    end
+
+    style LLM fill:#0D47A1
+    style BUILD fill:#4CAF50
+    style UI fill:#FF9800
+```
+
+**Implementation Details**:
+- **Modules**: `stontology.py` (UI), `llm_ontology_generator.py` (LLM-driven extraction), `ontology_builder.py` (multi-format emitter), `ontology_intake_processor.py` (source normalisation)
+- **Detailed doc**: [`ontology_builder_guide.md`](ontology_builder_guide.md)
+- **Sample artefacts**: `ontology/chip_supplychain.{json,jsonld,ttl}`, `ontology/chipfab_plant.{json,jsonld,ttl}`, `ontology/dataset_ontology.{json,jsonld,ttl}`
+- **Outputs**: JSON (apps), JSON-LD (semantic web), Turtle (graph databases)
+
+**Business Impact**:
+- 🗺️ Ontology drafts produced in minutes per dataset (vs weeks)
+- 🔁 Re-generated automatically when source schema changes
+- 🧩 Same artefact feeds RAG, knowledge graphs, and BI semantic layers
+- ✅ Standards-compliant output (JSON-LD + Turtle) integrates with existing tooling
+
+---
+
+## Physical AI & Robotics Design
+
+### Use Case: Physical AI Designer (Omniverse + Isaac + Jetson)
+
+**Business Challenge**:
+Designing a physical-AI / robotics solution (e.g., a warehouse pick-and-place
+robot or a manufacturing inspection cell) requires three different specialist
+skill sets working in lockstep: requirements engineering, simulation design,
+and on-device training/deployment. Coordinating them sequentially is slow and
+loses context between hand-offs.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "Physical AI Designer — Magentic Orchestration"
+        BRIEF[Product / robotics brief] --> MGR[Magentic Manager]
+
+        MGR --> STRAT[Strategist & Requirements Agent]
+        MGR --> SCENE[Scene & Simulation Designer Omniverse/Isaac Sim]
+        MGR --> TRAIN[Training & Implementation Engineer GR00T/Jetson]
+
+        STRAT --> |Requirements| MGR
+        SCENE --> |Synthetic data + scene graph| MGR
+        TRAIN --> |Training plan + deploy script| MGR
+
+        MGR --> OUTPUT[Integrated Physical AI Design]
+        OUTPUT --> REQS[Requirements doc]
+        OUTPUT --> SIM[Simulation plan]
+        OUTPUT --> EDGE[Edge deployment recipe]
+    end
+
+    style MGR fill:#1565C0
+    style OUTPUT fill:#4CAF50
+```
+
+**Implementation Details**:
+- **Module**: `stphysicalaidesigner.py`
+- **Pattern**: Microsoft Agent Framework **Magentic** orchestration over three Foundry-hosted specialist agents
+- **Domain coverage**: NVIDIA Omniverse, Isaac Sim, Isaac Lab, GR00T humanoid stack, Jetson edge deployment
+
+**Business Impact**:
+- 🤖 End-to-end robotics design produced in a single session (vs weeks of cross-team meetings)
+- 🧪 Simulation-first workflow reduces hardware iteration cost
+- 🚀 Deploy recipe targets Jetson edge devices from day one
+- 🔁 Same prompt regenerates all three artefacts when requirements change
+
+---
+
+## Procurement & Competitive Bidding
+
+### Use Case: Retail Bidding Agent — Multi-Vendor Negotiation
+
+**Business Challenge**:
+Procurement teams spend hours requesting quotes from multiple vendors,
+comparing offers across price/shipping/lead-time, and negotiating discounts.
+The process is sequential, manual, and rarely surfaces the truly optimal
+deal.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "Magentic-One Bidding Workflow"
+        BUYER[Buyer: I need 500 units of product X] --> MGR[Bidding Coordinator Magentic-One Manager]
+
+        MGR --> WALMART[Walmart Negotiator Agent]
+        MGR --> AMAZON[Amazon Negotiator Agent]
+        MGR --> NEG[Retail Negotiation Agent drives counter-offers]
+
+        WALMART --> |unit price + shipping + ETA| LEDGER[Magentic Ledger]
+        AMAZON --> |unit price + shipping + ETA| LEDGER
+        NEG --> |Counter rounds| LEDGER
+
+        LEDGER --> DECIDE[Best-deal selection]
+        DECIDE --> BUYER2[Buyer receives recommended vendor + terms]
+    end
+
+    style MGR fill:#FF6F00
+    style LEDGER fill:#2196F3
+    style DECIDE fill:#4CAF50
+```
+
+**Implementation Details**:
+- **Module**: `stbid.py`
+- **Pattern**: Magentic-One multi-agent negotiation with streaming UI updates
+- **Tools**: `negotiate_walmart`, `negotiate_amazon` (return unit price, shipping cost, delivery ETA)
+- **Agents**: Walmart agent, Amazon agent, Retail Negotiator (drives competitive rounds), Coordinator
+
+**Business Impact**:
+- 🛒 Procurement cycle compressed from days to minutes
+- 💰 Competitive cross-bid typically yields 8–15% better unit pricing
+- 📦 Total-cost-of-acquisition view (price + shipping + ETA) instead of price alone
+- 🔁 Agents can be added per vendor with no orchestration code changes
+
+---
+
+## Enterprise Knowledge Retrieval (Foundry IQ RAG)
+
+### Use Case: Agentic Retrieval over Enterprise Knowledge Bases
+
+**Business Challenge**:
+Classic RAG ranks chunks by embedding similarity, but enterprise queries
+often require **multi-step retrieval planning** ("find the RFP, then the
+related past proposals, then the pricing tables"). Single-shot vector
+search returns mediocre context and hurts answer quality.
+
+**Agentic AI Solution**:
+
+```mermaid
+graph TB
+    subgraph "Foundry IQ Agentic Retrieval"
+        Q[User question] --> AGENT[ChatAgent AzureAIAgentClient]
+        AGENT --> CTX[AzureAISearchContextProvider mode=agentic]
+
+        CTX --> PLAN[Query planner Azure OpenAI]
+        PLAN --> SUBQ{Multiple sub-queries}
+        SUBQ --> S1[Search KB: RFP docs]
+        SUBQ --> S2[Search KB: past proposals]
+        SUBQ --> S3[Search KB: pricing tables]
+
+        S1 --> MERGE[Merge + rerank]
+        S2 --> MERGE
+        S3 --> MERGE
+
+        MERGE --> CONTEXT[Grounded context]
+        CONTEXT --> AGENT
+        AGENT --> ANS[Cited answer]
+    end
+
+    style PLAN fill:#0D47A1
+    style MERGE fill:#2196F3
+    style ANS fill:#4CAF50
+```
+
+**Implementation Details**:
+- **Module**: `foundryiq.py`
+- **Components**: `AzureAISearchContextProvider(mode="agentic", retrieval_reasoning_effort="medium")` + `AzureAIAgentClient` + `ChatAgent`
+- **Knowledge base**: Azure AI Search index (example: `constructionrfpdocs1`)
+- **Auth**: `DefaultAzureCredential` (managed identity / Entra) — no keys in code
+
+**Business Impact**:
+- 📈 Higher answer quality on multi-hop enterprise questions vs single-shot RAG
+- 🔒 Keyless authentication via managed identity / Entra
+- 🔌 Plug-in pattern: any agent gains agentic retrieval by adding the context provider
+- 💸 Tunable cost via `retrieval_reasoning_effort` (`low` / `medium`) — see [STPRICING.md](STPRICING.md) for the IQ pricing model
 
 ---
 
